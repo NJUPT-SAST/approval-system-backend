@@ -25,9 +25,9 @@ public class User implements Serializable {
      */
     private String name;
     /**
-     * 用户学号
+     * 用户学号，和Apifox上的有冲突
      */
-    private String num;
+    private String code;
     /**
      * 用户密码
      */
