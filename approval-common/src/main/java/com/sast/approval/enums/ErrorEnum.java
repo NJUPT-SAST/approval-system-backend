@@ -12,6 +12,7 @@ public enum ErrorEnum {
     EXPIRED_LOGIN(1003, "登录过期"),
     NO_ROLE(1004,"无权限"),
     NO_TOKEN(1005,"TOKEN不能为空"),
+    Login_ERROR(1006, "账号或者密码错误"),
     UNKNOWN_COMPETITION_ID(2001, "找不到相应的比赛"),
     UNKNOWN_TEAM_ID(2002, "找不到相应的队伍"),
     HAVE_NOT_SIGNED_COM(2003, "您还未报名该比赛"),

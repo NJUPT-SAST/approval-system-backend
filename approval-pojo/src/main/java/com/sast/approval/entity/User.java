@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class User implements Serializable {
 
-    //TODO 这什么意思
-    private Department depId;
+    /**
+     * 部门编号
+     */
+    private Integer depId;
     /**
      * 用户id编号
      */
@@ -33,7 +35,7 @@ public class User implements Serializable {
     /**
      * 角色
      */
-    private long role;
+    private Integer role;
 
     private LocalDateTime createTime;
 

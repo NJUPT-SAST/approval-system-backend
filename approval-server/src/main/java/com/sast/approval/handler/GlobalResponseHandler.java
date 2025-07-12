@@ -3,7 +3,6 @@ package com.sast.approval.handler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sast.approval.annotation.ResponseResult;
-import com.sast.approval.enums.ErrorEnum;
 import com.sast.approval.response.GlobalResponse;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +44,6 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
         }
         if(body instanceof GlobalResponse){
             return body;
-        }
-        if(body instanceof ErrorEnum){
-            return GlobalResponse.failure((ErrorEnum) body);
         }
         try {
             response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

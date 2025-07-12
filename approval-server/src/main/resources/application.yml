@@ -1,0 +1,3 @@
+jwt:
+  secret: LRXHV49MAFSAXB79WJV3IIQR  #JWT密钥
+  expiration: 864000000             #JWT过期时间（1000天）
