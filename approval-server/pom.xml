@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.sast</groupId>
+        <groupId>fun.sast</groupId>
         <artifactId>approval-system-backend</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -23,13 +23,13 @@
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sast</groupId>
+            <groupId>fun.sast</groupId>
             <artifactId>approval-pojo</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
-            <groupId>com.sast</groupId>
+            <groupId>fun.sast</groupId>
             <artifactId>approval-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
