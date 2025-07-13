@@ -19,7 +19,6 @@ public class CommonController {
      * @param id 比赛id
      * @return 比赛通知
      */
-    //TODO
     @GetMapping("/notice/list")
     public List<Map<String, Object>> getComNotice(@RequestParam Long id) {
         return new ArrayList<>();

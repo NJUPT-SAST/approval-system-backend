@@ -37,6 +37,16 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
                 returnType.getContainingClass().isAnnotationPresent(ResponseResult.class);
     }
 
+    /**
+     * 处理接口返回数据
+     * @param body
+     * @param returnType
+     * @param selectedContentType
+     * @param selectedConverterType
+     * @param request
+     * @param response
+     * @return object
+     */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body == null){

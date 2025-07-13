@@ -17,24 +17,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
+
+    /**
+     * 登录
+     * @param userLoginDTO
+     * @return UserLoginVO
+     */
 
     @PostMapping("/login")
     @ResponseResult
-    public Object login(@RequestBody UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
-        User user = userService.authenticate(userLoginDTO.getCode(), userLoginDTO.getPassword());
-        if(user == null){
-            throw new BaseException(ErrorEnum.Login_ERROR);
-        }
-        String token = JwtUtil.generateToken(user.getCode());
-
-        return UserLoginVO.builder()
-                .name(user.getName())
-                .depId(user.getDepId())
-                .role(user.getRole())
-                .token(token)
-                .build();
+    public UserLoginVO login(@RequestBody UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
+//        User user = userService.authenticate(userLoginDTO.getCode(), userLoginDTO.getPassword());
+//        if(user == null){
+//            throw new BaseException(ErrorEnum.Login_ERROR);
+//        }
+//        String token = JwtUtil.generateToken(user.getCode());
+//
+//        return UserLoginVO.builder()
+//                .name(user.getName())
+//                .depId(user.getDepId())
+//                .role(user.getRole())
+//                .token(token)
+//                .build();
+        return  new UserLoginVO();
 
     }
 }

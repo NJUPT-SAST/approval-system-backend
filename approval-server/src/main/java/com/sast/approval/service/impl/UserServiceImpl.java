@@ -21,9 +21,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public User authenticate(String code, String password) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("code", code).eq("password", password);
-        return userMapper.selectOne(queryWrapper);
+//        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("code", code).eq("password", password);
+//        return userMapper.selectOne(queryWrapper);
+        return new User();
         }
 
 }
