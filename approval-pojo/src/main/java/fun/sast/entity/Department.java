@@ -1,23 +1,19 @@
 package fun.sast.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Department implements Serializable {
-    /**
-     * 部门id
-     */
+    /** 部门id */
     private Integer id;
-    /**
-     * 部门名称
-     */
+
+    /** 部门名称 */
     private String name;
 
     private LocalDateTime createTime;
