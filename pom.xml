@@ -28,6 +28,7 @@
         <mybatis-plus.version>3.5.12</mybatis-plus.version>
         <jjwt>0.9.1</jjwt>
         <mysql.version>8.0.33</mysql.version>
+        <spotless.version>2.45.0</spotless.version>
     </properties>
 
 
@@ -70,5 +71,27 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless.version}</version>
+                <configuration>
+                    <java>
+                        <includes>
+                            <include>**/src/main/**/*.java</include>
+                            <include>**/src/test/**/*.java</include>
+                        </includes>
+                        <googleJavaFormat>
+                            <version>1.28.0</version>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                    </java>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
