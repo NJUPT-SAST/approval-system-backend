@@ -1,14 +1,14 @@
 package fun.sast.response;
 
 import fun.sast.enums.ErrorEnum;
-import lombok.Data;
 import java.io.Serializable;
+import lombok.Data;
 
 /**
  * 统一返回结果类
+ *
  * @param <T>
  */
-
 @Data
 public class GlobalResponse<T> implements Serializable {
     private Integer errCode;
@@ -36,6 +36,4 @@ public class GlobalResponse<T> implements Serializable {
         response.setData(null);
         return response;
     }
-
-
 }
