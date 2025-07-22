@@ -82,7 +82,7 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
         output: sarif-results
-        upload: failure-only
+        upload: always
 
     - name: Filter CodeQL Analysis Results
       uses: advanced-security/filter-sarif@v1
