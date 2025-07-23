@@ -27,7 +27,7 @@ public class UserController {
     @ResponseResult
     public UserProfileVO getUserProfile() {
         User user = UserInterceptor.userHolder.get();
-        if (user == null){
+        if (user == null) {
             throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
         return userService.getUserProfile(user);
