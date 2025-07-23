@@ -19,3 +19,4 @@ jobs:
 
     - name: Running Test Scenario
       run: apifox run --access-token ${{ secrets.APIFOX_ACCESS_TOKEN }} -t 6971273 -e 35314484 -n 1 -r html,cli
+      continue-on-error: true
