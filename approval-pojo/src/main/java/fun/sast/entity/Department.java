@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Department implements Serializable {
-    /** 部门id */
+    /** 学院id */
     private Integer id;
 
-    /** 部门名称 */
+    /** 学院名称 */
     private String name;
 
     private LocalDateTime createTime;
