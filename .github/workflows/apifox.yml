@@ -1,0 +1,21 @@
+name: Automated API Tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Apifox CLI
+      run: npm install -g apifox-cli
+
+    - name: Running Test Scenario
+      run: apifox run --access-token ${{ secrets.APIFOX_ACCESS_TOKEN }} -t 6971273 -e 35314484 -n 1 -r html,cli
