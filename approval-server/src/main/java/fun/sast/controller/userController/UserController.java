@@ -1,7 +1,9 @@
 package fun.sast.controller.userController;
 
+import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
+import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
@@ -25,6 +27,9 @@ public class UserController {
     @ResponseResult
     public UserProfileVO getUserProfile() {
         User user = UserInterceptor.userHolder.get();
+        if (user == null){
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
+        }
         return userService.getUserProfile(user);
     }
 }
