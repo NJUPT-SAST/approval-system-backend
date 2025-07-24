@@ -1,7 +1,12 @@
 package fun.sast.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
+import fun.sast.Exception.BaseException;
+import fun.sast.entity.Competition;
 import fun.sast.entity.Department;
 import fun.sast.entity.User;
+import fun.sast.enums.ErrorEnum;
+import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.DepartmentMapper;
 import fun.sast.mapper.UserMapper;
 import fun.sast.service.UserService;
@@ -15,6 +20,8 @@ public class UserServiceImpl implements UserService {
     @Autowired private UserMapper userMapper;
 
     @Autowired private DepartmentMapper departmentMapper;
+
+    @Autowired private CompetitionMapper competitionMapper;
 
     /**
      * 验证用户信息
@@ -51,5 +58,24 @@ public class UserServiceImpl implements UserService {
             userProfileVO.setDepartmentName(department.getName());
         }
         return userProfileVO;
+    }
+
+    /**
+     * 获取需要提交的资料表单
+     *
+     * @param comId 比赛id
+     * @return 资料表单
+     */
+    @Override
+    public JSONObject getComSchemaTemplate(String comId) {
+        Competition competition = competitionMapper.selectById(comId);
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+        }
+        JSONObject table = competition.getTable();
+        if (table == null) {
+            throw new BaseException(ErrorEnum.SCHEMA_ERROR);
+        }
+        return table;
     }
 }

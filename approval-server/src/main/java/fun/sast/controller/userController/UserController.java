@@ -1,5 +1,6 @@
 package fun.sast.controller.userController;
 
+import com.alibaba.fastjson2.JSONObject;
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
@@ -9,6 +10,7 @@ import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +33,16 @@ public class UserController {
             throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
         return userService.getUserProfile(user);
+    }
+
+    /**
+     * 获取公司模板
+     *
+     * @param comId 比赛id
+     * @return 比赛表单
+     */
+    @GetMapping("/com/schema/{comId}")
+    public JSONObject getComSchemaTemplate(@PathVariable String comId) {
+        return userService.getComSchemaTemplate(comId);
     }
 }
