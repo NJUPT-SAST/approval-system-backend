@@ -2,17 +2,19 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.dto.UserLoginDTO;
+import fun.sast.entity.VerifyCode;
+import fun.sast.response.GlobalResponse;
+import fun.sast.service.LoginService;
 import fun.sast.vo.UserLoginVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class LoginController {
 
     //    @Autowired
-    //    private UserService userService;
+    // private UserService userService;
+    @Autowired private LoginService loginService;
 
     /**
      * 登录
@@ -38,5 +40,12 @@ public class LoginController {
         //                .token(token)
         //                .build();
         return new UserLoginVO();
+    }
+
+    @GetMapping("/getValidateCode")
+    public GlobalResponse getValidateCode() {
+        VerifyCode verifyCode = loginService.getVerifyCode();
+        System.out.println(verifyCode);
+        return GlobalResponse.success(verifyCode.getImage() + verifyCode.getText());
     }
 }
