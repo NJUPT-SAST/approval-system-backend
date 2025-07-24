@@ -1,5 +1,8 @@
 package fun.sast.entity;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -55,9 +58,9 @@ public class Competition implements Serializable {
     /** 活动提交结束时间 */
     private String submitEndTime;
 
-    /** 表单 schema。我不知道是啥 */
-    // TODO???
-    private Object table;
+    /** 表单 schema */
+    @TableField(typeHandler = Fastjson2TypeHandler.class)
+    private JSONObject table;
 
     /** 0 团队，1 个人 */
     private Integer type;
