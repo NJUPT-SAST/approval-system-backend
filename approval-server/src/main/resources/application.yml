@@ -8,9 +8,10 @@ spring:
     username: sast
     password: sast_forever
 
- # redis:
-   # host: 127.0.0.1
-   # port: 6379
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
 
 
