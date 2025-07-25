@@ -23,7 +23,6 @@ public class LoginServiceImpl implements LoginService {
         String verifyCodeKey = UUID.randomUUID().toString();
         // 验证码图片base64
         VerifyCode verifyCode = new VerifyCode(verifyCodeKey, captcha.toBase64(), verifyCodeText);
-
         // 将验证码文本存入Redis，过期时间60s
         redisUtil.set(verifyCodeKey, verifyCodeText, 60);
         System.out.println(redisUtil.get(verifyCodeKey));

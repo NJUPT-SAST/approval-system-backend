@@ -2,6 +2,7 @@ package fun.sast.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,4 +37,7 @@ public class User implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    // 密码加盐
+    private String salt = UUID.randomUUID().toString().replaceAll("-", "");
 }

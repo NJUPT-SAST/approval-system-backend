@@ -2,11 +2,18 @@ jwt:
   secret: LRXHV49MAFSAXB79WJV3IIQR  # JWT密钥
   expiration: 864000000             # JWT过期时间（毫秒）
 
+#spring:
+ # datasource:
+  #  url: jdbc:mysql://47.97.252.72:3307/review?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Hongkong&allowPublicKeyRetrieval=true
+   # username: sast
+    #password: sast_forever
+
 spring:
   datasource:
-    url: jdbc:mysql://47.97.252.72:3307/review?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=Hongkong&allowPublicKeyRetrieval=true
-    username: sast
-    password: sast_forever
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/review
+    username: root
+    password: 111111
 
   data:
     redis:
