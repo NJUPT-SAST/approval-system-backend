@@ -1,11 +1,18 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
+import fun.sast.dto.RegisterUserDTO;
 import fun.sast.dto.UserLoginDTO;
+import fun.sast.entity.Token;
 import fun.sast.entity.VerifyCode;
+import fun.sast.enums.ErrorEnum;
 import fun.sast.response.GlobalResponse;
 import fun.sast.service.LoginService;
-import fun.sast.vo.UserLoginVO;
+import fun.sast.service.UserService;
+import fun.sast.utils.RedisUtil;
+import java.util.Optional;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     //    @Autowired
-    // private UserService userService;
+    // private UserService;
     @Autowired private LoginService loginService;
+    @Autowired private UserService userService;
+    @Autowired private RedisUtil redisUtil;
 
     /**
      * 登录
@@ -25,23 +34,29 @@ public class LoginController {
      */
     @PostMapping("/login")
     @ResponseResult
-    public UserLoginVO login(
-            @RequestBody UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
+    public GlobalResponse login(UserLoginDTO userLoginDTO, @RequestHeader String captcha)
+            throws BadRequestException {
+        // 验证验证码
+        String currentCode = (String) redisUtil.get(captcha);
+        if (currentCode == null) {
+            throw new BaseException(ErrorEnum.INVALID_CAPTCHA);
+        } else if (!currentCode.equals(userLoginDTO.getValidateCode())) {
+            throw new BaseException(ErrorEnum.INCORRECT_CAPTCHA);
+        }
+        // 删除redis中的验证码
+        redisUtil.delete(captcha);
+        if ("".equals(userLoginDTO.getCode()) || "".equals(userLoginDTO.getValidateCode())) {
+            throw new BaseException(ErrorEnum.USERNAME_OR_PASSWORD_EMPTY);
+        }
+        // 登录逻辑
+        Token token = new Token();
+        token.setToken(userService.login(userLoginDTO));
+        return Optional.ofNullable(userService.login(userLoginDTO))
+                .map(user -> GlobalResponse.success(token))
+                .orElse(GlobalResponse.failure(ErrorEnum.LOGIN_ERROR));
 
-        //        User user = userService.authenticate(userLoginDTO.getCode(),
-        // userLoginDTO.getPassword());
-        //        if(user == null){
-        //            throw new BaseException(ErrorEnum.Login_ERROR);
-        //        }
-        //        String token = JwtUtil.generateToken(user.getCode());
-        //
-        //        return UserLoginVO.builder()
-        //                .name(user.getName())
-        //                .depId(user.getDepId())
-        //                .role(user.getRole())
-        //                .token(token)
-        //                .build();
-        return new UserLoginVO();
+        // 从数据库查询
+
     }
 
     @GetMapping("/getValidateCode")
@@ -54,5 +69,11 @@ public class LoginController {
 
         // 3. 构建完整响应实体（包含头部和响应体）
         return ResponseEntity.ok().header("CAPTCHA", verifyCode.getKey()).body(responseBody);
+    }
+
+    @PostMapping("/register")
+    public GlobalResponse register(RegisterUserDTO registerUserDTO) {
+        userService.register(registerUserDTO);
+        return GlobalResponse.success();
     }
 }
