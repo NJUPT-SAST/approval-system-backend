@@ -73,9 +73,9 @@ public class UserServiceImpl implements UserService {
                 DigestUtils.md5DigestAsHex((dto.getPassword() + user.getSalt()).getBytes());
         // 验证密码
         if (!md5Password.equals(user.getPassword())) {
-            return null;
-            // 生成并返回 JWT Token
+            throw new BaseException(ErrorEnum.LOGIN_ERROR);
         }
+        // 生成并返回 JWT Token
         String jwt = jwtUtil.createJwt(user.getCode());
         System.out.println(jwtUtil.resolveJwt(jwt));
         return jwtUtil.createJwt(user.getCode());
