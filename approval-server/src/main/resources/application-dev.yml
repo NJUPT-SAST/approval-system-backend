@@ -1,0 +1,12 @@
+jwt:
+  secret: jwt  #JWT密钥
+  expiration: 864000000             #JWT过期时间（1000天）
+
+spring:
+   datasource:
+      url:
+      username:
+      password:
+#   redis:
+#     host: 127.0.0.1
+#     port: 6379
