@@ -18,11 +18,6 @@ public class CommonController {
      * @param id 比赛id
      * @return 比赛通知
      */
-    //    @GetMapping("/notice/list")
-    //    public List<Map<String, Object>> getComNotice(@RequestParam Long id) {
-    //        return new ArrayList<>();
-    //    }
-
     @GetMapping("/notice/list")
     public GlobalResponse<List<Notice>> getComNotice(@RequestParam Long id) {
         System.out.println("Received competition ID: " + id);
