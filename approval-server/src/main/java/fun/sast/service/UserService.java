@@ -1,5 +1,6 @@
 package fun.sast.service;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import fun.sast.entity.User;
 import fun.sast.vo.UserProfileVO;
@@ -21,9 +22,16 @@ public interface UserService {
     UserProfileVO getUserProfile(User user);
 
     /**
-     * 获取需要提交的资料表单
+     * 获取需要提交的比赛表单
      *
      * @param comId 比赛id
      */
-    JSONObject getComSchemaTemplate(String comId);
+    JSONObject getComSchemaTemplate(Long comId);
+
+    /**
+     * 获取已提交的比赛表单
+     *
+     * @param comId 比赛id
+     */
+    JSONArray getSubmittedComSchemaTemplate(User user, Long comId);
 }

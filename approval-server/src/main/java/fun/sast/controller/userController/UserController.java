@@ -1,5 +1,6 @@
 package fun.sast.controller.userController;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
@@ -36,13 +37,25 @@ public class UserController {
     }
 
     /**
-     * 获取公司模板
+     * 获取需要提交的比赛表单
      *
      * @param comId 比赛id
      * @return 比赛表单
      */
     @GetMapping("/com/schema/{comId}")
-    public JSONObject getComSchemaTemplate(@PathVariable String comId) {
+    public JSONObject getComSchemaTemplate(@PathVariable Long comId) {
         return userService.getComSchemaTemplate(comId);
+    }
+
+    /**
+     * 获取已提交的比赛表单
+     *
+     * @param comId 比赛id, 用户
+     * @return 提交表单
+     */
+    @GetMapping("/com/schema/{comId}")
+    public JSONArray getSubmittedComSchemaTemplate(@PathVariable Long comId) {
+        User user = UserInterceptor.userHolder.get();
+        return userService.getSubmittedComSchemaTemplate(user, comId);
     }
 }
