@@ -32,14 +32,4 @@ public class CommonController {
         // 使用单元素列表
         return GlobalResponse.success(Collections.singletonList(notice));
     }
-
-    /**
-     * 获取下载凭证
-     *
-     * @param url 证书url
-     */
-    @GetMapping("/file/downloadCertificate")
-    public Map<String, String> downloadCertificate(@RequestParam String url) {
-        return new HashMap<>();
-    }
 }
