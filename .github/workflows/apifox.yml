@@ -67,11 +67,14 @@ jobs:
             port: 6379
         EOF
 
-    - name: Build and start Spring Boot application
+    - name: Build entire project
       run: |
-        cd approval-server
-        mvn clean compile
-        nohup mvn spring-boot:run &
+        mvn clean install -DskipTests
+        echo "Project built successfully"
+
+    - name: Start Spring Boot application
+      run: |
+        cd approval-server && nohup mvn spring-boot:run > app.log 2>&1 &
         sleep 30
         echo "Application started"
 
