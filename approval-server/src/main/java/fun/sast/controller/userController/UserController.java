@@ -9,7 +9,7 @@ import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Autowired private UserService userService;
+    private final UserService userService;
 
     /**
      * 获取用户信息
