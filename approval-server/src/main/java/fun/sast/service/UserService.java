@@ -18,6 +18,7 @@ public interface UserService {
      * 获取用户信息
      *
      * @param user 用户
+     * @return 用户信息
      */
     UserProfileVO getUserProfile(User user);
 
@@ -25,6 +26,7 @@ public interface UserService {
      * 获取需要提交的比赛表单
      *
      * @param comId 比赛id
+     * @return 需要提交的比赛表单
      */
     JSONObject getComSchemaTemplate(Long comId);
 
@@ -32,6 +34,7 @@ public interface UserService {
      * 获取已提交的比赛表单
      *
      * @param comId 比赛id
+     * @return 已提交表单
      */
     JSONArray getSubmittedComSchemaTemplate(User user, Long comId);
 }

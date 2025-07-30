@@ -26,13 +26,14 @@ public class UserController {
      * 获取用户信息
      *
      * @return 用户信息
+     * @throws BaseException 用户不存在
      */
     @GetMapping("/profile")
     @ResponseResult
     public UserProfileVO getUserProfile() {
         User user = UserInterceptor.userHolder.get();
         if (user == null) {
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
+            throw new BaseException(ErrorEnum.USER_NOT_EXIST);
         }
         return userService.getUserProfile(user);
     }
@@ -51,7 +52,7 @@ public class UserController {
     /**
      * 获取已提交的比赛表单
      *
-     * @param comId 比赛id, 用户
+     * @param comId 比赛id
      * @return 提交表单
      */
     @GetMapping("/com/schema/{comId}")
