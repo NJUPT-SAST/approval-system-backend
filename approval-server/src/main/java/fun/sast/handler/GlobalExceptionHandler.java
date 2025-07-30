@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    /** 处理自定义异常 */
     @ExceptionHandler(BaseException.class)
     public GlobalResponse<ErrorEnum> exceptionHandler(BaseException ex) {
         log.error("异常信息：{}", ex.getMessage());
         return GlobalResponse.failure(ex.getErrorEnum());
     }
 
+    /** 处理其他异常 */
     @ExceptionHandler(Exception.class)
     public GlobalResponse<ErrorEnum> handleOtherException(Exception ex) {
         log.error("未知异常：", ex);
