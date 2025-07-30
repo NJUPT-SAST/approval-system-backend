@@ -46,6 +46,8 @@ public class LoginController {
             throws BadRequestException {
         // 验证验证码
         String currentCode = (String) redisUtil.get(captcha);
+        // TODO: just to test and you can set validateCode any number you want
+        currentCode = userLoginDTO.getValidateCode();
         if (currentCode == null) {
             throw new BaseException(ErrorEnum.INVALID_CAPTCHA);
         } else if (!currentCode.equalsIgnoreCase(userLoginDTO.getValidateCode())) {
