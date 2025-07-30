@@ -9,12 +9,20 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Department implements Serializable {
-    /** 学院id */
-    private Integer id;
+public class Work implements Serializable {
+    private Long id;
 
-    /** 学院名称 */
-    private String name;
+    /** 比赛ID */
+    private Long comId;
+
+    /** 队长学号 */
+    private String userCode;
+
+    /** 作品名称 */
+    private String workName;
+
+    /** 由XRender渲染的表单数据 */
+    private String schemaContent;
 
     private LocalDateTime createTime;
 
