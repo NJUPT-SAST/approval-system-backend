@@ -1,3 +1,7 @@
 package fun.sast.service;
 
-public interface FileService {}
+import fun.sast.entity.User;
+
+public interface FileService {
+    String getDownloadCertificate(User user, String url);
+}
