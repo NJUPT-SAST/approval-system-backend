@@ -36,4 +36,7 @@ public class User implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    // 密码加盐
+    private String salt;
 }
