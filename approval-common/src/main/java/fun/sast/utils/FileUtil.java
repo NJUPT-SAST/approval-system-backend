@@ -4,12 +4,13 @@ import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+@RequiredArgsConstructor
 @Component
 public class FileUtil {
-    @Autowired private OSSUtil ossUtil;
+    private final OSSUtil ossUtil;
     public static final int PUBLIC_FOLDER = 1;
 
     /**
@@ -30,8 +31,8 @@ public class FileUtil {
     }
 
     /**
-     * @param url
-     * @return 完整url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @return 带有凭证url
      */
 
     // 获取下载凭证,根据文件的url添加key等

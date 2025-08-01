@@ -1,8 +1,8 @@
 package fun.sast.service;
 
-import fun.sast.dto.RegisterUserDTO;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
+import fun.sast.vo.UserLoginVO;
 
 public interface UserService {
     /**
@@ -14,8 +14,8 @@ public interface UserService {
     User authenticate(String code, String password);
 
     // 注册
-    void register(RegisterUserDTO registerUserDTO);
+    // void register(UserRegisterDTO userRegisterDTO);
 
     // 登录
-    String login(UserLoginDTO loginUserDTO);
+    UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
 }

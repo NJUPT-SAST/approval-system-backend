@@ -12,3 +12,5 @@ VALUES
 -- insert initial file into the database
 INSERT IGNORE INTO `file` (`id`, `com_id`, `user_code`, `input`, `url`)
 VALUES (1, 1, '1', '1', 'list/list2/text2.txt');
+INSERT IGNORE INTO `file` (`id`, `com_id`, `user_code`, `input`, `url`)
+VALUES (2, 1, '1', '1', '文本.txt');

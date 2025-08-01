@@ -3,7 +3,7 @@ package fun.sast.dto;
 import lombok.Data;
 
 @Data
-public class RegisterUserDTO {
+public class UserRegisterDTO {
     private String code;
     private String password;
 }

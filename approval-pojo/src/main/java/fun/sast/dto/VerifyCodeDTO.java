@@ -1,4 +1,4 @@
-package fun.sast.entity;
+package fun.sast.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VerifyCode implements Serializable {
+public class VerifyCodeDTO implements Serializable {
     /** 验证码Key */
     private String key;
 

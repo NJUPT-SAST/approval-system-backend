@@ -1,5 +1,6 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
 import fun.sast.response.GlobalResponse;
 import fun.sast.service.FileService;
@@ -7,45 +8,38 @@ import fun.sast.service.UserService;
 import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class FileController {
 
-    @Autowired private OSSUtil ossUtil;
-    @Autowired private UserService userService;
-    @Autowired private FileService fileService;
-
-    @PostMapping("/file/delete")
-    public String delete(@RequestParam String url) {
-        log.info("收到删除请求，文件URL: {}", url);
-        String objectName = fun.sast.utils.FileUtil.getObjectNameOSS(url);
-        log.info("对象路径: {}", objectName);
-        ossUtil.deleteFileOSS(url);
-        return "删除请求已发送，文件路径: " + objectName;
-    }
+    private final OSSUtil ossUtil;
+    private final UserService userService;
+    private final FileService fileService;
 
     /**
      * 获取下载凭证
      *
-     * @param url URL编码后的文件地址
+     * @param url 文件地址例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      */
+    @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
     public GlobalResponse downloadCertificate(@RequestParam String url) {
-        // User user = UserInterceptor.userHolder.get();
-        // return new HashMap<>(){{
-        // put("url",fileService.getDownloadCertificate(user, url));}};\
-
-        // 根据url拼接，传入user鉴权
         User user = new User();
         String certificateUrl = fileService.getDownloadCertificate(user, url);
 
         return GlobalResponse.success(certificateUrl);
     }
 
+    /**
+     * @param url 原始url
+     * @param response 重定向至下载
+     * @throws IOException
+     */
     @GetMapping("/com/file/download")
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {

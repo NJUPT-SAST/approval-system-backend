@@ -9,16 +9,24 @@ import fun.sast.enums.UserRoleEnum;
 import fun.sast.mapper.FileMapper;
 import fun.sast.service.FileService;
 import fun.sast.utils.FileUtil;
+import fun.sast.utils.OSSUtil;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
-    @Autowired private FileMapper fileMapper;
-    @Autowired private FileUtil fileUtil;
+    private final FileMapper fileMapper;
+    private final FileUtil fileUtil;
+    private final OSSUtil ossUtil;
 
+    /**
+     * @param user 发送请求的用户角色，用于权限判断
+     * @param url 文件存储的url，如http://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/文本.txt
+     * @return 可以直接用于下载的凭证
+     */
     @Override
     public String getDownloadCertificate(User user, String url) {
         System.out.println("原始URL：" + url);

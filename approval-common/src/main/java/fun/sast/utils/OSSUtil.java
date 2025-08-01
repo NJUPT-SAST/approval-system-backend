@@ -73,35 +73,9 @@ public class OSSUtil {
     }
 
     /**
-     * 删除OSS上的文件
+     * 获取下载凭证
      *
-     * @param url 文件的完整URL
-     */
-    public void deleteFileOSS(String url) {
-        log.info("删除OSS中的文件，文件地址：{}", url);
-
-        try {
-            // 解析URL
-            URL parsedUrl = new URL(url);
-
-            String key = parsedUrl.getPath();
-            if (key.startsWith("/")) {
-                key = key.substring(1); // 去掉前导斜杠
-            }
-
-            log.info("解析出的OSS对象Key: {}", key);
-
-            ossClient.deleteObject(bucketName, key);
-            log.info("删除成功！");
-        } catch (Exception e) {
-            log.error("删除OSS文件失败", e);
-        }
-    }
-
-    /**
-     * 获取下载凭证（仅针对私有的Bucket）
-     *
-     * @param url 文件url
+     * @param url 文件url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {

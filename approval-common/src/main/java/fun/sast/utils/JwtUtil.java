@@ -36,6 +36,10 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * @param code 用户账号
+     * @return 含有code的token
+     */
     public String createJwt(String code) {
         Date now = new Date();
         Date expDate = new Date(now.getTime() + expiration);
@@ -47,6 +51,10 @@ public class JwtUtil {
                 .sign(Algorithm.HMAC256(secret)); // 使用密钥签名
     }
 
+    /**
+     * @param token
+     * @return 提取code字段
+     */
     public String resolveJwt(String token) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();

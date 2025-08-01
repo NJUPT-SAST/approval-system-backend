@@ -3,12 +3,14 @@ package fun.sast.controller.publicController;
 import fun.sast.entity.Notice;
 import fun.sast.response.GlobalResponse;
 import java.util.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/com")
 public class CommonController {
 
