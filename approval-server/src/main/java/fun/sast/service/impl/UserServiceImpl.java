@@ -18,6 +18,8 @@ import fun.sast.vo.UserProfileVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -104,5 +106,19 @@ public class UserServiceImpl implements UserService {
             throw new BaseException(ErrorEnum.HAVE_NOT_UPLOAD_WORK);
         }
         return JSONArray.parseArray(work.getSchemaContent());
+    }
+
+    /**
+     * 获取上传凭证
+     *
+     * @param user 用户
+     * @param id 文件id
+     * @param input 文件输入
+     * @param filename 文件名
+     * @return 上传凭证
+     */
+    @Override
+    public Map<String, String> getUploadCertificate(User user, Long id, String input, String filename) {
+        return Map.of();
     }
 }

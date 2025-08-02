@@ -10,10 +10,9 @@ import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -55,9 +54,37 @@ public class UserController {
      * @param comId 比赛id
      * @return 提交表单
      */
-    @GetMapping("/com/schema/{comId}")
+    @GetMapping("/com/getSchema/{comId}")
     public JSONArray getSubmittedComSchemaTemplate(@PathVariable Long comId) {
         User user = UserInterceptor.userHolder.get();
         return userService.getSubmittedComSchemaTemplate(user, comId);
+    }
+
+    /**
+     * 提交作品资料表单
+     *
+     * @param comId 比赛id
+     * @param jsonObject 表单
+     */
+    @PostMapping("/com/uploadSchema/{comId}")
+    public void uploadComSchema(@PathVariable Long comId, @RequestBody JSONObject jsonObject) {
+        User user = UserInterceptor.userHolder.get();
+//        userService.uploadComSchema(user, comId, jsonObject);
+    }
+
+    /**
+     * 获取上传作品凭证
+     *
+     * @param id 作品id
+     * @param input 输入框内容
+     * @param filename 文件名
+     * @return 上传作品凭证
+     */
+    @GetMapping("/com/uploadCertificate")
+    public Map<String, String> getUploadCertificate(@RequestParam Long id,
+                                                    @RequestParam String input,
+                                                    @RequestParam String filename) {
+        User user = UserInterceptor.userHolder.get();
+        return userService.getUploadCertificate(user, id, input, filename);
     }
 }

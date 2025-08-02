@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import fun.sast.entity.User;
 import fun.sast.vo.UserProfileVO;
 
+import java.util.Map;
+
 public interface UserService {
     /**
      * 验证用户
@@ -37,4 +39,15 @@ public interface UserService {
      * @return 已提交表单
      */
     JSONArray getSubmittedComSchemaTemplate(User user, Long comId);
+
+    /**
+     * 获取上传作品凭证
+     *
+     * @param user 用户
+     * @param id 比赛id
+     * @param input 文件输入流
+     * @param filename 文件名
+     * return 上传凭证
+     */
+    Map<String, String> getUploadCertificate(User user, Long id, String input, String filename);
 }
