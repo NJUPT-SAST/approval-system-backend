@@ -23,12 +23,14 @@ public class FileServiceImpl implements FileService {
     private final OSSUtil ossUtil;
 
     /**
-     * @param user 发送请求的用户角色，用于权限判断
      * @param url 文件存储的url，如http://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/文本.txt
      * @return 可以直接用于下载的凭证
      */
     @Override
-    public String getDownloadCertificate(User user, String url) {
+    public String getDownloadCertificate(String url) {
+        // 获取user身份信息,暂未完成
+        User user = new User();
+
         System.out.println("原始URL：" + url);
 
         // 解码
@@ -52,7 +54,8 @@ public class FileServiceImpl implements FileService {
 
         // user身份判断
         user.setCode("111");
-        user.setRole(1);
+        user.setRole(3);
+        System.out.println(user);
 
         // 权限控制
         if (user.getRole().equals(UserRoleEnum.STUDENT.getRole())

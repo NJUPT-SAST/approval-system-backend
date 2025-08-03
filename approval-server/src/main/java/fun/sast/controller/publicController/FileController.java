@@ -30,7 +30,7 @@ public class FileController {
     @GetMapping("/com/file/downloadCertificate")
     public GlobalResponse downloadCertificate(@RequestParam String url) {
         User user = new User();
-        String certificateUrl = fileService.getDownloadCertificate(user, url);
+        String certificateUrl = fileService.getDownloadCertificate(url);
 
         return GlobalResponse.success(certificateUrl);
     }

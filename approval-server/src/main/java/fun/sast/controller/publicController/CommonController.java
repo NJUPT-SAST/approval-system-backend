@@ -1,6 +1,8 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.Notice;
+import fun.sast.entity.User;
 import fun.sast.response.GlobalResponse;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +22,12 @@ public class CommonController {
      * @param id 比赛id
      * @return 比赛通知
      */
+    @ResponseResult
     @GetMapping("/notice/list")
-    public GlobalResponse<List<Notice>> getComNotice(@RequestParam Long id) {
-        System.out.println("Received competition ID: " + id);
+    public GlobalResponse noticeList(@RequestParam String id) {
+        User user = new User();
 
-        Notice notice = new Notice();
-        notice.setId(1);
-        notice.setTitle("比赛公告");
-        notice.setContent("比赛即将开始");
-        notice.setTime("2023-06-20 10:00:00");
-        notice.setRole(1);
-
-        // 使用单元素列表
-        return GlobalResponse.success(Collections.singletonList(notice));
+        List<Notice> noticeList = new ArrayList<>();
+        return GlobalResponse.success(noticeList);
     }
 }
