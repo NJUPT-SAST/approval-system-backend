@@ -1,3 +1,8 @@
 package fun.sast.service;
 
-public interface NoticeService {}
+import fun.sast.entity.Notice;
+import java.util.List;
+
+public interface NoticeService {
+    List<Notice> getNotices(String comId);
+}
