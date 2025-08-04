@@ -29,14 +29,4 @@ public class FileUtil {
         }
         return url.getPath().substring(1);
     }
-
-    /**
-     * @param url url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
-     * @return 带有凭证url
-     */
-
-    // 获取下载凭证,根据文件的url添加key等
-    public String getDownloadCertificate(String url) {
-        return ossUtil.getDownloadCertificate(url);
-    }
 }

@@ -38,6 +38,10 @@ public class UserServiceImpl implements UserService {
         return new User();
     }
 
+    private boolean isBlank(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
     /**
      * @param userLoginDTO 验证码，账号，密码
      * @param captcha 存在header的验证码id
@@ -51,12 +55,14 @@ public class UserServiceImpl implements UserService {
         // TODO:现在任何验证码都是对的，记得删除
         currentCode = userLoginDTO.getValidateCode();
         if (currentCode == null) {
-            throw new BaseException(ErrorEnum.INVALID_CAPTCHA);
+            throw new BaseException(ErrorEnum.CAPTCHA_NOT_EXIST);
         } else if (!currentCode.equalsIgnoreCase(userLoginDTO.getValidateCode())) {
             throw new BaseException(ErrorEnum.INCORRECT_CAPTCHA);
         }
         redisUtil.delete(captcha);
-        if ("".equals(userLoginDTO.getCode()) || "".equals(userLoginDTO.getValidateCode())) {
+
+        // 空密码
+        if (isBlank(userLoginDTO.getCode()) || isBlank(userLoginDTO.getPassword())) {
             throw new BaseException(ErrorEnum.USERNAME_OR_PASSWORD_EMPTY);
         }
 
@@ -64,7 +70,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectOne(Wrappers.<User>query().eq("code", userLoginDTO.getCode()));
 
         if (user == null) {
-            throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+            throw new BaseException(ErrorEnum.LOGIN_ERROR);
         }
         // 密码校验
         String md5Password =

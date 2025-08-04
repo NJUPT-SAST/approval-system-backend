@@ -44,7 +44,8 @@ public enum ErrorEnum {
     NOTICE_NOT_EXIST(9002, "公告不存在"),
     IMPORT_ERROR(10000, "导入失败"),
     INVALID_CAPTCHA(11001, "验证码过期"),
-    INCORRECT_CAPTCHA(11002, "验证码错误");
+    INCORRECT_CAPTCHA(11002, "验证码错误"),
+    CAPTCHA_NOT_EXIST(11003, "请输入验证码");
 
     private final Integer errCode;
     private final String errMsg;

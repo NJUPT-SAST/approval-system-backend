@@ -22,7 +22,7 @@ public class LoginController {
     /**
      * 登录
      *
-     * @param userLoginDTO
+     * @param userLoginDTO 传入的账号密码验证码
      * @return UserLoginVO
      */
     @ResponseResult
@@ -39,19 +39,13 @@ public class LoginController {
     @ResponseResult
     @GetMapping("/getValidateCode")
     public ResponseEntity<GlobalResponse<String>> getValidateCode() {
-        // 1. 获取验证码信息
+        // 获取验证码信息
         VerifyCodeDTO verifyCodeDTO = loginService.getVerifyCode();
 
-        // 2. 创建响应体（包含Base64图片）
+        // 创建响应体（包含Base64图片）
         GlobalResponse<String> responseBody = GlobalResponse.success(verifyCodeDTO.getImage());
 
-        // 3. 构建完整响应实体（包含头部和响应体）
+        // 构建完整响应实体（包含头部和响应体）
         return ResponseEntity.ok().header("CAPTCHA", verifyCodeDTO.getKey()).body(responseBody);
     }
-
-    //    @PostMapping("/register")
-    //    public GlobalResponse register(UserRegisterDTO userRegisterDTO) {
-    //        userService.register(userRegisterDTO);
-    //        return GlobalResponse.success();
-    //    }
 }

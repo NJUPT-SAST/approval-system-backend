@@ -23,7 +23,7 @@ public class FileServiceImpl implements FileService {
     private final OSSUtil ossUtil;
 
     /**
-     * @param url 文件存储的url，如http://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/文本.txt
+     * @param url 文件存储的url，如http://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/文本.txt,在这里实现身份判断
      * @return 可以直接用于下载的凭证
      */
     @Override
@@ -63,6 +63,6 @@ public class FileServiceImpl implements FileService {
             throw new BaseException(ErrorEnum.FILE_NOT_EXIST);
         }
 
-        return fileUtil.getDownloadCertificate(url);
+        return ossUtil.getDownloadCertificate(url);
     }
 }

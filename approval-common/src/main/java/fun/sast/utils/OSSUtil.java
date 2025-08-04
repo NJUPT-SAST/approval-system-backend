@@ -13,6 +13,7 @@ import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Component
@@ -38,7 +39,7 @@ public class OSSUtil {
         CredentialsProvider credentialsProvider =
                 new DefaultCredentialProvider(accessKeyId, accessKeySecret);
 
-        // 创建客户端配置（可选）
+        // 创建客户端配置
         ClientBuilderConfiguration config = new ClientBuilderConfiguration();
 
         // 创建OSS客户端
@@ -49,11 +50,8 @@ public class OSSUtil {
         this.endpoint = "https://" + bucketName + "." + endpoint;
         this.uploadExpiredTime = uploadExpiredTime;
         this.downloadExpiredTime = downloadExpiredTime;
-    }
 
-    private String getBaseFolderName(int number) {
-        if (FileUtil.PUBLIC_FOLDER == number) return publicFolder;
-        else return privateFolder;
+        System.out.println(endpoint);
     }
 
     /**
@@ -94,13 +92,37 @@ public class OSSUtil {
         request.setExpiration(expiration);
         request.setMethod(HttpMethod.GET);
 
+        System.out.println(bucketName);
+
         return ossClient.generatePresignedUrl(request).toString();
     }
 
-    // 关闭OSS客户端的方法
-    public void shutdown() {
-        if (ossClient != null) {
-            ossClient.shutdown();
+    @Value("${file.OSS.bucket-url-prefix}")
+    private String bucketUrlPrefix;
+
+    /**
+     * 判断是否为合法 OSS 文件地址（是否以配置的前缀开头）
+     *
+     * @param url 待校验的 OSS URL
+     * @return true 合法，false 非法
+     */
+    public boolean isLegalOSSUrl(String url) {
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
+            return false;
         }
+        return url.startsWith(bucketUrlPrefix);
+    }
+
+    /**
+     * 去除 OSS URL 的前缀，获得相对路径
+     *
+     * @param url 完整 OSS URL
+     * @return 相对路径
+     */
+    public String extractObjectKey(String url) {
+        if (isLegalOSSUrl(url)) {
+            return url.substring(bucketUrlPrefix.length());
+        }
+        return null;
     }
 }

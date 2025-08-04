@@ -43,14 +43,14 @@ public class FileController {
     @GetMapping("/com/file/download")
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
-        // 判断是否是 OSS 文件地址
-        if (!ossUtil.isOSSBucketURL(url)) {
+        // 判断是否是 自己的OSS 文件地址
+        if (!ossUtil.isLegalOSSUrl(url)) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Invalid OSS URL.");
             return;
         }
         // 获取带签名的下载链接
-        String signedUrl = ossUtil.getDownloadCertificate(url);
+        String signedUrl = fileService.getDownloadCertificate(url);
         System.out.println(signedUrl);
         // 重定向到签名地址进行下载
         response.sendRedirect(signedUrl);

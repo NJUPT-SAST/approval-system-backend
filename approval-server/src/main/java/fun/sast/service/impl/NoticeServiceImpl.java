@@ -22,6 +22,10 @@ public class NoticeServiceImpl implements NoticeService {
     // 管理员显示所有公告（未推送）
     // 非管理员显示已经推送的
 
+    /**
+     * @param comId 比赛id
+     * @return 根据身份返回公告
+     */
     @Override
     public List<Notice> getNotices(String comId) {
         // 鉴权
