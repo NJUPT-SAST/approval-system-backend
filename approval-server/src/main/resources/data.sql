@@ -1,7 +1,7 @@
 -- insert initial user into the database
 SET @admin_salt = REPLACE(UUID(), '-', '');
-INSERT IGNORE INTO `user` (`dep_id`, `code`, `password`, `name`, `role`, `salt`, `create_time`, `update_time`, `create_user`, `update_user`)
-VALUES ('0', 'admin', MD5(CONCAT('admin', @admin_salt)), 'admin', 3, @admin_salt, NOW(), NOW(), 1, 1);
+INSERT IGNORE INTO `user` (`dep_id`, `code`, `password`, `name`, `role`, `salt`, `create_time`, `update_time`, `create_user`, `update_user`, `major`, `contact`)
+VALUES ('0', 'admin', MD5(CONCAT('admin', @admin_salt)), 'admin', 3, @admin_salt, NOW(), NOW(), 1, 1,"txgc","1112232");
 
 -- insert initial notices into the database
 INSERT IGNORE INTO `notice` (`com_id`, `content`, `role`, `time`, `title`, `create_time`, `update_time`, `create_user`, `update_user`)

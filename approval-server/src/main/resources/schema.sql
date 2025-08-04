@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `create_user` bigint(20) DEFAULT NULL COMMENT '创建用户ID',
   `update_user` bigint(20) DEFAULT NULL COMMENT '更新用户ID',
   `salt` varchar(50) NOT NULL COMMENT '密码加盐值',
+  `major` varchar(50) NOT NULL COMMENT '专业',
+  `contact` varchar(50) NOT NULL COMMENT '手机号',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
