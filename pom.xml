@@ -35,6 +35,8 @@
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <jackson-annotations.version>2.19.1</jackson-annotations.version>
         <mybatis-plus-annotation.version>3.5.12</mybatis-plus-annotation.version>
+        <fastjson2.version>2.0.35</fastjson2.version>
+        <mybatis-plus-extension.version>3.5.12</mybatis-plus-extension.version>
 
     </properties>
 
@@ -115,6 +117,17 @@
                 <artifactId>mybatis-plus-annotation</artifactId>
                 <version>${mybatis-plus-annotation.version}</version>
                 <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-extension</artifactId>
+                <version>${mybatis-plus-extension.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
