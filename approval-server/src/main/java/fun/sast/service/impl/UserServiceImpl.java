@@ -12,12 +12,9 @@ import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.UserMapper;
 import fun.sast.service.UserService;
 import java.util.Collections;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -84,6 +81,7 @@ public class UserServiceImpl implements UserService {
         result.put("list", Collections.emptyList());
         return result;
     }
+
     // 查询比赛详情
     @Override
     public Map<String, Object> getComInfo(Long comId) {
@@ -144,7 +142,8 @@ public class UserServiceImpl implements UserService {
 
     // 上传证书
     @Override
-    public Map<String, String> getUploadCertificate(User user, Long comId, String input, String filename) {
+    public Map<String, String> getUploadCertificate(
+            User user, Long comId, String input, String filename) {
         // 实际应用中，这里应该处理证书上传逻辑
         Map<String, String> result = new HashMap<>();
         result.put("success", "true");

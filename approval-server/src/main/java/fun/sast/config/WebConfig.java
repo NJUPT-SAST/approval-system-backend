@@ -17,5 +17,4 @@ public class WebConfig implements WebMvcConfigurer {
                 // 排除不需要拦截的请求路径
                 .excludePathPatterns("/public/**");
     }
-
 }

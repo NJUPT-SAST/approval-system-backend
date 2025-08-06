@@ -26,7 +26,9 @@ public class UserInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(
+            HttpServletRequest request, HttpServletResponse response, Object handler)
+            throws Exception {
         // 这里应该从请求中获取用户信息，例如从token中解析
         // 为了演示，这里暂时设置一个空用户
         User user = new User();
@@ -35,13 +37,10 @@ public class UserInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(
+            HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
         // 请求完成后清除用户信息，防止内存泄漏
         removeUser();
     }
-
 }
-
-
-    
-

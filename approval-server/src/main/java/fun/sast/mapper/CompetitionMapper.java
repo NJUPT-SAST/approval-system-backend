@@ -5,5 +5,4 @@ import fun.sast.entity.Competition;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CompetitionMapper extends BaseMapper<Competition> {
-}
+public interface CompetitionMapper extends BaseMapper<Competition> {}
