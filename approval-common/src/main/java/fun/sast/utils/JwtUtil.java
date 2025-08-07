@@ -68,9 +68,9 @@ public class JwtUtil {
             return code;
 
         } catch (TokenExpiredException e) {
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
+            throw new BaseException(ErrorEnum.EXPIRED_LOGIN);
         } catch (Exception e) {
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
+            throw new BaseException(ErrorEnum.TOKEN_ERROR);
         }
     }
 }

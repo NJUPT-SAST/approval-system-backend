@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import fun.sast.entity.Notice;
 import fun.sast.entity.User;
 import fun.sast.enums.UserRoleEnum;
+import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
 import java.time.LocalDateTime;
@@ -29,8 +30,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public List<Notice> getNotices(String comId) {
         // 鉴权
-        User user = new User();
-        user.setRole(UserRoleEnum.JUDGE.getRole());
+        User user = UserInterceptor.userHolder.get();
 
         List<Notice> notices =
                 noticeMapper.selectList(
@@ -38,6 +38,15 @@ public class NoticeServiceImpl implements NoticeService {
         List<Notice> results = new ArrayList<>();
 
         for (Notice notice : notices) {
+            // 未登录：只能看游客权限的，已推送的公告
+            if (user == null) {
+                if (notice.getRole().equals(UserRoleEnum.TOURIST.getRole())
+                        && notice.getTime().isBefore(LocalDateTime.now())) {
+                    results.add(notice);
+                }
+                continue;
+            }
+
             // 管理员
             if (user.getRole().equals(UserRoleEnum.ADMIN.getRole())) {
                 results.add(notice);

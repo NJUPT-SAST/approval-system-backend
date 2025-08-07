@@ -1,10 +1,8 @@
 package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
-import fun.sast.entity.User;
 import fun.sast.response.GlobalResponse;
 import fun.sast.service.FileService;
-import fun.sast.service.UserService;
 import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class FileController {
 
     private final OSSUtil ossUtil;
-    private final UserService userService;
     private final FileService fileService;
 
     /**
@@ -29,9 +26,7 @@ public class FileController {
     @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
     public GlobalResponse downloadCertificate(@RequestParam String url) {
-        User user = new User();
         String certificateUrl = fileService.getDownloadCertificate(url);
-
         return GlobalResponse.success(certificateUrl);
     }
 
