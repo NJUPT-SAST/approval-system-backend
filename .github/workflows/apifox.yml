@@ -62,9 +62,22 @@ jobs:
             init:
               mode: always
               continue-on-error: false
-          redis:
-            host: localhost
-            port: 6379
+          data:
+            redis:
+              host: localhost
+              port: 6379
+
+        file:
+          OSS:
+            endpoint: oss-cn-hangzhou.aliyuncs.com
+            accessKeyId: mock-access-key
+            accessKeySecret: mock-access-secret
+            bucketName: mock-bucket
+            publicFolder: public
+            privateFolder: private
+            uploadExpiredTime: 60
+            downloadExpiredTime: 60
+            bucket-url-prefix: https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/
         EOF
 
     - name: Build entire project
