@@ -57,7 +57,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis-plus-annotation.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

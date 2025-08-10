@@ -20,7 +20,7 @@ public class RedisUtil {
     }
 
     /**
-     * 设置缓存（有时间限制，单位为 秒）
+     * 设置缓存（有时间限制，单位为秒）
      *
      * @param key
      * @param value
