@@ -25,3 +25,5 @@ file:
     uploadExpiredTime: 60
     downloadExpiredTime: 60
     bucket-url-prefix: https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/
+server:
+  port: 9090

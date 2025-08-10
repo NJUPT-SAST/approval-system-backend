@@ -31,6 +31,8 @@ public class NoticeServiceImpl implements NoticeService {
     public List<Notice> getNotices(String comId) {
         // 鉴权
         User user = UserInterceptor.userHolder.get();
+        System.out.println(user);
+        System.out.println(user);
 
         List<Notice> notices =
                 noticeMapper.selectList(
@@ -38,9 +40,9 @@ public class NoticeServiceImpl implements NoticeService {
         List<Notice> results = new ArrayList<>();
 
         for (Notice notice : notices) {
-            // 未登录：只能看游客权限的，已推送的公告
+            // 未登录：获取学生公告
             if (user == null) {
-                if (notice.getRole().equals(UserRoleEnum.TOURIST.getRole())
+                if (notice.getRole().equals(UserRoleEnum.STUDENT.getRole())
                         && notice.getTime().isBefore(LocalDateTime.now())) {
                     results.add(notice);
                 }
@@ -51,13 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
             if (user.getRole().equals(UserRoleEnum.ADMIN.getRole())) {
                 results.add(notice);
             }
-            // 游客
-            else if (user.getRole().equals(UserRoleEnum.TOURIST.getRole())) {
-                if (notice.getRole().equals(UserRoleEnum.TOURIST.getRole())
-                        && notice.getTime().isBefore(LocalDateTime.now())) {
-                    results.add(notice);
-                }
-            }
+
             // 自己角色
             else if (user.getRole().equals(notice.getRole())
                     && notice.getTime().isBefore(LocalDateTime.now())) {

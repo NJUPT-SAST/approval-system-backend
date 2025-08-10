@@ -27,7 +27,6 @@ public class UserInterceptor implements HandlerInterceptor {
             throws Exception {
 
         String token = request.getHeader("Token");
-        System.out.println(token);
 
         if (token == null || token.isBlank()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -44,7 +43,6 @@ public class UserInterceptor implements HandlerInterceptor {
             response.getWriter().write("Unauthorized: Invalid token");
             return false;
         }
-        System.out.println(userCode);
 
         // 根据 code 字段查询用户
         User user =

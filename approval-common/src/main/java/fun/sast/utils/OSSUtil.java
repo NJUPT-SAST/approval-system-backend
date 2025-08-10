@@ -50,8 +50,6 @@ public class OSSUtil {
         this.endpoint = "https://" + bucketName + "." + endpoint;
         this.uploadExpiredTime = uploadExpiredTime;
         this.downloadExpiredTime = downloadExpiredTime;
-
-        System.out.println(endpoint);
     }
 
     /**

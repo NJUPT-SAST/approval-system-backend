@@ -72,7 +72,7 @@ public class RedisUtil {
         if (redisTemplate.hasKey(key)) {
             return redisTemplate.getExpire(key);
         } else {
-            return Long.parseLong(-2 + "");
+            return -2L;
         }
     }
 }

@@ -27,9 +27,6 @@ public class LoginServiceImpl implements LoginService {
         // 将验证码文本存入Redis，过期时间60s
         redisUtil.set(verifyCodeKey, verifyCodeText, 60);
 
-        // TODO 记得删除
-        System.out.println(redisUtil.get(verifyCodeKey));
-
         return verifyCodeDTO;
     }
 }

@@ -51,9 +51,7 @@ public class UserServiceImpl implements UserService {
     public UserLoginVO login(UserLoginDTO userLoginDTO, String captcha) {
 
         String currentCode = (String) redisUtil.get(captcha);
-        // 验证验证码
-        // TODO:现在任何验证码都是对的，记得删除
-        currentCode = userLoginDTO.getValidateCode();
+
         if (currentCode == null) {
             throw new BaseException(ErrorEnum.CAPTCHA_NOT_EXIST);
         } else if (!currentCode.equalsIgnoreCase(userLoginDTO.getValidateCode())) {

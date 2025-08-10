@@ -46,7 +46,6 @@ public class FileController {
         }
         // 获取带签名的下载链接
         String signedUrl = fileService.getDownloadCertificate(url);
-        System.out.println(signedUrl);
         // 重定向到签名地址进行下载
         response.sendRedirect(signedUrl);
     }
