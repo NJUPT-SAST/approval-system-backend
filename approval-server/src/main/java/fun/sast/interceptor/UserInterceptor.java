@@ -27,11 +27,19 @@ public class UserInterceptor implements HandlerInterceptor {
             throws Exception {
 
         String token = request.getHeader("Token");
+        String requestPath = request.getRequestURI();
+
+        // 对于某些端点，允许未登录访问但仍尝试解析身份
+        boolean isOptionalAuth = requestPath.equals("/com/notice/list");
 
         if (token == null || token.isBlank()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Missing token");
-            return false;
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: Missing token");
+                return false;
+            }
         }
 
         // 解析 token，提取用户 code
@@ -39,18 +47,26 @@ public class UserInterceptor implements HandlerInterceptor {
         try {
             userCode = jwtUtil.resolveJwt(token); // 应该从 token 中提取 code 字段
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: Invalid token");
-            return false;
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: Invalid token");
+                return false;
+            }
         }
 
         // 根据 code 字段查询用户
         User user =
                 userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getCode, userCode));
         if (user == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Unauthorized: User not found");
-            return false;
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: User not found");
+                return false;
+            }
         }
 
         // 保存用户到 ThreadLocal
