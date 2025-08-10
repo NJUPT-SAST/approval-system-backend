@@ -1,6 +1,7 @@
 package fun.sast.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -208,11 +209,41 @@ public class UserServiceImpl implements UserService {
     // 提交比赛报名表单
     @Override
     public void uploadComSchema(User user, Long comId, String jsonData) {
-        // 实际应用中，这里应该处理表单数据的存储
+        // 参数校验
+        if (user == null) {
+            throw new RuntimeException("用户未登录");
+        }
+        if (comId == null || comId <= 0) {
+            throw new RuntimeException("比赛ID无效");
+        }
+        if (jsonData == null || jsonData.trim().isEmpty()) {
+            throw new RuntimeException("表单数据不能为空");
+        }
+
+        // 业务逻辑校验 - 检查比赛是否存在
+        Competition competition = competitionMapper.selectById(comId);
+        if (competition == null) {
+            throw new RuntimeException("比赛不存在");
+        }
+        // 可以添加更多业务校验，例如检查比赛是否已截止报名等
+
         try {
+            // 校验JSON格式
             JSONObject data = JSONObject.parseObject(jsonData);
+            if (data.isEmpty()) {
+                throw new RuntimeException("表单数据不能为空");
+            }
+
+            // 可以添加表单字段校验
+            // 例如检查必填字段是否存在
+            if (!data.containsKey("teamName")) {
+                throw new RuntimeException("团队名称不能为空");
+            }
             // 保存数据到数据库...
             log.info("用户 {} 上传比赛 {} 的表单数据成功", user.getId(), comId);
+        } catch (JSONException e) {
+            log.error("上传表单数据失败：JSON格式无效", e);
+            throw new RuntimeException("表单数据格式无效", e);
         } catch (Exception e) {
             log.error("上传表单数据失败", e);
             throw new RuntimeException("上传表单数据失败", e);
@@ -234,3 +265,4 @@ public class UserServiceImpl implements UserService {
         }
     }
 }
+
