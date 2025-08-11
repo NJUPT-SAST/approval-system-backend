@@ -13,9 +13,11 @@ public interface UserService {
      */
     User authenticate(String code, String password);
 
-    // 注册
-    // void register(UserRegisterDTO userRegisterDTO);
-
-    // 登录
+    /**
+     * 用户登录
+     *
+     * @param userLoginDTO 用户登录信息
+     * @param captcha 验证码ID
+     */
     UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
 }
