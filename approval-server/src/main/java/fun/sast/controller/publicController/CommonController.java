@@ -1,8 +1,32 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.annotation.ResponseResult;
+import fun.sast.entity.Notice;
+import fun.sast.response.GlobalResponse;
+import fun.sast.service.NoticeService;
+import java.util.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/com")
-public class CommonController {}
+public class CommonController {
+    private final NoticeService noticeService;
+
+    /**
+     * 获取比赛公告
+     *
+     * @param id 比赛id
+     * @return 比赛通知
+     */
+    @ResponseResult
+    @GetMapping("/notice/list")
+    public GlobalResponse noticeList(@RequestParam String id) {
+        List<Notice> noticeList = noticeService.getNotices(id);
+        return GlobalResponse.success(noticeList);
+    }
+}
