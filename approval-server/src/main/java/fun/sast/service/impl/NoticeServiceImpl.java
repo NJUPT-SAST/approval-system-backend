@@ -31,8 +31,6 @@ public class NoticeServiceImpl implements NoticeService {
     public List<Notice> getNotices(String comId) {
         // 鉴权
         User user = UserInterceptor.userHolder.get();
-        System.out.println(user);
-        System.out.println(user);
 
         List<Notice> notices =
                 noticeMapper.selectList(

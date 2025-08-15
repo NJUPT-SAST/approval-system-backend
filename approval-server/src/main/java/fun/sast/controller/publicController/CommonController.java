@@ -2,7 +2,6 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.Notice;
-import fun.sast.response.GlobalResponse;
 import fun.sast.service.NoticeService;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +24,7 @@ public class CommonController {
      */
     @ResponseResult
     @GetMapping("/notice/list")
-    public GlobalResponse noticeList(@RequestParam String id) {
-        List<Notice> noticeList = noticeService.getNotices(id);
-        return GlobalResponse.success(noticeList);
+    public List<Notice> noticeList(@RequestParam String id) {
+        return noticeService.getNotices(id);
     }
 }

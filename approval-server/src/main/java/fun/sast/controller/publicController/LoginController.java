@@ -7,8 +7,8 @@ import fun.sast.response.GlobalResponse;
 import fun.sast.service.LoginService;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserLoginVO;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +27,8 @@ public class LoginController {
      */
     @ResponseResult
     @PostMapping("/login")
-    public GlobalResponse login(UserLoginDTO userLoginDTO, @RequestHeader String captcha)
-            throws BadRequestException {
-        UserLoginVO userLoginVO = userService.login(userLoginDTO, captcha);
-        return GlobalResponse.success(userLoginVO);
+    public UserLoginVO login(UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
+        return userService.login(userLoginDTO, captcha);
     }
 
     /**
@@ -38,14 +36,14 @@ public class LoginController {
      */
     @ResponseResult
     @GetMapping("/getValidateCode")
-    public ResponseEntity<GlobalResponse<String>> getValidateCode() {
+    public ResponseEntity<GlobalResponse<String>> getValidateCode(HttpServletResponse response) {
         // 获取验证码信息
         VerifyCodeDTO verifyCodeDTO = loginService.getVerifyCode();
 
-        // 创建响应体（包含Base64图片）
-        GlobalResponse<String> responseBody = GlobalResponse.success(verifyCodeDTO.getImage());
+        // 设置响应头
+        response.setHeader("CAPTCHA", verifyCodeDTO.getKey());
 
-        // 构建完整响应实体（包含头部和响应体）
-        return ResponseEntity.ok().header("CAPTCHA", verifyCodeDTO.getKey()).body(responseBody);
+        // 返回Base64图片数据
+        return  ResponseEntity.ok(GlobalResponse.success(verifyCodeDTO.getImage()));
     }
 }
