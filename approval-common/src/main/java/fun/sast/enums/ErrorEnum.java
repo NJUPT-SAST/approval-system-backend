@@ -25,6 +25,7 @@ public enum ErrorEnum {
     OSS_BUCKET_NOT_EXIST(3005, "Bucket不存在"),
     OSS_FILE_NOT_EXIST(3006, "文件不存在"),
     INVALID_URL_ERROR(3007, "URL格式不合法"),
+    URL_EMPTY_ERROR(3008, "URL为空"),
     SCORE_NOT_EXIST(4001, "评审结果不存在"),
     NO_RESULT(5002, "没有结果"),
     CONTEST_NOT_EXIST(6001, "比赛不存在"),

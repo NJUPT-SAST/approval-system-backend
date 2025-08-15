@@ -22,11 +22,18 @@ public class FileUtil {
     public static String getObjectNameOSS(String urlString) {
         URL url;
         try {
+            if (urlString == null || urlString.isEmpty()) {
+                throw new BaseException(ErrorEnum.INVALID_URL_ERROR);
+            }
             urlString = urlString.trim();
             url = new URL(urlString);
         } catch (MalformedURLException e) {
-            throw new BaseException(ErrorEnum.INVALID_URL_ERROR);
+            throw new BaseException(ErrorEnum.URL_EMPTY_ERROR);
         }
-        return url.getPath().substring(1);
+        String path = url.getPath();
+        if (path.isEmpty()) {
+            return  "";
+        }
+        return path.substring(1);
     }
 }
