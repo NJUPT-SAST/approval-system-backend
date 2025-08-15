@@ -44,6 +44,6 @@ public class LoginController {
         response.setHeader("CAPTCHA", verifyCodeDTO.getKey());
 
         // 返回Base64图片数据
-        return  ResponseEntity.ok(GlobalResponse.success(verifyCodeDTO.getImage()));
+        return ResponseEntity.ok(GlobalResponse.success(verifyCodeDTO.getImage()));
     }
 }
