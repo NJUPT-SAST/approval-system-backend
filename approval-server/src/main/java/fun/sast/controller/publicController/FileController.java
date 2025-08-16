@@ -3,6 +3,7 @@ package fun.sast.controller.publicController;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.response.GlobalResponse;
 import fun.sast.service.FileService;
+import fun.sast.utils.FileUtil;
 import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,6 +18,7 @@ public class FileController {
 
     private final OSSUtil ossUtil;
     private final FileService fileService;
+    private final FileUtil fileUtil;
 
     /**
      * 获取下载凭证
@@ -27,6 +29,7 @@ public class FileController {
     @GetMapping("/com/file/downloadCertificate")
     public GlobalResponse downloadCertificate(@RequestParam String url) {
         String certificateUrl = fileService.getDownloadCertificate(url);
+
         return GlobalResponse.success(certificateUrl);
     }
 
@@ -38,12 +41,6 @@ public class FileController {
     @GetMapping("/com/file/download")
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
-        // 判断是否是 自己的OSS 文件地址
-        if (!ossUtil.isLegalOSSUrl(url)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid OSS URL.");
-            return;
-        }
         // 获取带签名的下载链接
         String signedUrl = fileService.getDownloadCertificate(url);
         // 重定向到签名地址进行下载
