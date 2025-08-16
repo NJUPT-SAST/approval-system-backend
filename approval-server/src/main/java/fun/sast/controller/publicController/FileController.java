@@ -1,7 +1,6 @@
 package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
-import fun.sast.response.GlobalResponse;
 import fun.sast.service.FileService;
 import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,9 +24,8 @@ public class FileController {
      */
     @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
-    public GlobalResponse downloadCertificate(@RequestParam String url) {
-        String certificateUrl = fileService.getDownloadCertificate(url);
-        return GlobalResponse.success(certificateUrl);
+    public String downloadCertificate(@RequestParam String url) {
+        return fileService.getDownloadCertificate(url);
     }
 
     /**
