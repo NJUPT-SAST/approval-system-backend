@@ -19,6 +19,8 @@ public class Review implements Serializable {
 
     private String id;
 
+    private Integer score;
+
     /** 审批人id */
     private Integer judgeId;
 
@@ -38,3 +40,4 @@ public class Review implements Serializable {
 
     private Long updateUser;
 }
+

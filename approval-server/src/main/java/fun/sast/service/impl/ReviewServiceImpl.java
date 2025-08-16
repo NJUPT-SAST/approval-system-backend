@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    @Autowired private ReviewMapper reviewMapper;
+    @Autowired
+    private ReviewMapper reviewMapper;
 
     @Override
     public void exportReviewResult(Integer comId, HttpServletResponse response) {
@@ -32,7 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
             String fileName = URLEncoder.encode("评审结果", StandardCharsets.UTF_8);
             response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
 
-            // 获取数据
+            // 获取数据，VO映射
             List<ReviewExportVO> reviewList = reviewMapper.selectReviewsForExport(comId);
             if (reviewList == null || reviewList.isEmpty()) {
                 throw new BaseException(ErrorEnum.SCORE_NOT_EXIST);

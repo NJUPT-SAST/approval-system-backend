@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Select;
 public interface ReviewMapper extends BaseMapper<Review> {
 
     @Select(
-            "SELECT r.id, r.judge_id, r.user_id, r.com_id, r.score, r.option "
+            "SELECT r.id, r.judge_id, r.user_id, r.com_id, r.score, r.option,r.accept,r.create_time,r.update_time,r.create_user,r.update_user "
                     + "FROM review r "
                     + "WHERE r.com_id = #{comId}")
     List<ReviewExportVO> selectReviewsForExport(Integer comId);

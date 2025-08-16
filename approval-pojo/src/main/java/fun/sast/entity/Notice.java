@@ -20,10 +20,7 @@ public class Notice implements Serializable {
     private Integer id;
 
     /** */
-    private long role;
-
-    /** 发出公告的时间 */
-    private String time;
+    private Integer role;
 
     /** 公告标题 */
     private String title;
