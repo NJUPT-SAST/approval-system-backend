@@ -3,7 +3,6 @@ package fun.sast.controller.publicController;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.dto.VerifyCodeDTO;
-import fun.sast.response.GlobalResponse;
 import fun.sast.service.LoginService;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserLoginVO;
@@ -29,10 +28,10 @@ public class LoginController {
      */
     @ResponseResult
     @PostMapping("/login")
-    public GlobalResponse login(UserLoginDTO userLoginDTO, @RequestHeader String captcha)
+    public UserLoginVO login(UserLoginDTO userLoginDTO, @RequestHeader String captcha)
             throws BadRequestException {
         UserLoginVO userLoginVO = userService.login(userLoginDTO, captcha);
-        return GlobalResponse.success(userLoginVO);
+        return userLoginVO;
     }
 
     @GetMapping("/getValidateCode")
