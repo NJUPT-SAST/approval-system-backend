@@ -1,42 +1,42 @@
 package fun.sast.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import fun.sast.Exception.BaseException;
-import fun.sast.entity.Competition;
-import fun.sast.entity.Department;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import fun.sast.Exception.BaseException;
+import fun.sast.constant.RedisKeyConstant;
 import fun.sast.dto.UserLoginDTO;
-import fun.sast.entity.User;
-import fun.sast.entity.Work;
+import fun.sast.entity.*;
 import fun.sast.enums.ErrorEnum;
-import fun.sast.mapper.CompetitionMapper;
-import fun.sast.mapper.DepartmentMapper;
-import fun.sast.mapper.UserMapper;
-import fun.sast.mapper.WorkMapper;
+import fun.sast.mapper.*;
 import fun.sast.service.UserService;
-import fun.sast.vo.UserProfileVO;
-import lombok.RequiredArgsConstructor;
+import fun.sast.utils.FileUtil;
 import fun.sast.utils.JwtUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserLoginVO;
+import fun.sast.vo.UserProfileVO;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final JwtUtil jwtUtil;
+    private final FileUtil fileUtil;
     private final RedisUtil redisUtil;
     private final WorkMapper workMapper;
     private final UserMapper userMapper;
     private final DepartmentMapper departmentMapper;
     private final CompetitionMapper competitionMapper;
+    private final TeamMapper teamMapper;
 
     /**
      * 验证用户信息
@@ -118,14 +118,38 @@ public class UserServiceImpl implements UserService {
      * 获取上传凭证
      *
      * @param user 用户
-     * @param id 文件id
-     * @param input 文件输入
+     * @param id 比赛id
+     * @param input 输入框名
      * @param filename 文件名
      * @return 上传凭证
      */
     @Override
-    public Map<String, String> getUploadCertificate(User user, Long id, String input, String filename) {
-        return Map.of();
+    public Map<String, String> getUploadCertificate(
+            User user, Long id, String input, String filename) {
+        Team team =
+                teamMapper.selectOne(
+                        new LambdaQueryWrapper<Team>()
+                                .eq(Team::getCaptain, user.getCode())
+                                .eq(Team::getComId, id));
+
+        // 检查redis缓存
+        String key = RedisKeyConstant.getWorkFileCacheKey(user.getCode(), input);
+        if (redisUtil.hasKey(key)) {
+            FileUploadCache cache =
+                    JSON.parseObject((String) redisUtil.get(key), FileUploadCache.class);
+            fileUtil.deleteFileOSS(cache.getUrl(), FileUtil.PRIVATE_FOLDER);
+            redisUtil.delete(key);
+        }
+        Map<String, String> urlMap =
+                fileUtil.getUploadCertificate(filename, id, team.getId(), input);
+        FileUploadCache uploadFile = new FileUploadCache();
+        uploadFile.setComId(id);
+        uploadFile.setUserCode(user.getCode());
+        uploadFile.setInput(input);
+        uploadFile.setUrl(urlMap.get("clearUrl"));
+        uploadFile.setDate(LocalDateTime.now());
+        redisUtil.set(key, JSON.toJSONString(uploadFile));
+        return urlMap;
     }
 
     private boolean isBlank(String str) {
@@ -180,4 +204,14 @@ public class UserServiceImpl implements UserService {
 
         return vo;
     }
+
+    /**
+     * 上传比赛表单
+     *
+     * @param user 用户
+     * @param comId 比赛id
+     * @param jsonObject 表单内容
+     */
+    @Override
+    public void uploadComSchema(User user, Long comId, JSONObject jsonObject) {}
 }

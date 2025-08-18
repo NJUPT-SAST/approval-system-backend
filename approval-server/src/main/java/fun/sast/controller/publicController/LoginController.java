@@ -27,7 +27,8 @@ public class LoginController {
      */
     @ResponseResult
     @PostMapping("/login")
-    public UserLoginVO login(UserLoginDTO userLoginDTO, @RequestHeader String captcha) throws BadRequestException {
+    public UserLoginVO login(UserLoginDTO userLoginDTO, @RequestHeader String captcha)
+            throws BadRequestException {
         return userService.login(userLoginDTO, captcha);
     }
 

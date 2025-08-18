@@ -6,7 +6,6 @@ import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
 import fun.sast.vo.UserLoginVO;
 import fun.sast.vo.UserProfileVO;
-
 import java.util.Map;
 
 public interface UserService {
@@ -47,9 +46,8 @@ public interface UserService {
      *
      * @param user 用户
      * @param id 比赛id
-     * @param input 文件输入流
-     * @param filename 文件名
-     * return 上传凭证
+     * @param input 输入框名
+     * @param filename 文件名 return 上传凭证
      */
     Map<String, String> getUploadCertificate(User user, Long id, String input, String filename);
 
@@ -61,4 +59,13 @@ public interface UserService {
      * @return 登录信息
      */
     UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
+
+    /**
+     * 上传比赛表单
+     *
+     * @param user 用户
+     * @param comId 比赛id
+     * @param jsonObject 表单
+     */
+    void uploadComSchema(User user, Long comId, JSONObject jsonObject);
 }

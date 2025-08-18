@@ -75,4 +75,8 @@ public class RedisUtil {
             return -2L;
         }
     }
+
+    public boolean hasKey(String key) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
+    }
 }

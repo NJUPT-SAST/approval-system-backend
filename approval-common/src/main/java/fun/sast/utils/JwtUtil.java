@@ -7,11 +7,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,18 +19,6 @@ public class JwtUtil {
 
     @Value("${jwt.expiration}")
     private long expiration;
-
-    public String generateToken(String code) {
-        Date now = new Date();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("code", code);
-        return Jwts.builder()
-                .setIssuedAt(now)
-                .setClaims(claims)
-                .setExpiration(new Date(now.getTime() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
-    }
 
     /**
      * @param code 用户账号
@@ -52,7 +36,7 @@ public class JwtUtil {
     }
 
     /**
-     * @param token
+     * @param token 含有code的token
      * @return 提取code字段
      */
     public String resolveJwt(String token) {

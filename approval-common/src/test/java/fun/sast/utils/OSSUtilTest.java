@@ -1,9 +1,13 @@
 package fun.sast.utils;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.aliyun.oss.HttpMethod;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
-import com.aliyun.oss.model.ResponseHeaderOverrides;
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,21 +16,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 class OSSUtilTest {
 
-    @Mock
-    private OSS ossClient;
+    @Mock private OSS ossClient;
 
-    @InjectMocks
-    private OSSUtil ossUtil;
+    @InjectMocks private OSSUtil ossUtil;
 
     @BeforeEach
     void setUp() {
@@ -34,12 +28,14 @@ class OSSUtilTest {
 
         // 使用反射设置私有字段
         ReflectionTestUtils.setField(ossUtil, "bucketName", "test-bucket");
-        ReflectionTestUtils.setField(ossUtil, "endpoint", "https://test-bucket.oss-cn-hangzhou.aliyuncs.com");
+        ReflectionTestUtils.setField(
+                ossUtil, "endpoint", "https://test-bucket.oss-cn-hangzhou.aliyuncs.com");
         ReflectionTestUtils.setField(ossUtil, "publicFolder", "public");
         ReflectionTestUtils.setField(ossUtil, "privateFolder", "private");
         ReflectionTestUtils.setField(ossUtil, "uploadExpiredTime", 60);
         ReflectionTestUtils.setField(ossUtil, "downloadExpiredTime", 60);
-        ReflectionTestUtils.setField(ossUtil, "bucketUrlPrefix", "https://test-bucket.oss-cn-hangzhou.aliyuncs.com/");
+        ReflectionTestUtils.setField(
+                ossUtil, "bucketUrlPrefix", "https://test-bucket.oss-cn-hangzhou.aliyuncs.com/");
     }
 
     @Test
@@ -108,7 +104,8 @@ class OSSUtilTest {
         String fileUrl = "https://test-bucket.oss-cn-hangzhou.aliyuncs.com/private/test-file.txt";
         URL expectedUrl = mock(URL.class);
         when(expectedUrl.toString()).thenReturn("https://signed-url.com/test");
-        when(ossClient.generatePresignedUrl(any(GeneratePresignedUrlRequest.class))).thenReturn(expectedUrl);
+        when(ossClient.generatePresignedUrl(any(GeneratePresignedUrlRequest.class)))
+                .thenReturn(expectedUrl);
 
         // When
         String result = ossUtil.getDownloadCertificate(fileUrl);
@@ -118,7 +115,8 @@ class OSSUtilTest {
         assertEquals("https://signed-url.com/test", result);
 
         // 验证generatePresignedUrl方法被正确调用
-        ArgumentCaptor<GeneratePresignedUrlRequest> requestCaptor = ArgumentCaptor.forClass(GeneratePresignedUrlRequest.class);
+        ArgumentCaptor<GeneratePresignedUrlRequest> requestCaptor =
+                ArgumentCaptor.forClass(GeneratePresignedUrlRequest.class);
         verify(ossClient).generatePresignedUrl(requestCaptor.capture());
 
         GeneratePresignedUrlRequest capturedRequest = requestCaptor.getValue();

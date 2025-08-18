@@ -9,10 +9,9 @@ import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -69,22 +68,21 @@ public class UserController {
     @PostMapping("/com/uploadSchema/{comId}")
     public void uploadComSchema(@PathVariable Long comId, @RequestBody JSONObject jsonObject) {
         User user = UserInterceptor.userHolder.get();
-//        userService.uploadComSchema(user, comId, jsonObject);
+        userService.uploadComSchema(user, comId, jsonObject);
     }
 
     /**
      * 获取上传作品凭证
      *
-     * @param id 作品id
-     * @param input 输入框内容
+     * @param comId 比赛id
+     * @param input 输入框名
      * @param filename 文件名
      * @return 上传作品凭证
      */
     @GetMapping("/com/uploadCertificate")
-    public Map<String, String> getUploadCertificate(@RequestParam Long id,
-                                                    @RequestParam String input,
-                                                    @RequestParam String filename) {
+    public Map<String, String> getUploadCertificate(
+            @RequestParam Long comId, @RequestParam String input, @RequestParam String filename) {
         User user = UserInterceptor.userHolder.get();
-        return userService.getUploadCertificate(user, id, input, filename);
+        return userService.getUploadCertificate(user, comId, input, filename);
     }
 }

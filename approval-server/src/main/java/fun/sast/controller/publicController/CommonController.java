@@ -2,7 +2,6 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.Notice;
-import fun.sast.response.GlobalResponse;
 import fun.sast.service.NoticeService;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
