@@ -1,30 +1,30 @@
 package fun.sast.service.impl;
 
 import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONException;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import fun.sast.Exception.BaseException;
 import fun.sast.controller.publicController.UserResponse;
+import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.Competition;
 import fun.sast.entity.User;
+import fun.sast.enums.ErrorEnum;
 import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.UserMapper;
 import fun.sast.service.UserService;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import lombok.extern.slf4j.Slf4j;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import fun.sast.Exception.BaseException;
-import fun.sast.dto.UserLoginDTO;
-import fun.sast.enums.ErrorEnum;
 import fun.sast.utils.JwtUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserLoginVO;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -57,8 +57,6 @@ public class UserServiceImpl implements UserService {
         log.info("用户验证成功: 学号={}", code);
         return user;
     }
-
-    
 
     // 分页查询所有已审批的比赛列表
     @Override

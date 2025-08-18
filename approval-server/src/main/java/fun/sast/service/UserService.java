@@ -1,14 +1,12 @@
 package fun.sast.service;
 
-import java.util.Map;
-
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-
 import fun.sast.controller.publicController.UserResponse;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
 import fun.sast.vo.UserLoginVO;
+import java.util.Map;
 
 public interface UserService {
     /**
@@ -42,6 +40,7 @@ public interface UserService {
     void uploadComSchema(User user, Long comId, String jsonData);
 
     void signUpCom(User user, String jsonData);
+
     /**
      * 用户登录
      *
