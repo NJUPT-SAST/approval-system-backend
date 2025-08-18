@@ -1,10 +1,14 @@
 package fun.sast.service;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import fun.sast.controller.publicController.UserResponse;
-import fun.sast.entity.User;
 import java.util.Map;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+import fun.sast.controller.publicController.UserResponse;
+import fun.sast.dto.UserLoginDTO;
+import fun.sast.entity.User;
+import fun.sast.vo.UserLoginVO;
 
 public interface UserService {
     /**
@@ -38,4 +42,11 @@ public interface UserService {
     void uploadComSchema(User user, Long comId, String jsonData);
 
     void signUpCom(User user, String jsonData);
+    /**
+     * 用户登录
+     *
+     * @param userLoginDTO 用户登录信息
+     * @param captcha 验证码ID
+     */
+    UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
 }

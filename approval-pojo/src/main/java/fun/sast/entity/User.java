@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User implements Serializable {
 
-    /** 部门编号 */
+    /** 学院编号 */
     private Integer depId;
 
     /** 用户id编号 */
@@ -29,6 +29,12 @@ public class User implements Serializable {
     /** 角色 */
     private Integer role;
 
+    /** 专业 */
+    private String major;
+
+    /** 手机号 */
+    private String contact;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updateTime;
@@ -36,4 +42,7 @@ public class User implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    // 密码加盐
+    private String salt;
 }

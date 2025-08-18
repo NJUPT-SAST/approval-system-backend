@@ -1,7 +1,7 @@
 package fun.sast.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import fun.sast.annotation.CheckRole;
 import fun.sast.annotation.OperateLog;
 import fun.sast.annotation.PassToken;

@@ -1,46 +1,85 @@
 package fun.sast.interceptor;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import fun.sast.entity.User;
+import fun.sast.mapper.UserMapper;
+import fun.sast.utils.JwtUtil;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
+@RequiredArgsConstructor
 public class UserInterceptor implements HandlerInterceptor {
 
-    // 使用ThreadLocal存储用户信息，保证线程安全
     public static final ThreadLocal<User> userHolder = new ThreadLocal<>();
 
-    // 设置当前线程的用户信息
-    public static void setUser(User user) {
-        userHolder.set(user);
-    }
+    private final JwtUtil jwtUtil;
 
-    // 获取当前线程的用户信息
-    public static User getUser() {
-        return userHolder.get();
-    }
-
-    // 清除当前线程的用户信息，防止内存泄漏
-    public static void removeUser() {
-        userHolder.remove();
-    }
+    @Resource private UserMapper userMapper;
 
     @Override
     public boolean preHandle(
             HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        // 这里应该从请求中获取用户信息，例如从token中解析
-        // 为了演示，这里暂时设置一个空用户
-        User user = new User();
-        setUser(user);
+
+        String token = request.getHeader("Token");
+        String requestPath = request.getRequestURI();
+
+        // 对于某些端点，允许未登录访问但仍尝试解析身份
+        boolean isOptionalAuth = requestPath.equals("/com/notice/list");
+
+        if (token == null || token.isBlank()) {
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: Missing token");
+                return false;
+            }
+        }
+
+        // 解析 token，提取用户 code
+        String userCode;
+        try {
+            userCode = jwtUtil.resolveJwt(token); // 应该从 token 中提取 code 字段
+        } catch (Exception e) {
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: Invalid token");
+                return false;
+            }
+        }
+
+        // 根据 code 字段查询用户
+        User user =
+                userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getCode, userCode));
+        if (user == null) {
+            if (isOptionalAuth) {
+                return true;
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Unauthorized: User not found");
+                return false;
+            }
+        }
+
+        // 保存用户到 ThreadLocal
+        userHolder.set(user);
         return true;
     }
 
     @Override
     public void afterCompletion(
-            HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
-            throws Exception {
-        // 请求完成后清除用户信息，防止内存泄漏
-        removeUser();
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler,
+            Exception ex) {
+        userHolder.remove();
     }
 }
