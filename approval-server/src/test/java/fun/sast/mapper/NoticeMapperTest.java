@@ -1,6 +1,10 @@
 package fun.sast.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import fun.sast.entity.Notice;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -8,21 +12,14 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.List;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(locations = "classpath:application-test.properties")
 class NoticeMapperTest {
 
-    @Autowired
-    private TestEntityManager entityManager;
+    @Autowired private TestEntityManager entityManager;
 
-    @Autowired
-    private NoticeMapper noticeMapper;
+    @Autowired private NoticeMapper noticeMapper;
 
     @Test
     void testSaveAndFindNotice() {
@@ -66,7 +63,8 @@ class NoticeMapperTest {
 
         // Then
         assertThat(notices).hasSize(2);
-        assertThat(notices).extracting(Notice::getTitle)
+        assertThat(notices)
+                .extracting(Notice::getTitle)
                 .containsExactlyInAnyOrder("Notice 1", "Notice 2");
     }
 }

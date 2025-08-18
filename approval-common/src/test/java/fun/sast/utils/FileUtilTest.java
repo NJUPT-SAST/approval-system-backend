@@ -1,9 +1,10 @@
 package fun.sast.utils;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class FileUtilTest {
 
@@ -23,7 +24,8 @@ class FileUtilTest {
     @Test
     void testGetObjectNameOSS_WithUrlContainingSpaces() {
         // Given
-        String urlWithSpaces = "  https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/public/test-file.txt  ";
+        String urlWithSpaces =
+                "  https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/public/test-file.txt  ";
         String expectedPath = "public/test-file.txt";
 
         // When
@@ -49,7 +51,8 @@ class FileUtilTest {
     @Test
     void testGetObjectNameOSS_WithComplexPath() {
         // Given
-        String complexUrl = "https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/folder/subfolder/file.name.ext";
+        String complexUrl =
+                "https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/folder/subfolder/file.name.ext";
         String expectedPath = "folder/subfolder/file.name.ext";
 
         // When
@@ -65,9 +68,12 @@ class FileUtilTest {
         String invalidUrl = "invalid-url";
 
         // When & Then
-        BaseException exception = assertThrows(BaseException.class, () -> {
-            FileUtil.getObjectNameOSS(invalidUrl);
-        });
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> {
+                            FileUtil.getObjectNameOSS(invalidUrl);
+                        });
 
         assertEquals(ErrorEnum.URL_EMPTY_ERROR, exception.getErrorEnum());
     }
@@ -78,9 +84,12 @@ class FileUtilTest {
         String nullUrl = null;
 
         // When & Then
-        BaseException exception = assertThrows(BaseException.class, () -> {
-            FileUtil.getObjectNameOSS(nullUrl);
-        });
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> {
+                            FileUtil.getObjectNameOSS(nullUrl);
+                        });
 
         assertEquals(ErrorEnum.INVALID_URL_ERROR, exception.getErrorEnum());
     }
@@ -91,9 +100,12 @@ class FileUtilTest {
         String emptyUrl = "";
 
         // When & Then
-        BaseException exception = assertThrows(BaseException.class, () -> {
-            FileUtil.getObjectNameOSS(emptyUrl);
-        });
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> {
+                            FileUtil.getObjectNameOSS(emptyUrl);
+                        });
 
         assertEquals(ErrorEnum.INVALID_URL_ERROR, exception.getErrorEnum());
     }

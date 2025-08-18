@@ -1,4 +1,3 @@
 package fun.sast.service;
 
-public class NoticeServiceTest {
-}
+public class NoticeServiceTest {}
