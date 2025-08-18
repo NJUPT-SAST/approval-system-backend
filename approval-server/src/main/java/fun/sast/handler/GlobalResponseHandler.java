@@ -1,9 +1,7 @@
 package fun.sast.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.response.GlobalResponse;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
@@ -19,8 +17,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 @Slf4j
 public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
 
-    @Resource private ObjectMapper objectMapper;
-
     /**
      * 只处理有@ResponseResult注解的接口
      *
@@ -30,7 +26,8 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(
-            MethodParameter returnType, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
+            MethodParameter returnType,
+            @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
         return returnType.hasMethodAnnotation(ResponseResult.class)
                 || returnType.getContainingClass().isAnnotationPresent(ResponseResult.class);
     }
@@ -56,8 +53,7 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
             @NotNull ServerHttpResponse response) {
         if (body == null) {
             return GlobalResponse.success();
-        }
-        else if (body instanceof GlobalResponse) {
+        } else if (body instanceof GlobalResponse) {
             return body;
         }
         return GlobalResponse.success(body);
