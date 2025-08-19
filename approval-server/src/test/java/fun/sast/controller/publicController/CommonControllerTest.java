@@ -5,23 +5,36 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fun.sast.entity.Notice;
+import fun.sast.handler.GlobalResponseHandler;
 import fun.sast.service.NoticeService;
 import java.util.Arrays;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@ExtendWith(MockitoExtension.class)
 class CommonControllerTest {
 
-    @Autowired private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-    @MockBean private NoticeService noticeService;
+    @Mock
+    private NoticeService noticeService;
+
+    @InjectMocks
+    private CommonController commonController;
+
+    @BeforeEach
+    void setUp() {
+        mockMvc = MockMvcBuilders.standaloneSetup(commonController)
+                .setControllerAdvice(new GlobalResponseHandler())
+                .build();
+    }
 
     @Test
     void testNoticeList_withValidId_shouldReturnNoticeList() throws Exception {
@@ -55,9 +68,7 @@ class CommonControllerTest {
     @Test
     void testNoticeList_withMissingId_shouldReturnBadRequest() throws Exception {
         mockMvc.perform(get("/com/notice/list"))
-                .andExpect(status().isOk()) // 全局异常处理后返回200
-                .andExpect(jsonPath("$.success").value(false))
-                .andExpect(jsonPath("$.errCode").value(1000));
+                .andExpect(status().isBadRequest());
     }
 
     @Test

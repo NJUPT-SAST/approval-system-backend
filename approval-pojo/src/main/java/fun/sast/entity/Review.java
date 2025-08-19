@@ -10,13 +10,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Review implements Serializable {
+
+    private String id;
+
     /** 是否通过 */
     private boolean accept;
 
-    /** 活动id */
-    private Integer comId;
+    /** 比赛id */
+    private Long comId;
 
-    private String id;
+    /** 队长学号 */
+    private String code;
 
     /** 审批人id */
     private Integer judgeId;
