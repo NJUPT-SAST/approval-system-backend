@@ -25,16 +25,16 @@
         <java.version>17</java.version>
         <spring-boot.version>3.5.3</spring-boot.version>
         <lombok.version>1.18.38</lombok.version>
-        <mybatis-plus.version>3.5.12</mybatis-plus.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <jjwt>0.9.1</jjwt>
         <mysql.version>8.0.33</mysql.version>
         <spotless.version>2.45.0</spotless.version>
         <redis.version>3.5.3</redis.version>
         <auth0.version>3.11.0</auth0.version>
-        <oss.version>3.17.4</oss.version>
+        <oss.version>3.17.1</oss.version>
         <easy-captcha.version>1.6.2</easy-captcha.version>
         <jackson-annotations.version>2.19.1</jackson-annotations.version>
-        <fastjson2.version>2.0.35</fastjson2.version>
+        <fastjson2.version>2.0.41</fastjson2.version>
         <annotations.version>24.1.0</annotations.version>
     </properties>
 
