@@ -23,17 +23,16 @@ class CommonControllerTest {
 
     private MockMvc mockMvc;
 
-    @Mock
-    private NoticeService noticeService;
+    @Mock private NoticeService noticeService;
 
-    @InjectMocks
-    private CommonController commonController;
+    @InjectMocks private CommonController commonController;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(commonController)
-                .setControllerAdvice(new GlobalResponseHandler())
-                .build();
+        mockMvc =
+                MockMvcBuilders.standaloneSetup(commonController)
+                        .setControllerAdvice(new GlobalResponseHandler())
+                        .build();
     }
 
     @Test
@@ -67,8 +66,7 @@ class CommonControllerTest {
 
     @Test
     void testNoticeList_withMissingId_shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(get("/com/notice/list"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(get("/com/notice/list")).andExpect(status().isBadRequest());
     }
 
     @Test
