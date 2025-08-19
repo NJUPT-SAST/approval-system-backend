@@ -1,22 +1,22 @@
 package fun.sast.controller.publicController;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import fun.sast.entity.Notice;
 import fun.sast.service.NoticeService;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(CommonController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class CommonControllerTest {
 
     @Autowired private MockMvc mockMvc;
@@ -49,21 +49,21 @@ class CommonControllerTest {
                 .andExpect(jsonPath("$.data[0].title").value("Notice 1"))
                 .andExpect(jsonPath("$.data[1].title").value("Notice 2"));
 
-        Mockito.verify(noticeService, Mockito.times(1)).getNotices(comId);
+        verify(noticeService).getNotices(comId);
     }
 
     @Test
     void testNoticeList_withMissingId_shouldReturnBadRequest() throws Exception {
-        // When & Then
-        mockMvc.perform(get("/com/notice/list")).andExpect(status().isBadRequest());
+        mockMvc.perform(get("/com/notice/list"))
+                .andExpect(status().isOk()) // 全局异常处理后返回200
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.errCode").value(1000));
     }
 
     @Test
     void testNoticeList_withEmptyId_shouldReturnSuccessWithEmptyList() throws Exception {
-        // Given
         when(noticeService.getNotices("")).thenReturn(List.of());
 
-        // When & Then
         mockMvc.perform(get("/com/notice/list").param("id", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())

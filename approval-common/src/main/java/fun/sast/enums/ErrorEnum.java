@@ -37,6 +37,8 @@ public enum ErrorEnum {
     SCHEMA_ERROR(6007, "表单未设置"),
     WORK_NOT_EXIST(6008, "作品不存在"),
     ASSIGN_ERROR(6009, "无法分配评委，存在未审批或审批未通过的作品"),
+    WORK_SUBMIT_END(6010, "作品提交已结束"),
+    WORK_SUBMIT_NOT_START(6011, "作品提交还未开始"),
     USER_NOT_EXIST(7001, "用户不存在"),
     USER_EXIST(7002, "用户已存在"),
     FILE_NOT_EXIST(8001, "文件不存在"),

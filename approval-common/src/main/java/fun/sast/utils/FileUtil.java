@@ -42,6 +42,10 @@ public class FileUtil {
         return path.substring(1);
     }
 
+    public Boolean isOSSBucketURL(String content) {
+        return ossUtil.isOSSBucketURL(content);
+    }
+
     /**
      * 删除文件
      *

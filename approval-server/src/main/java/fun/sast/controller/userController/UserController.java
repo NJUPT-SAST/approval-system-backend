@@ -4,11 +4,13 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
+import fun.sast.dto.WorkSchemaDTO;
 import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserProfileVO;
+import java.util.LinkedList;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -63,12 +65,14 @@ public class UserController {
      * 提交作品资料表单
      *
      * @param comId 比赛id
-     * @param jsonObject 表单
+     * @param workSchemaDTOLinkedList 作品表单
      */
     @PostMapping("/com/uploadSchema/{comId}")
-    public void uploadComSchema(@PathVariable Long comId, @RequestBody JSONObject jsonObject) {
+    public void uploadComSchema(
+            @PathVariable Long comId,
+            @RequestBody LinkedList<WorkSchemaDTO> workSchemaDTOLinkedList) {
         User user = UserInterceptor.userHolder.get();
-        userService.uploadComSchema(user, comId, jsonObject);
+        userService.uploadComSchema(user, comId, workSchemaDTOLinkedList);
     }
 
     /**

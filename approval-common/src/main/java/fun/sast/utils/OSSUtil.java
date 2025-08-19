@@ -151,7 +151,10 @@ public class OSSUtil {
      * @param url 文件url
      */
     public void deleteFileOSS(String url, int folderNum) {
-        // todo
+        String folderName = getBaseFolderName(folderNum);
+        String objectName = FileUtil.getObjectNameOSS(url);
+        String key = folderName + "/" + objectName;
+        ossClient.deleteObject(bucketName, key);
     }
 
     /**

@@ -21,4 +21,13 @@ public class FileUploadCache implements Serializable {
 
     /** 创建时间 */
     private LocalDateTime date;
+
+    public File toFile() {
+        File file = new File();
+        file.setComId(comId);
+        file.setUserCode(userCode);
+        file.setInput(input);
+        file.setUrl(url);
+        return file;
+    }
 }

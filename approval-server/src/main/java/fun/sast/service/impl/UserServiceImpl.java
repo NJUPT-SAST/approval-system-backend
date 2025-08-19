@@ -9,9 +9,13 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import fun.sast.Exception.BaseException;
 import fun.sast.constant.RedisKeyConstant;
 import fun.sast.dto.UserLoginDTO;
+import fun.sast.dto.WorkSchemaDTO;
 import fun.sast.entity.*;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.mapper.*;
+import fun.sast.service.CompetitionService;
+import fun.sast.service.FileService;
+import fun.sast.service.ReviewService;
 import fun.sast.service.UserService;
 import fun.sast.utils.FileUtil;
 import fun.sast.utils.JwtUtil;
@@ -20,38 +24,31 @@ import fun.sast.vo.UserLoginVO;
 import fun.sast.vo.UserProfileVO;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final JwtUtil jwtUtil;
     private final FileUtil fileUtil;
     private final RedisUtil redisUtil;
+    private final ReviewService reviewService;
+    private final CompetitionService competitionService;
     private final WorkMapper workMapper;
     private final UserMapper userMapper;
+    private final FileService fileService;
     private final DepartmentMapper departmentMapper;
     private final CompetitionMapper competitionMapper;
     private final TeamMapper teamMapper;
-
-    /**
-     * 验证用户信息
-     *
-     * @param code 学号
-     * @param password 密码
-     * @return 用户信息
-     */
-    @Override
-    public User authenticate(String code, String password) {
-        //        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        //        queryWrapper.eq("code", code).eq("password", password);
-        //        return userMapper.selectOne(queryWrapper);
-        return new User();
-    }
 
     /**
      * 获取用户信息
@@ -131,6 +128,9 @@ public class UserServiceImpl implements UserService {
                         new LambdaQueryWrapper<Team>()
                                 .eq(Team::getCaptain, user.getCode())
                                 .eq(Team::getComId, id));
+        if (team == null) {
+            throw new BaseException(ErrorEnum.UNKNOWN_TEAM_ID);
+        }
 
         // 检查redis缓存
         String key = RedisKeyConstant.getWorkFileCacheKey(user.getCode(), input);
@@ -210,8 +210,70 @@ public class UserServiceImpl implements UserService {
      *
      * @param user 用户
      * @param comId 比赛id
-     * @param jsonObject 表单内容
+     * @param workSchemaDTOLinkedList 表单内容
      */
+    @Transactional
     @Override
-    public void uploadComSchema(User user, Long comId, JSONObject jsonObject) {}
+    public void uploadComSchema(
+            User user, Long comId, LinkedList<WorkSchemaDTO> workSchemaDTOLinkedList) {
+
+        competitionService.validateSubmissionPeriod(comId);
+
+        Work work = processWorkSchema(user, comId, workSchemaDTOLinkedList);
+
+        Work workDB =
+                workMapper.selectOne(
+                        new LambdaQueryWrapper<Work>()
+                                .eq(Work::getComId, comId)
+                                .eq(Work::getUserCode, user.getCode()));
+
+        if (workDB != null) {
+            workDB.setWorkName(work.getWorkName());
+            workDB.setSchemaContent(work.getSchemaContent());
+            workMapper.updateById(workDB);
+        } else {
+            workMapper.insert(work);
+        }
+
+        reviewService.updateReviewStatus(comId, user.getCode());
+    }
+
+    /**
+     * 处理作品表单
+     *
+     * @param user 用户
+     * @param comId 比赛id
+     * @param workSchemaDTOLinkedList 表单内容
+     * @return 处理后的作品表单
+     */
+    private Work processWorkSchema(
+            User user, Long comId, List<WorkSchemaDTO> workSchemaDTOLinkedList) {
+        Work work = new Work();
+
+        work.setUserCode(user.getCode());
+        work.setComId(comId);
+
+        List<WorkSchemaDTO> workSchemas = new LinkedList<>();
+        for (WorkSchemaDTO workSchemaDTO : workSchemaDTOLinkedList) {
+            String title = workSchemaDTO.getInput();
+            String content = workSchemaDTO.getContent();
+
+            // 获取作品名称，这里很不优雅 todo
+            if (title.equals("作品名称") || title.equals("作品名") || title.equals("项目名称"))
+                work.setWorkName(content);
+
+            WorkSchemaDTO workSchema = new WorkSchemaDTO();
+            workSchema.setInput(title);
+            workSchema.setContent(content);
+            workSchema.setIsFile(false);
+            // 单独处理文件
+            if (fileUtil.isOSSBucketURL(content)) {
+                fileService.processSubmissionFiles(user, comId, content, title);
+                workSchema.setIsFile(true);
+            }
+            workSchemas.add(workSchema);
+        }
+        work.setSchemaContent(JSON.toJSONString(workSchemas));
+        return work;
+    }
 }

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController("/com/file")
 @Slf4j
 @RequiredArgsConstructor
 public class FileController {
@@ -23,7 +23,7 @@ public class FileController {
      * @param url 文件地址例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      */
     @ResponseResult
-    @GetMapping("/com/file/downloadCertificate")
+    @GetMapping("/downloadCertificate")
     public String downloadCertificate(@RequestParam String url) {
         return fileService.getDownloadCertificate(url);
     }
@@ -31,9 +31,9 @@ public class FileController {
     /**
      * @param url 原始url
      * @param response 重定向至下载
-     * @throws IOException
+     * @throws IOException IO异常
      */
-    @GetMapping("/com/file/download")
+    @GetMapping("/download")
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
         // 判断是否是 自己的OSS 文件地址

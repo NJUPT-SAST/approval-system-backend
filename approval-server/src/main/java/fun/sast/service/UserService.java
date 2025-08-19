@@ -3,19 +3,14 @@ package fun.sast.service;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import fun.sast.dto.UserLoginDTO;
+import fun.sast.dto.WorkSchemaDTO;
 import fun.sast.entity.User;
 import fun.sast.vo.UserLoginVO;
 import fun.sast.vo.UserProfileVO;
+import java.util.LinkedList;
 import java.util.Map;
 
 public interface UserService {
-    /**
-     * 验证用户
-     *
-     * @param code 学号
-     * @param password 密码
-     */
-    User authenticate(String code, String password);
 
     /**
      * 获取用户信息
@@ -65,7 +60,7 @@ public interface UserService {
      *
      * @param user 用户
      * @param comId 比赛id
-     * @param jsonObject 表单
+     * @param workSchemaDTOLinkedList 表单
      */
-    void uploadComSchema(User user, Long comId, JSONObject jsonObject);
+    void uploadComSchema(User user, Long comId, LinkedList<WorkSchemaDTO> workSchemaDTOLinkedList);
 }

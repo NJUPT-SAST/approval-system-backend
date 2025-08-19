@@ -116,28 +116,24 @@ class JwtUtilTest {
     }
 
     @Test
-    void testResolveJwt_withTokenHavingEmptyCode()
-            throws NoSuchFieldException, IllegalAccessException {
+    void testResolveJwt_withTokenMissingCodeClaim() throws Exception {
         // Given
-        // 获取JwtUtil实例中的secret值
         Field secretField = jwtUtil.getClass().getDeclaredField("secret");
         secretField.setAccessible(true);
         String secret = (String) secretField.get(jwtUtil);
 
-        // 获取过期时间
         Field expirationField = jwtUtil.getClass().getDeclaredField("expiration");
         expirationField.setAccessible(true);
         long expiration = (Long) expirationField.get(jwtUtil);
 
-        // 使用与JwtUtil中完全相同的方式创建token，但不包含code声明
         Date now = new Date();
         Date expDate = new Date(now.getTime() + expiration);
 
         String tokenWithoutCode =
                 JWT.create()
-                        .withIssuedAt(now)
-                        .withExpiresAt(expDate)
-                        .sign(Algorithm.HMAC256(secret));
+                        .withIssuedAt(now) // 必须包含签发时间
+                        .withExpiresAt(expDate) // 必须包含过期时间
+                        .sign(Algorithm.HMAC256(secret)); // 使用正确的密钥
 
         // When & Then
         BaseException exception =
@@ -147,7 +143,6 @@ class JwtUtilTest {
                             jwtUtil.resolveJwt(tokenWithoutCode);
                         });
 
-        // Token有效但不包含code声明，应抛出COMMON_ERROR
         assertEquals(ErrorEnum.COMMON_ERROR, exception.getErrorEnum());
     }
 
