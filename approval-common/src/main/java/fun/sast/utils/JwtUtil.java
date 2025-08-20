@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
@@ -49,10 +50,7 @@ public class JwtUtil {
             DecodedJWT verify = jwtVerifier.verify(token);
 
             // 先判断是否存在code
-            com.auth0.jwt.interfaces.Claim codeClaim = verify.getClaim("code");
-            if (codeClaim.isNull()) {
-                throw new BaseException(ErrorEnum.COMMON_ERROR);
-            }
+            Claim codeClaim = verify.getClaim("code");
             String code = codeClaim.asString(); // 提取 "code" 字段
 
             if (code == null || code.isEmpty()) {

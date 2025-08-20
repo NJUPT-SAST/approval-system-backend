@@ -10,7 +10,6 @@ import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.FileMapper;
 import fun.sast.service.FileService;
-import fun.sast.utils.FileUtil;
 import fun.sast.utils.OSSUtil;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 public class FileServiceImpl implements FileService {
     private final FileMapper fileMapper;
     private final OSSUtil ossUtil;
-    private final FileUtil fileUtil;
 
     @Value("${file.OSS.bucket-url-prefix:}")
     String prefix;

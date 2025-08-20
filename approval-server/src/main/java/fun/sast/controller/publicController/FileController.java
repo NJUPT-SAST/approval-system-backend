@@ -2,8 +2,6 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.FileService;
-import fun.sast.utils.FileUtil;
-import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final OSSUtil ossUtil;
     private final FileService fileService;
-    private final FileUtil fileUtil;
 
     /**
      * 获取下载凭证
@@ -27,8 +23,7 @@ public class FileController {
     @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
     public String downloadCertificate(@RequestParam String url) {
-        String certificateUrl = fileService.getDownloadCertificate(url);
-        return certificateUrl;
+        return fileService.getDownloadCertificate(url);
     }
 
     /**
