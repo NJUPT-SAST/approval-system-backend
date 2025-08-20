@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 import fun.sast.annotation.CheckRole;
 import fun.sast.annotation.OperateLog;
 import fun.sast.annotation.PassToken;
-import fun.sast.controller.publicController.UserResponse;
 import fun.sast.entity.User;
 import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
@@ -74,33 +73,6 @@ public class UserController {
     @GetMapping("/com/info/{comId}")
     public Map<String, Object> getComInfo(@PathVariable Long comId) {
         return userService.getComInfo(comId);
-    }
-
-    /**
-     * 获取上传凭证
-     *
-     * @param id 比赛ID
-     * @param input 输入框名称
-     * @param filename 文件名
-     */
-    @OperateLog("获取上传凭证")
-    @GetMapping("/com/uploadCertificate")
-    public Map<String, String> getUploadCertificate(
-            @RequestParam Long id, @RequestParam String input, @RequestParam String filename) {
-        User user = UserInterceptor.userHolder.get();
-        return userService.getUploadCertificate(user, id, input, filename);
-    }
-
-    /**
-     * 获取当前用户信息
-     *
-     * @return 数据
-     */
-    @OperateLog("获取当前用户信息")
-    @GetMapping("/profile")
-    public UserResponse getUserProfile() {
-        User user = UserInterceptor.userHolder.get();
-        return userService.getUserProfile(user);
     }
 
     /**

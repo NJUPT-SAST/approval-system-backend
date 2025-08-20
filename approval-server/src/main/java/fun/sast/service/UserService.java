@@ -2,7 +2,6 @@ package fun.sast.service;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import fun.sast.controller.publicController.UserResponse;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
 import fun.sast.vo.UserLoginVO;
@@ -28,10 +27,6 @@ public interface UserService {
     Map<String, Object> searchComName(String key, Integer cur, Integer limit);
 
     Map<String, Object> getTeamInfo(User user, Long comId);
-
-    Map<String, String> getUploadCertificate(User user, Long comId, String input, String filename);
-
-    UserResponse getUserProfile(User user);
 
     JSONObject getComSchemaTemplate(Long comId);
 

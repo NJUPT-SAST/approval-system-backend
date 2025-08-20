@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import fun.sast.Exception.BaseException;
-import fun.sast.controller.publicController.UserResponse;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.Competition;
 import fun.sast.entity.User;
@@ -141,31 +140,6 @@ public class UserServiceImpl implements UserService {
         result.put("success", false);
         result.put("message", "团队信息未找到");
         return result;
-    }
-
-    // 上传证书
-    @Override
-    public Map<String, String> getUploadCertificate(
-            User user, Long comId, String input, String filename) {
-        // 实际应用中，这里应该处理证书上传逻辑
-        Map<String, String> result = new HashMap<>();
-        result.put("success", "true");
-        result.put("message", "证书上传成功");
-        result.put("url", "/certificates/" + filename);
-        return result;
-    }
-
-    // 查询用户个人信息
-    @Override
-    public UserResponse getUserProfile(User user) {
-        UserResponse response = new UserResponse();
-        if (user != null) {
-            // 假设User实体类中有这些字段
-            response.setName(user.getName());
-            response.setCode(user.getCode());
-            // 填充其他字段...
-        }
-        return response;
     }
 
     // 查询比赛报名表单模板
