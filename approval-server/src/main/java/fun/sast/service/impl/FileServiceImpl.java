@@ -42,13 +42,17 @@ public class FileServiceImpl implements FileService {
         // 解码
         url = URLDecoder.decode(url, StandardCharsets.UTF_8);
 
+        // 判断url是否合法
+        if (!ossUtil.isOSSBucketURL(url)) {
+            throw new BaseException(ErrorEnum.INVALID_URL_ERROR);
+        }
+
         // 提取 objectKey
         String objectKey = url.startsWith(prefix) ? url.substring(prefix.length()) : url;
 
         QueryWrapper<File> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("url", objectKey);
         File file = fileMapper.selectOne(queryWrapper);
-
         if (file == null) {
             throw new BaseException(ErrorEnum.FILE_NOT_EXIST);
         }

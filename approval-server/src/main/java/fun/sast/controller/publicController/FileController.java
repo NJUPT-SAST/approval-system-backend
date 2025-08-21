@@ -2,7 +2,6 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.FileService;
-import fun.sast.utils.OSSUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class FileController {
 
-    private final OSSUtil ossUtil;
     private final FileService fileService;
 
     /**
@@ -36,12 +34,6 @@ public class FileController {
     @GetMapping("/com/file/download")
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
-        // 判断是否是 自己的OSS 文件地址
-        if (!ossUtil.isLegalOSSUrl(url)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid OSS URL.");
-            return;
-        }
         // 获取带签名的下载链接
         String signedUrl = fileService.getDownloadCertificate(url);
         // 重定向到签名地址进行下载

@@ -3,13 +3,12 @@ package fun.sast.controller.publicController;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.dto.VerifyCodeDTO;
-import fun.sast.response.GlobalResponse;
 import fun.sast.service.LoginService;
 import fun.sast.service.UserService;
 import fun.sast.vo.UserLoginVO;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,19 +30,16 @@ public class LoginController {
         return userService.login(userLoginDTO, captcha);
     }
 
-    /**
-     * @return 获取验证码图片，头部以及响应体
-     */
-    @ResponseResult
     @GetMapping("/getValidateCode")
-    public ResponseEntity<GlobalResponse<String>> getValidateCode(HttpServletResponse response) {
-        // 获取验证码信息
+    public void getValidateCode(HttpServletResponse response) throws IOException {
         VerifyCodeDTO verifyCodeDTO = loginService.getVerifyCode();
-
         // 设置响应头
-        response.setHeader("CAPTCHA", verifyCodeDTO.getKey());
-
-        // 返回Base64图片数据
-        return  ResponseEntity.ok(GlobalResponse.success(verifyCodeDTO.getImage()));
+        response.setContentType("image/png");
+        response.addHeader("CAPTCHA", verifyCodeDTO.getKey());
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        // 写入输出流
+        response.getOutputStream().write(verifyCodeDTO.getImage());
+        response.getOutputStream().flush();
     }
 }

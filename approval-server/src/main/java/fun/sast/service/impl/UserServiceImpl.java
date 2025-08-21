@@ -23,21 +23,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final RedisUtil redisUtil;
 
-    /**
-     * 验证用户信息
-     *
-     * @param code 学号
-     * @param password 密码
-     * @return 用户信息
-     */
-    @Override
-    public User authenticate(String code, String password) {
-        //        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        //        queryWrapper.eq("code", code).eq("password", password);
-        //        return userMapper.selectOne(queryWrapper);
-        return new User();
-    }
-
     private boolean isBlank(String str) {
         return str == null || str.trim().isEmpty();
     }
