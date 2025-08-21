@@ -14,8 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 class FileUtilTest {
 
-    @Mock
-    private OSSUtil ossUtil;
+    @Mock private OSSUtil ossUtil;
 
     private FileUtil fileUtil;
 
@@ -49,7 +48,8 @@ class FileUtilTest {
     @Test
     void testGetObjectKey_invalidUrl_shouldThrow() {
         String invalidUrl = "not-a-url";
-        BaseException ex = assertThrows(BaseException.class, () -> FileUtil.getObjectKey(invalidUrl));
+        BaseException ex =
+                assertThrows(BaseException.class, () -> FileUtil.getObjectKey(invalidUrl));
         assertEquals(ErrorEnum.INVALID_URL_ERROR, ex.getErrorEnum());
     }
 
@@ -113,8 +113,10 @@ class FileUtilTest {
             mockStatic.when(() -> CommonUtil.getTypeByFilename(filename)).thenReturn("exe");
             mockStatic.when(() -> CommonUtil.isAllowUploadType("exe")).thenReturn(false);
 
-            BaseException ex = assertThrows(BaseException.class, () ->
-                    fileUtil.getUploadCertificate(filename, comId, id, input));
+            BaseException ex =
+                    assertThrows(
+                            BaseException.class,
+                            () -> fileUtil.getUploadCertificate(filename, comId, id, input));
             assertEquals(ErrorEnum.INVALID_FILE_TYPE_ERROR, ex.getErrorEnum());
 
             // 验证OSSUtil方法没有被调用
