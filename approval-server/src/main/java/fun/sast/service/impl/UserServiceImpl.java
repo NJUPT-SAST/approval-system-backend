@@ -19,6 +19,7 @@ import fun.sast.service.ReviewService;
 import fun.sast.service.UserService;
 import fun.sast.utils.FileUtil;
 import fun.sast.utils.JwtUtil;
+import fun.sast.utils.OSSUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserLoginVO;
 import fun.sast.vo.UserProfileVO;
@@ -30,6 +31,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 @Service
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     private final JwtUtil jwtUtil;
     private final FileUtil fileUtil;
+    private final OSSUtil ossUtil;
     private final RedisUtil redisUtil;
     private final ReviewService reviewService;
     private final CompetitionService competitionService;
@@ -266,7 +269,7 @@ public class UserServiceImpl implements UserService {
             workSchema.setContent(content);
             workSchema.setIsFile(false);
             // 单独处理文件
-            if (fileUtil.isOSSBucketURL(content)) {
+            if (ossUtil.isOSSBucketURL(content)) {
                 fileService.processSubmissionFiles(user, comId, content, title);
                 workSchema.setIsFile(true);
             }

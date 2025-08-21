@@ -102,7 +102,8 @@ public class FileServiceImpl implements FileService {
             file = cache.toFile();
             fileMapper.insert(file);
         } else if (!file.getUrl().equalsIgnoreCase(content)) {
-            fileUtil.deleteFileOSS(file.getUrl(), FileUtil.PRIVATE_BUCKET);
+            // 删除旧文件并更新为新文件
+            fileUtil.deleteFileOSS(file.getUrl(), FileUtil.PRIVATE_FOLDER);
             file.setUrl(content);
             fileMapper.updateById(file);
         }

@@ -110,7 +110,7 @@ public class OSSUtil {
             throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
         }
 
-        String key = FileUtil.getObjectNameOSS(url);
+        String key = extractObjectKey(url);
 
         // 设置预签名URL过期时间
         Date expiration = new Date(System.currentTimeMillis() + downloadExpiredTime * 60 * 1000);
@@ -156,7 +156,7 @@ public class OSSUtil {
      */
     public void deleteFileOSS(String url, int folderNum) {
         String folderName = getBaseFolderName(folderNum);
-        String objectName = FileUtil.getObjectNameOSS(url);
+        String objectName = extractObjectKey(url);
         String key = folderName + "/" + objectName;
         ossClient.deleteObject(bucketName, key);
     }
