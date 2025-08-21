@@ -1,5 +1,7 @@
 package fun.sast.handler;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.response.GlobalResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,13 @@ public class GlobalResponseHandler implements ResponseBodyAdvice<Object> {
             return GlobalResponse.success();
         } else if (body instanceof GlobalResponse) {
             return body;
+        } else if (body instanceof String) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                return mapper.writeValueAsString(GlobalResponse.success(body));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }
         return GlobalResponse.success(body);
     }

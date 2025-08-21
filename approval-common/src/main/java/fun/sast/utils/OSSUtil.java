@@ -7,6 +7,8 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProvider;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import fun.sast.Exception.BaseException;
+import fun.sast.enums.ErrorEnum;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -54,6 +56,9 @@ public class OSSUtil {
         this.downloadExpiredTime = downloadExpiredTime;
     }
 
+    @Value("${file.OSS.bucket-url-prefix}")
+    private String bucketUrlPrefix;
+
     /**
      * 获取上传凭证
      *
@@ -100,9 +105,11 @@ public class OSSUtil {
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {
-        log.info("获取从OSS下载凭证，文件地址：{}", url);
-        // String objectName = FileUtil.getObjectNameOSS(url);
-        // String key = privateFolder + "/" + objectName;
+        // 在获取凭证前校验前缀
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
+            throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
+        }
+
         String key = FileUtil.getObjectNameOSS(url);
 
         // 设置预签名URL过期时间
@@ -115,9 +122,6 @@ public class OSSUtil {
 
         return ossClient.generatePresignedUrl(request).toString();
     }
-
-    @Value("${file.OSS.bucket-url-prefix}")
-    private String bucketUrlPrefix;
 
     /**
      * 判断是否为合法 OSS 文件地址（是否以配置的前缀开头）
