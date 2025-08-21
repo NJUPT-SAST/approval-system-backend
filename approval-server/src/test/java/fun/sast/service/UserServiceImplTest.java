@@ -13,6 +13,7 @@ import fun.sast.enums.ErrorEnum;
 import fun.sast.mapper.*;
 import fun.sast.service.impl.UserServiceImpl;
 import fun.sast.utils.FileUtil;
+import fun.sast.utils.OSSUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserProfileVO;
 import java.util.LinkedList;
@@ -29,6 +30,8 @@ class UserServiceImplTest {
     @InjectMocks private UserServiceImpl userService;
 
     @Mock private FileUtil fileUtil;
+
+    @Mock private OSSUtil ossUtil;
 
     @Mock private RedisUtil redisUtil;
 
@@ -288,7 +291,7 @@ class UserServiceImplTest {
 
         when(workMapper.selectOne(any())).thenReturn(null);
         doNothing().when(competitionService).validateSubmissionPeriod(anyLong());
-        when(fileUtil.isOSSBucketURL(anyString())).thenReturn(true);
+        when(ossUtil.isOSSBucketURL(anyString())).thenReturn(true);
 
         // When
         userService.uploadComSchema(testUser, 1L, schemaList);
@@ -333,7 +336,7 @@ class UserServiceImplTest {
 
         when(workMapper.selectOne(any())).thenReturn(null);
         doNothing().when(competitionService).validateSubmissionPeriod(anyLong());
-        when(fileUtil.isOSSBucketURL(anyString())).thenReturn(true);
+        when(ossUtil.isOSSBucketURL(anyString())).thenReturn(true);
 
         // When
         userService.uploadComSchema(testUser, 1L, schemaList);
