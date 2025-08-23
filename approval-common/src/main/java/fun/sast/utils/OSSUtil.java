@@ -88,6 +88,7 @@ public class OSSUtil {
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest requestToGetToken = attributes.getRequest();
         String userCode = jwtUtil.resolveJwt(requestToGetToken.getHeader("Token"));
+
         // 提取文件名
         String fileName = FileUtil.getObjectNameOSS(url);
 
