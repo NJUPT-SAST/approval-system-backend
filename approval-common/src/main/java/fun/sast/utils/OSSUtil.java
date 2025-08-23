@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -60,6 +61,9 @@ public class OSSUtil {
         this.downloadExpiredTime = downloadExpiredTime;
     }
 
+    @Value("${file.OSS.bucket-url-prefix}")
+    private String bucketUrlPrefix;
+
     /**
      * 判断字符串是否为Bucket上的文件地址
      *
@@ -83,6 +87,11 @@ public class OSSUtil {
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {
+        // 在获取凭证前校验前缀空值
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
+            throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
+        }
+
         // 获取code作为key
         ServletRequestAttributes attributes =
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
