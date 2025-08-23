@@ -18,7 +18,7 @@ public class FileController {
     /**
      * 获取下载凭证
      *
-     * @param url 文件地址例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件地址例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      */
     @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
