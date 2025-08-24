@@ -26,13 +26,11 @@
         <dependency>
             <groupId>fun.sast</groupId>
             <artifactId>approval-pojo</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>fun.sast</groupId>
             <artifactId>approval-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

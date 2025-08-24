@@ -96,6 +96,16 @@
                 <artifactId>java-jwt</artifactId>
                 <version>${auth0.version}</version>
             </dependency>
+            <dependency>
+                <groupId>fun.sast</groupId>
+                <artifactId>approval-pojo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fun.sast</groupId>
+                <artifactId>approval-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
