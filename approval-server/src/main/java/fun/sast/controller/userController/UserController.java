@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import fun.sast.annotation.CheckRole;
 import fun.sast.annotation.OperateLog;
 import fun.sast.annotation.PassToken;
+import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
 import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
@@ -37,6 +38,7 @@ public class UserController {
      * @param limit 每页数据个数
      * @return 数据
      */
+    @ResponseResult
     @PassToken
     @OperateLog("获取所有比赛列表")
     @GetMapping("/com/list")
@@ -53,11 +55,11 @@ public class UserController {
      * @param limit 每页数据个数
      * @return 数据
      */
+    @ResponseResult
     @OperateLog("获取已报名比赛列表")
     @GetMapping("/com/signList")
-    public Map<String, Object> getSignedComList(
-            @RequestParam(defaultValue = "1") Integer cur,
-            @RequestParam(defaultValue = "10") Integer limit) {
+    public Map<String, Object> getSignedComList(@RequestParam(defaultValue = "1") Integer cur,
+                                                @RequestParam(defaultValue = "10") Integer limit) {
         User user = UserInterceptor.userHolder.get();
         return userService.getSignedComList(user, cur, limit);
     }
@@ -68,6 +70,7 @@ public class UserController {
      * @param comId 比赛ID
      * @return 数据
      */
+    @ResponseResult
     @PassToken
     @OperateLog("获取比赛详情")
     @GetMapping("/com/info/{comId}")
@@ -81,6 +84,7 @@ public class UserController {
      * @param comId 比赛ID
      * @return 团队成员List
      */
+    @ResponseResult
     @OperateLog("获取比赛团队信息")
     @GetMapping("/com/teamInfo/{comId}")
     public Map<String, Object> getTeamInfo(@PathVariable Long comId) {
@@ -94,6 +98,7 @@ public class UserController {
      * @param comId 比赛ID
      * @return 数据
      */
+    @ResponseResult
     @OperateLog("获取比赛报名信息")
     @GetMapping("/com/signInfo/{comId}")
     public Map<String, Object> getComSignUpInfo(@PathVariable Long comId) {
@@ -106,6 +111,7 @@ public class UserController {
      * @param comId 比赛ID
      * @return 表单Schema
      */
+    @ResponseResult
     @OperateLog("获取需要提交的资料表单")
     @GetMapping("/com/schema/{comId}")
     public JSONObject getComSchemaTemplate(@PathVariable Long comId) {
@@ -118,6 +124,7 @@ public class UserController {
      * @param comId 比赛ID
      * @param jsonData 表单数据
      */
+    @ResponseResult
     @OperateLog("提交作品资料表单")
     @PostMapping("/com/uploadSchema/{comId}")
     public void uploadComSchema(@PathVariable Long comId, @RequestBody String jsonData) {
@@ -131,6 +138,7 @@ public class UserController {
      * @param comId 比赛ID
      * @return 表单数据
      */
+    @ResponseResult
     @OperateLog("获取已提交的资料表单")
     @GetMapping("/com/getSchema/{comId}")
     public JSONArray getComSchema(@PathVariable Long comId) {
@@ -144,6 +152,7 @@ public class UserController {
      * @param key 关键词
      * @return 比赛列表
      */
+    @ResponseResult
     @PassToken
     @OperateLog("查找比赛")
     @GetMapping("/com/search")

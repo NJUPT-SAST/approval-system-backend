@@ -4,36 +4,25 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final String secret;
 
-    @Value("${jwt.expiration}")
-    private long expiration;
+    private final long expiration;
 
-    public String generateToken(String code) {
-        Date now = new Date();
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("code", code);
-        return Jwts.builder()
-                .setIssuedAt(now)
-                .setClaims(claims)
-                .setExpiration(new Date(now.getTime() + expiration))
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+    public JwtUtil(
+            @Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") long expiration) {
+        this.secret = secret;
+        this.expiration = expiration;
     }
 
     /**
@@ -58,8 +47,11 @@ public class JwtUtil {
     public String resolveJwt(String token) {
         try {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
-            DecodedJWT verify = jwtVerifier.verify(token); // 验证 token 签名和过期
-            String code = verify.getClaim("code").asString(); // 提取 "code" 字段
+            DecodedJWT verify = jwtVerifier.verify(token);
+
+            // 先判断是否存在code
+            Claim codeClaim = verify.getClaim("code");
+            String code = codeClaim.asString(); // 提取 "code" 字段
 
             if (code == null || code.isEmpty()) {
                 throw new BaseException(ErrorEnum.COMMON_ERROR);

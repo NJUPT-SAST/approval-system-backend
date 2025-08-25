@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectOne(queryWrapper);
         if (user == null) {
             log.warn("用户验证失败: 学号={}", code);
-            return null;
+            throw new BaseException(ErrorEnum.LOGIN_ERROR);
         }
         log.info("用户验证成功: 学号={}", code);
         return user;
@@ -60,42 +60,81 @@ public class UserServiceImpl implements UserService {
     // 分页查询所有已审批的比赛列表
     @Override
     public Map<String, Object> getAllComList(Integer cur, Integer limit) {
-        IPage<Competition> page = new Page<>(cur, limit);
-        QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("is_review", Competition.REVIEWED);
-        queryWrapper.orderByDesc("id");
-        IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
+        try {
+            if (cur == null || cur < 1) {
+                cur = 1;
+            }
+            if (limit == null || limit < 1 || limit > 100) {
+                limit = 10;
+            }
+            IPage<Competition> page = new Page<>(cur, limit);
+            QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("is_review", Competition.REVIEWED);
+            queryWrapper.orderByDesc("id");
+            IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("total", competitionPage.getTotal());
-        result.put("list", competitionPage.getRecords());
-        return result;
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", competitionPage.getTotal());
+            result.put("list", competitionPage.getRecords());
+            return result;
+        } catch (Exception e) {
+            log.error("分页查询所有已审批的比赛列表失败", e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
+        }
     }
 
     // 分页查询用户已报名的比赛列表
     @Override
     public Map<String, Object> getSignedComList(User user, Integer cur, Integer limit) {
+        // 参数校验
+        if (user == null) {
+            throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+        }
+        if (cur == null || cur < 1) {
+            cur = 1;
+        }
+        if (limit == null || limit < 1 || limit > 100) {
+            limit = 10;
+        }
+
         // 实际应用中，这里应该查询用户已报名的比赛
         // 假设我们有一个关联表user_competition记录用户报名信息
-        // 这里简单返回空列表作为示例
-        Map<String, Object> result = new HashMap<>();
-        result.put("total", 0);
-        result.put("list", Collections.emptyList());
-        return result;
+        IPage<Competition> page = new Page<>(cur, limit);
+        
+        // 假设存在user_competition表，关联userId和competitionId
+        QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
+        // 使用参数化查询避免SQL注入
+        queryWrapper.lambda().inSql(Competition::getId, String.format("SELECT com_id FROM user_competition WHERE user_id = %d", user.getId()));
+        queryWrapper.orderByDesc("id");
+        
+        try {
+            IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("total", competitionPage.getTotal());
+            result.put("list", competitionPage.getRecords());
+            return result;
+        } catch (BaseException e) {
+            // 处理已定义的业务异常
+            log.error("查询用户报名比赛列表失败: userId={}, 错误信息: {}", user.getId(), e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            // 处理未定义的系统异常
+            log.error("查询用户报名比赛列表失败: userId={}", user.getId(), e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
+        }
     }
 
     // 查询比赛详情
     @Override
     public Map<String, Object> getComInfo(Long comId) {
         Competition competition = competitionMapper.selectById(comId);
-        Map<String, Object> result = new HashMap<>();
-        if (competition != null) {
-            result.put("success", true);
-            result.put("data", competition);
-        } else {
-            result.put("success", false);
-            result.put("message", "比赛不存在");
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("data", competition);
         return result;
     }
 
@@ -103,17 +142,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getComSignUpInfo(Long comId) {
         Competition competition = competitionMapper.selectById(comId);
-        Map<String, Object> result = new HashMap<>();
-        if (competition != null) {
-            result.put("success", true);
-            result.put("maxTeamMembers", competition.getMaxTeamMembers());
-            result.put("minTeamMembers", competition.getMinTeamMembers());
-            result.put("regBeginTime", competition.getRegBeginTime());
-            result.put("regEndTime", competition.getRegEndTime());
-        } else {
-            result.put("success", false);
-            result.put("message", "比赛不存在");
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("maxTeamMembers", competition.getMaxTeamMembers());
+        result.put("minTeamMembers", competition.getMinTeamMembers());
+        result.put("regBeginTime", competition.getRegBeginTime());
+        result.put("regEndTime", competition.getRegEndTime());
         return result;
     }
 
@@ -121,30 +158,47 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> searchComName(String key, Integer cur, Integer limit) {
-        IPage<Competition> page = new Page<>(cur, limit);
-        QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", key).eq("is_review", Competition.REVIEWED);
-        IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
+        try {
+            if (cur == null || cur < 1) {
+                cur = 1;
+            }
+            if (limit == null || limit < 1 || limit > 100) {
+                limit = 10;
+            }
+            IPage<Competition> page = new Page<>(cur, limit);
+            QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
+            queryWrapper.like("name", key).eq("is_review", Competition.REVIEWED);
+            IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("total", competitionPage.getTotal());
-        result.put("list", competitionPage.getRecords());
-        return result;
+            Map<String, Object> result = new HashMap<>();
+            result.put("total", competitionPage.getTotal());
+            result.put("list", competitionPage.getRecords());
+            return result;
+        } catch (Exception e) {
+            log.error("搜索比赛名称失败: key={}", key, e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
+        }
     }
 
     // 查询用户在指定比赛中的团队信息
     @Override
     public Map<String, Object> getTeamInfo(User user, Long comId) {
         // 实际应用中，这里应该查询用户在指定比赛中的团队信息
-        Map<String, Object> result = new HashMap<>();
-        result.put("success", false);
-        result.put("message", "团队信息未找到");
-        return result;
+        // 此处改为抛出异常，而不是返回包含错误信息的Map
+        throw new BaseException(ErrorEnum.NO_RESULT);
     }
 
     // 查询比赛报名表单模板
     @Override
     public JSONObject getComSchemaTemplate(Long comId) {
+        if (comId == null || comId <= 0) {
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+        }
+        // 检查比赛是否存在
+        Competition competition = competitionMapper.selectById(comId);
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
+        }
         JSONObject template = new JSONObject();
         JSONArray fields = new JSONArray();
 
@@ -171,6 +225,12 @@ public class UserServiceImpl implements UserService {
     // 查询用户已报名的比赛表单数据
     @Override
     public JSONArray getComSchema(User user, Long comId) {
+        if (user == null) {
+            throw new BaseException(ErrorEnum.NO_LOGIN);
+        }
+        if (comId == null || comId <= 0) {
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+        }
         // 实际应用中，这里应该查询用户针对该比赛的报名表单数据
         JSONArray schema = new JSONArray();
         // 示例数据
@@ -187,19 +247,19 @@ public class UserServiceImpl implements UserService {
     public void uploadComSchema(User user, Long comId, String jsonData) {
         // 参数校验
         if (user == null) {
-            throw new RuntimeException("用户未登录");
+            throw new BaseException(ErrorEnum.NO_LOGIN);
         }
         if (comId == null || comId <= 0) {
-            throw new RuntimeException("比赛ID无效");
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
         }
         if (jsonData == null || jsonData.trim().isEmpty()) {
-            throw new RuntimeException("表单数据不能为空");
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
 
         // 业务逻辑校验 - 检查比赛是否存在
         Competition competition = competitionMapper.selectById(comId);
         if (competition == null) {
-            throw new RuntimeException("比赛不存在");
+            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
         // 可以添加更多业务校验，例如检查比赛是否已截止报名等
 
@@ -207,22 +267,22 @@ public class UserServiceImpl implements UserService {
             // 校验JSON格式
             JSONObject data = JSONObject.parseObject(jsonData);
             if (data.isEmpty()) {
-                throw new RuntimeException("表单数据不能为空");
+                throw new BaseException(ErrorEnum.COMMON_ERROR);
             }
 
             // 可以添加表单字段校验
             // 例如检查必填字段是否存在
             if (!data.containsKey("teamName")) {
-                throw new RuntimeException("团队名称不能为空");
+                throw new BaseException(ErrorEnum.COMMON_ERROR);
             }
             // 保存数据到数据库...
             log.info("用户 {} 上传比赛 {} 的表单数据成功", user.getId(), comId);
         } catch (JSONException e) {
             log.error("上传表单数据失败：JSON格式无效", e);
-            throw new RuntimeException("表单数据格式无效", e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
         } catch (Exception e) {
             log.error("上传表单数据失败", e);
-            throw new RuntimeException("上传表单数据失败", e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
     }
 
@@ -231,13 +291,32 @@ public class UserServiceImpl implements UserService {
     public void signUpCom(User user, String jsonData) {
         // 实际应用中，这里应该处理比赛报名逻辑
         try {
+            if (user == null) {
+                throw new BaseException(ErrorEnum.NO_LOGIN);
+            }
+            if (jsonData == null || jsonData.trim().isEmpty()) {
+                throw new BaseException(ErrorEnum.COMMON_ERROR);
+            }
             JSONObject data = JSONObject.parseObject(jsonData);
             Long comId = data.getLong("comId");
-            // 执行报名逻辑...
+            if (comId == null || comId <= 0) {
+                throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+            }
+            // 检查比赛是否存在
+            Competition competition = competitionMapper.selectById(comId);
+            if (competition == null) {
+                throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
+            }
+            // 执行报名逻辑
             log.info("用户 {} 报名比赛 {} 成功", user.getId(), comId);
+        } catch (JSONException e) {
+            log.error("报名比赛失败:JSON格式无效", e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
+        } catch (BaseException e) {
+            throw e;
         } catch (Exception e) {
             log.error("报名比赛失败", e);
-            throw new RuntimeException("报名比赛失败", e);
+            throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
     }
 

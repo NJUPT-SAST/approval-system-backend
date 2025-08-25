@@ -8,13 +8,6 @@ import fun.sast.vo.UserLoginVO;
 import java.util.Map;
 
 public interface UserService {
-    /**
-     * 验证用户
-     *
-     * @param code 学号
-     * @param password 密码
-     */
-    User authenticate(String code, String password);
 
     Map<String, Object> getAllComList(Integer cur, Integer limit);
 
@@ -36,6 +29,8 @@ public interface UserService {
 
     void signUpCom(User user, String jsonData);
 
+    User authenticate(String code, String password);
+
     /**
      * 用户登录
      *
@@ -43,4 +38,12 @@ public interface UserService {
      * @param captcha 验证码ID
      */
     UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
+
+    /**
+     * 验证用户信息
+     *
+     * @param code 学号
+     * @param password 密码
+     * @return 用户信息
+     */
 }

@@ -4,6 +4,7 @@ import com.wf.captcha.SpecCaptcha;
 import fun.sast.dto.VerifyCodeDTO;
 import fun.sast.service.LoginService;
 import fun.sast.utils.RedisUtil;
+import java.util.Base64;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,13 @@ public class LoginServiceImpl implements LoginService {
         SpecCaptcha captcha = new SpecCaptcha(130, 48, 5); // 宽度, 高度, 字符数
         String verifyCodeText = captcha.text();
         String verifyCodeKey = UUID.randomUUID().toString();
-        // 验证码图片base64
-        VerifyCodeDTO verifyCodeDTO = new VerifyCodeDTO(verifyCodeKey, captcha.toBase64(), null);
+        // 原始验证码图片base64
+        String base64Image = captcha.toBase64();
+        // 去掉前缀 data:image/png;base64, 只保留纯 Base64 数据
+        base64Image = base64Image.substring(base64Image.indexOf(",") + 1);
+        // 转二进制
+        byte[] imageBytes = Base64.getDecoder().decode(base64Image);
+        VerifyCodeDTO verifyCodeDTO = new VerifyCodeDTO(verifyCodeKey, imageBytes, null);
         // 将验证码文本存入Redis，过期时间60s
         redisUtil.set(verifyCodeKey, verifyCodeText, 60);
 
