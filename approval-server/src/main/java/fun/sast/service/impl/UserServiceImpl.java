@@ -19,7 +19,6 @@ import fun.sast.utils.JwtUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserLoginVO;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -100,13 +99,19 @@ public class UserServiceImpl implements UserService {
         // 实际应用中，这里应该查询用户已报名的比赛
         // 假设我们有一个关联表user_competition记录用户报名信息
         IPage<Competition> page = new Page<>(cur, limit);
-        
+
         // 假设存在user_competition表，关联userId和competitionId
         QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
         // 使用参数化查询避免SQL注入
-        queryWrapper.lambda().inSql(Competition::getId, String.format("SELECT com_id FROM user_competition WHERE user_id = %d", user.getId()));
+        queryWrapper
+                .lambda()
+                .inSql(
+                        Competition::getId,
+                        String.format(
+                                "SELECT com_id FROM user_competition WHERE user_id = %d",
+                                user.getId()));
         queryWrapper.orderByDesc("id");
-        
+
         try {
             IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
             Map<String, Object> result = new HashMap<>();

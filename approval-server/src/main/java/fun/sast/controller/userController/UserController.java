@@ -58,8 +58,9 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取已报名比赛列表")
     @GetMapping("/com/signList")
-    public Map<String, Object> getSignedComList(@RequestParam(defaultValue = "1") Integer cur,
-                                                @RequestParam(defaultValue = "10") Integer limit) {
+    public Map<String, Object> getSignedComList(
+            @RequestParam(defaultValue = "1") Integer cur,
+            @RequestParam(defaultValue = "10") Integer limit) {
         User user = UserInterceptor.userHolder.get();
         return userService.getSignedComList(user, cur, limit);
     }
