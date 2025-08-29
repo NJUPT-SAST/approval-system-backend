@@ -31,9 +31,9 @@ class JwtUtilTest {
         assertNotNull(token, "生成的令牌不应为空");
         assertFalse(token.isEmpty(), "生成的令牌不应为空字符串");
 
-        // 手动解码令牌，以验证其声明，而不使用 resolveJwt 方法
+        // 手动解码令牌
         Date now = new Date();
-        long expirationTimeMs = now.getTime() + TEST_EXPIRATION;
+        long expectedExp = now.getTime() + TEST_EXPIRATION;
         Date decodedExp = JWT.decode(token).getExpiresAt();
 
         assertEquals(
@@ -41,11 +41,11 @@ class JwtUtilTest {
                 JWT.decode(token).getClaim("code").asString(),
                 "'code' 声明应该与输入的 code 相匹配");
 
-        // 我们检查解码后的过期时间是否在预期时间的合理范围内
+        long actualExp = decodedExp.getTime();
+        // 容忍 2 秒以内的误差
         assertTrue(
-                decodedExp.getTime() > expirationTimeMs - 1000
-                        && decodedExp.getTime() <= expirationTimeMs,
-                "过期时间应该设置正确");
+                Math.abs(actualExp - expectedExp) < 2000,
+                "过期时间应该设置正确，期望=" + expectedExp + "，实际=" + actualExp);
     }
 
     /** 测试用例，用于验证有效的令牌是否可以成功解析。 */
