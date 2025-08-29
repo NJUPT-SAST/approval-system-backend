@@ -1,5 +1,6 @@
 package fun.sast.utils;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class RedisUtil {
     @Resource private RedisTemplate<String, Object> redisTemplate;
 
+    @PostConstruct
     private void initStringSerializer() {
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new StringRedisSerializer());
@@ -35,7 +37,6 @@ public class RedisUtil {
      * @param timeout
      */
     public void set(String key, Object value, long timeout) {
-        initStringSerializer();
         redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
     }
 
@@ -46,7 +47,6 @@ public class RedisUtil {
      * @return
      */
     public boolean delete(String key) {
-        initStringSerializer();
         redisTemplate.delete(key);
         // 如果还存在这个 key 就证明删除失败
         if (redisTemplate.hasKey(key)) {
@@ -64,7 +64,6 @@ public class RedisUtil {
      * @return
      */
     public Object get(String key) {
-        initStringSerializer();
         if (redisTemplate.hasKey(key)) {
             return redisTemplate.opsForValue().get(key);
         } else {
@@ -79,7 +78,6 @@ public class RedisUtil {
      * @return
      */
     public long getExpire(String key) {
-        initStringSerializer();
         // 判断是否存在
         if (redisTemplate.hasKey(key)) {
             return redisTemplate.getExpire(key);

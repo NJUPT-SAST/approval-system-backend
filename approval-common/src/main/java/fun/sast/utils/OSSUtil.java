@@ -9,17 +9,13 @@ import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
-import jakarta.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Component
@@ -31,9 +27,6 @@ public class OSSUtil {
     private final String privateFolder;
     private final Integer uploadExpiredTime;
     private final Integer downloadExpiredTime;
-
-    @Autowired private OSSRateLimiterUtil ossRateLimiterUtil;
-    @Autowired private JwtUtil jwtUtil;
 
     public OSSUtil(
             @Value("${file.OSS.accessKeyId:}") String accessKeyId,
@@ -92,25 +85,8 @@ public class OSSUtil {
             throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
         }
 
-        // 获取code作为key
-        ServletRequestAttributes attributes =
-                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest requestToGetToken = attributes.getRequest();
-        String userCode = jwtUtil.resolveJwt(requestToGetToken.getHeader("Token"));
-
         // 提取文件名
         String fileName = FileUtil.getObjectNameOSS(url);
-
-        // 全局限流：限制用户总下载次数
-        if (!ossRateLimiterUtil.tryAcquire("download:" + userCode, 30, 60000, 120)) {
-            throw new BaseException(ErrorEnum.TOO_MANY_REQUESTS);
-        }
-
-        // 单文件限流：限制用户单文件下载次数
-        if (!ossRateLimiterUtil.tryAcquire(
-                "download:" + userCode + ":" + fileName, 5, 60000, 120)) {
-            throw new BaseException(ErrorEnum.TOO_MANY_REQUESTS);
-        }
 
         // 设置预签名URL过期时间
         Date expiration = new Date(System.currentTimeMillis() + downloadExpiredTime * 60 * 1000);

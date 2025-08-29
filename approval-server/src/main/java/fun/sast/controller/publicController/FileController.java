@@ -1,5 +1,6 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.annotation.RateLimited;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +33,7 @@ public class FileController {
      * @throws IOException
      */
     @GetMapping("/com/file/download")
+    @RateLimited
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
         // 获取带签名的下载链接
