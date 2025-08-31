@@ -4,4 +4,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import fun.sast.entity.Score;
 
 public interface ScoreService extends IService<Score> {
+    public Boolean scorePoint();
 }
