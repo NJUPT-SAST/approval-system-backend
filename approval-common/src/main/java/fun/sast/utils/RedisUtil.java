@@ -1,23 +1,13 @@
 package fun.sast.utils;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RedisUtil {
     @Resource private RedisTemplate<String, Object> redisTemplate;
-
-    @PostConstruct
-    private void initStringSerializer() {
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
-    }
 
     /**
      * 设置缓存（没有时间限制）

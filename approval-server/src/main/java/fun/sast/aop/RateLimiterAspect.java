@@ -4,9 +4,7 @@ import fun.sast.Exception.BaseException;
 import fun.sast.annotation.RateLimited;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.utils.JwtUtil;
-import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
-import io.github.bucket4j.Refill;
 import jakarta.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.time.Duration;
@@ -36,12 +34,15 @@ public class RateLimiterAspect {
 
     // 创建桶
     private Bucket createBucket(RateLimited annotation) {
-        Refill refill =
-                Refill.intervally(
-                        annotation.refillTokens(),
-                        Duration.ofSeconds(annotation.refillPeriodSeconds()));
-        Bandwidth limit = Bandwidth.classic(annotation.capacity(), refill);
-        return Bucket.builder().addLimit(limit).build();
+        return Bucket.builder()
+                .addLimit(
+                        limit ->
+                                limit.capacity(annotation.capacity())
+                                        .refillGreedy(
+                                                annotation.refillTokens(),
+                                                Duration.ofSeconds(
+                                                        annotation.refillPeriodSeconds())))
+                .build();
     }
 
     @Around("@annotation(fun.sast.annotation.RateLimited)")
