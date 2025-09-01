@@ -101,11 +101,11 @@ public class OSSUtil {
     /**
      * 获取下载凭证
      *
-     * @param url 文件url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件url例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {
-        // 在获取凭证前校验前缀
+        // 在获取凭证前校验前缀空值
         if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
             throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
         }

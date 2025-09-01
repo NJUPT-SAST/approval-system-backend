@@ -13,7 +13,7 @@ jobs:
     name: Celebrate PR Merge
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
-    
+
     steps:
     - name: Send celebration message to feishu
       uses: foxundermoon/feishu-action@v2
