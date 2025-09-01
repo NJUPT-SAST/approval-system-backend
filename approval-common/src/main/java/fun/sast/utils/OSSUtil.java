@@ -144,7 +144,12 @@ public class OSSUtil {
      */
     public String extractObjectKey(String url) {
         if (isLegalOSSUrl(url)) {
-            return url.substring(bucketUrlPrefix.length());
+            String key = url.substring(bucketUrlPrefix.length());
+            // 确保key开头没有多余的斜杠
+            if (key.startsWith("/")) {
+                key = key.substring(1);
+            }
+            return key;
         }
         return null;
     }
