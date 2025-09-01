@@ -76,22 +76,23 @@ public class OSSUtil {
     /**
      * 获取下载凭证
      *
-     * @param url 文件url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件url例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {
-        // 在获取凭证前校验前缀
+        // 在获取凭证前校验前缀空值
         if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
             throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
         }
 
-        String key = FileUtil.getObjectNameOSS(url);
+        // 提取文件名
+        String fileName = FileUtil.getObjectNameOSS(url);
 
         // 设置预签名URL过期时间
         Date expiration = new Date(System.currentTimeMillis() + downloadExpiredTime * 60 * 1000);
 
         // 创建预签名请求
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key);
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileName);
         request.setExpiration(expiration);
         request.setMethod(HttpMethod.GET);
 
