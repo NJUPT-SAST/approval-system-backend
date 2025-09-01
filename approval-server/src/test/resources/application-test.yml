@@ -1,0 +1,25 @@
+jwt:
+  secret: testSecretKey1234567890123456789012
+  expiration: 3600000
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: never
+
+file:
+  OSS:
+    accessKeyId: testAccessKeyId
+    accessKeySecret: testAccessKeySecret
+    endpoint: oss-cn-hangzhou.aliyuncs.com
+    bucketName: test-bucket
+    publicFolder: public
+    privateFolder: private
+    uploadExpiredTime: 30
+    downloadExpiredTime: 30
+    bucket-url-prefix: https://test-bucket.oss-cn-hangzhou.aliyuncs.com/

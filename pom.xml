@@ -36,10 +36,11 @@
         <jackson-annotations.version>2.19.1</jackson-annotations.version>
         <fastjson2.version>2.0.35</fastjson2.version>
         <annotations.version>24.1.0</annotations.version>
-        <mockito.version>5.17.0</mockito.version>
+        <test.version>7.11.0</test.version>
+        <mockito.version>5.2.0</mockito.version>
+        <h2.version>2.3.232</h2.version>
         <bucket4j.version>8.10.1</bucket4j.version>
         <aspectj.version>1.9.24</aspectj.version>
-
     </properties>
 
 
@@ -137,19 +138,24 @@
                 <artifactId>mybatis-plus-extension</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${test.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <scope>test</scope>
                 <version>${mockito.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-junit-jupiter</artifactId>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
                 <scope>test</scope>
-                <version>${mockito.version}</version>
             </dependency>
 
             <dependency>

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Score implements Serializable {
-    /** 活动id编号 */
+    /** 比赛id编号 */
     private String comId;
 
     private String id;
