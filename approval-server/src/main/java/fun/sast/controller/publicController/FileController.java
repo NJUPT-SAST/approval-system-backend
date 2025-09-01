@@ -1,5 +1,6 @@
 package fun.sast.controller.publicController;
 
+import fun.sast.annotation.RateLimited;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.FileService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,7 @@ public class FileController {
     /**
      * 获取下载凭证
      *
-     * @param url 文件地址例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件地址例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      */
     @ResponseResult
     @GetMapping("/com/file/downloadCertificate")
@@ -32,6 +33,7 @@ public class FileController {
      * @throws IOException
      */
     @GetMapping("/com/file/download")
+    @RateLimited
     public void download(@RequestParam String url, HttpServletResponse response)
             throws IOException {
         // 获取带签名的下载链接
