@@ -18,6 +18,7 @@ public class GlobalResponse<T> implements Serializable {
 
     public static <T> GlobalResponse<T> success(T data) {
         GlobalResponse<T> response = new GlobalResponse<>();
+        response.setSuccess(true);
         response.setErrCode(null);
         response.setErrMsg(null);
         response.setData(data);

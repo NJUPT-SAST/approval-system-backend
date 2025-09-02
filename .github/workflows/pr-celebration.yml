@@ -1,0 +1,38 @@
+name: "PR Celebration"
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+      - dev
+
+jobs:
+  celebrate:
+    name: Celebrate PR Merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+
+    steps:
+    - name: Send celebration message to feishu
+      uses: foxundermoon/feishu-action@v2
+      with:
+        url: ${{ secrets.WEBHOOK_URL }}
+        msg_type: post
+        content: |
+          post:
+            zh_cn:
+              title: 🥳 Congratulations, this PR has been merged!
+              content:
+              - - tag: text
+                  text: "PR: ${{ github.event.pull_request.title }}"
+              - - tag: text
+                  text: "Author: @${{ github.event.pull_request.user.login }}"
+              - - tag: text
+                  text: "Branch: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}"
+              - - tag: text
+                  text: 'Link: '
+                - tag: a
+                  text: "#${{ github.event.pull_request.number }}"
+                  href: ${{ github.event.pull_request.html_url }}

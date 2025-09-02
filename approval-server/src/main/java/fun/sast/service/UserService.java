@@ -1,13 +1,15 @@
 package fun.sast.service;
 
-import fun.sast.entity.User;
+import fun.sast.dto.UserLoginDTO;
+import fun.sast.vo.UserLoginVO;
 
 public interface UserService {
+
     /**
-     * 验证用户
+     * 用户登录
      *
-     * @param code 学号
-     * @param password 密码
+     * @param userLoginDTO 用户登录信息
+     * @param captcha 验证码ID
      */
-    User authenticate(String code, String password);
+    UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
 }

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserRoleEnum {
     TOURIST(-1, "游客"),
-    STUNDENT(0, "学生"),
+    STUDENT(0, "学生"),
     REVIEW(1, "审批"),
     JUDGE(2, "评委"),
     ADMIN(3, "管理员");

@@ -12,7 +12,8 @@ public enum ErrorEnum {
     EXPIRED_LOGIN(1003, "登录过期"),
     NO_ROLE(1004, "无权限"),
     NO_TOKEN(1005, "TOKEN不能为空"),
-    Login_ERROR(1006, "账号或者密码错误"),
+    LOGIN_ERROR(1006, "账号或者密码错误"),
+    USERNAME_OR_PASSWORD_EMPTY(1007, "账号或密码不能为空"),
     UNKNOWN_COMPETITION_ID(2001, "找不到相应的比赛"),
     UNKNOWN_TEAM_ID(2002, "找不到相应的队伍"),
     HAVE_NOT_SIGNED_COM(2003, "您还未报名该比赛"),
@@ -24,6 +25,7 @@ public enum ErrorEnum {
     OSS_BUCKET_NOT_EXIST(3005, "Bucket不存在"),
     OSS_FILE_NOT_EXIST(3006, "文件不存在"),
     INVALID_URL_ERROR(3007, "URL格式不合法"),
+    TOO_MANY_REQUESTS(3008, "请求过于频繁"),
     SCORE_NOT_EXIST(4001, "评审结果不存在"),
     NO_RESULT(5002, "没有结果"),
     CONTEST_NOT_EXIST(6001, "比赛不存在"),
@@ -36,11 +38,15 @@ public enum ErrorEnum {
     WORK_NOT_EXIST(6008, "作品不存在"),
     ASSIGN_ERROR(6009, "无法分配评委，存在未审批或审批未通过的作品"),
     USER_NOT_EXIST(7001, "用户不存在"),
+    USER_EXIST(7002, "用户已存在"),
     FILE_NOT_EXIST(8001, "文件不存在"),
     FILE_EXPIRED_ERROR(8002, "文件已过期，请重新提交"),
     NOTICE_ERROR(9001, "公告发布失败"),
     NOTICE_NOT_EXIST(9002, "公告不存在"),
-    IMPORT_ERROR(10000, "导入失败");
+    IMPORT_ERROR(10000, "导入失败"),
+    INVALID_CAPTCHA(11001, "验证码过期"),
+    INCORRECT_CAPTCHA(11002, "验证码错误"),
+    CAPTCHA_NOT_EXIST(11003, "请输入验证码");
 
     private final Integer errCode;
     private final String errMsg;

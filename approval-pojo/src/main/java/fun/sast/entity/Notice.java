@@ -22,6 +22,9 @@ public class Notice implements Serializable {
     /** */
     private Integer role;
 
+    /** 发出公告的时间 */
+    private LocalDateTime time;
+
     /** 公告标题 */
     private String title;
 

@@ -2,41 +2,44 @@ package fun.sast.controller.publicController;
 
 import fun.sast.annotation.ResponseResult;
 import fun.sast.dto.UserLoginDTO;
+import fun.sast.dto.VerifyCodeDTO;
+import fun.sast.service.LoginService;
+import fun.sast.service.UserService;
 import fun.sast.vo.UserLoginVO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
 
-    //    @Autowired
-    //    private UserService userService;
+    private final LoginService loginService;
+    private final UserService userService;
 
     /**
      * 登录
      *
-     * @param userLoginDTO
+     * @param userLoginDTO 传入的账号密码验证码
      * @return UserLoginVO
      */
-    @PostMapping("/login")
     @ResponseResult
-    public UserLoginVO login(
-            @RequestBody UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
-        //        User user = userService.authenticate(userLoginDTO.getCode(),
-        // userLoginDTO.getPassword());
-        //        if(user == null){
-        //            throw new BaseException(ErrorEnum.Login_ERROR);
-        //        }
-        //        String token = JwtUtil.generateToken(user.getCode());
-        //
-        //        return UserLoginVO.builder()
-        //                .name(user.getName())
-        //                .depId(user.getDepId())
-        //                .role(user.getRole())
-        //                .token(token)
-        //                .build();
-        return new UserLoginVO();
+    @PostMapping("/login")
+    public UserLoginVO login(UserLoginDTO userLoginDTO, @RequestHeader String captcha) {
+        return userService.login(userLoginDTO, captcha);
+    }
+
+    @GetMapping("/getValidateCode")
+    public void getValidateCode(HttpServletResponse response) throws IOException {
+        VerifyCodeDTO verifyCodeDTO = loginService.getVerifyCode();
+        // 设置响应头
+        response.setContentType("image/png");
+        response.addHeader("CAPTCHA", verifyCodeDTO.getKey());
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        // 写入输出流
+        response.getOutputStream().write(verifyCodeDTO.getImage());
+        response.getOutputStream().flush();
     }
 }
