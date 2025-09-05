@@ -1,6 +1,8 @@
 package fun.sast.service;
 
 import fun.sast.entity.Notice;
+import fun.sast.entity.User;
+import fun.sast.vo.NoticeOperateVO;
 
 import java.util.List;
 
@@ -10,15 +12,15 @@ public interface NoticeService {
     /**
      * 发布公告
      */
-    boolean releaseNotice(Notice notice);
+    void releaseNotice(NoticeOperateVO operateVO, User currentUser);
 
     /**
      * 修改公告
      */
-    boolean editNotice(Notice notice);
+    void updateNotice(NoticeOperateVO operateVO, User currentUser);
 
     /**
      * 删除公告
      */
-    boolean deleteNotice(Integer id);
+    void deleteNotice(Integer noticeId, User currentUser);
 }
