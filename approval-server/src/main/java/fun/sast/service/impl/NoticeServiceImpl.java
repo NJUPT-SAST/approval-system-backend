@@ -8,9 +8,11 @@ import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -59,5 +61,30 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
         return results;
+    }
+
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Override
+    public boolean releaseNotice(Notice notice) {
+        // 如果时间为空，设置为当前时间
+        if (notice.getTime() == null) {
+            notice.setTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)));
+        }
+        return noticeMapper.insert(notice) > 0;
+    }
+
+    @Override
+    public boolean editNotice(Notice notice) {
+        // 如果时间为空，保持原有时间不变
+        if (notice.getTime() != null) {
+            notice.setTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)));
+        }
+        return noticeMapper.update(notice) > 0;
+    }
+
+    @Override
+    public boolean deleteNotice(Integer id) {
+        return noticeMapper.delete(id) > 0;
     }
 }
