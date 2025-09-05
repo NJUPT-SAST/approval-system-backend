@@ -1,11 +1,10 @@
 package fun.sast.entity;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,5 +44,4 @@ public class Notice implements Serializable {
 
     @TableLogic // 逻辑删除
     private boolean isDeleted = false;
-
 }

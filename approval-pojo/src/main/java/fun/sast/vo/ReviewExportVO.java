@@ -2,11 +2,10 @@ package fun.sast.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.format.DateTimeFormat;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -43,6 +42,7 @@ public class ReviewExportVO {
 
     @ExcelProperty("创建人ID")
     private Long createUser;
+
     @ExcelProperty("更新人ID")
     private Long updateUser;
 }

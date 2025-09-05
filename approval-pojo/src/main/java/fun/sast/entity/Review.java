@@ -40,4 +40,3 @@ public class Review implements Serializable {
 
     private Long updateUser;
 }
-

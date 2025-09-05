@@ -5,9 +5,9 @@ jwt:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review
+    url: jdbc:mysql://localhost:3306/approval
     username: root
-    password: 111111
+    password: tmpxmt*0327
 
   data:
     redis:
@@ -27,3 +27,10 @@ file:
     bucket-url-prefix: https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/
 server:
   port: 9090
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-value: 1 #数据库中逻辑删除存储值
+      logic-not-delete-value: 0
+

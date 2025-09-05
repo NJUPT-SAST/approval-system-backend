@@ -1,4 +1,4 @@
-package fun.sast.controller;
+package fun.sast.controller.userController;
 
 import fun.sast.service.ReviewService;
 import jakarta.servlet.http.HttpServletResponse;

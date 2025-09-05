@@ -1,4 +1,4 @@
-package fun.sast.controller;
+package fun.sast.controller.userController;
 
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/notice")
 public class NoticeController {
 
-    @Autowired
-    private NoticeService noticeService;
+    @Autowired private NoticeService noticeService;
 
     /**
      * 发布公告
+     *
      * @param vo
      * @param request
      * @return
@@ -30,28 +30,31 @@ public class NoticeController {
         User currentUser = UserInterceptor.userHolder.get();
         try {
             noticeService.releaseNotice(vo, currentUser);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(ErrorEnum.NOTICE_ERROR);
         }
     }
+
     /**
      * 修改公告
+     *
      * @param vo
      * @return
      */
     @PutMapping("/update")
     @ResponseResult
-    public void updateNotice(@RequestBody NoticeOperateVO vo){
+    public void updateNotice(@RequestBody NoticeOperateVO vo) {
         User currentUser = UserInterceptor.userHolder.get();
         try {
             noticeService.updateNotice(vo, currentUser);
-            }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(ErrorEnum.NOTICE_ERROR);
-            }
+        }
     }
 
     /**
      * 删除公告
+     *
      * @param id 公告id
      * @return
      */
@@ -61,7 +64,7 @@ public class NoticeController {
         User currentUser = UserInterceptor.userHolder.get();
         try {
             noticeService.deleteNotice(id, currentUser);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BaseException(ErrorEnum.NOTICE_ERROR);
         }
     }

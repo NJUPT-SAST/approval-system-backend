@@ -9,14 +9,12 @@ import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
+import fun.sast.vo.NoticeOperateVO;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
-import fun.sast.vo.NoticeOperateVO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -67,7 +65,8 @@ public class NoticeServiceImpl implements NoticeService {
         return results;
     }
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter formatter =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
@@ -77,18 +76,19 @@ public class NoticeServiceImpl implements NoticeService {
             noticeTime = LocalDateTime.now().format(formatter);
         }
 
-        //转换为Notice实体，并填充其他字段信息
-        Notice notice = Notice.builder()
-                .comId(operateVO.getComId())
-                .content(operateVO.getContent())
-                .role(operateVO.getRole())
-                .title(operateVO.getTitle())
-                .time(LocalDateTime.parse(noticeTime, formatter))
-                .createTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
-                .updateTime(null)
-                .createUser(currentUser.getCreateUser())
-                .updateUser(null)
-                .build();
+        // 转换为Notice实体，并填充其他字段信息
+        Notice notice =
+                Notice.builder()
+                        .comId(operateVO.getComId())
+                        .content(operateVO.getContent())
+                        .role(operateVO.getRole())
+                        .title(operateVO.getTitle())
+                        .time(LocalDateTime.parse(noticeTime, formatter))
+                        .createTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
+                        .updateTime(null)
+                        .createUser(currentUser.getCreateUser())
+                        .updateUser(null)
+                        .build();
 
         noticeMapper.insert(notice);
     }
@@ -96,7 +96,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public void updateNotice(NoticeOperateVO operateVO, User currentUser) {
         Notice existingNotice = noticeMapper.selectById(operateVO.getId());
-        if(existingNotice == null) {
+        if (existingNotice == null) {
             throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
         }
 
@@ -106,18 +106,19 @@ public class NoticeServiceImpl implements NoticeService {
             noticeTime = LocalDateTime.now().format(formatter);
         }
 
-        Notice updatedNotice = Notice.builder()
-                .id(operateVO.getId())
-                .comId(operateVO.getComId())
-                .content(operateVO.getContent())
-                .role(operateVO.getRole())
-                .title(operateVO.getTitle())
-                .time(LocalDateTime.parse(noticeTime, formatter))
-                .createTime(existingNotice.getCreateTime())
-                .updateTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
-                .createUser(existingNotice.getCreateUser())
-                .updateUser(currentUser.getCreateUser())
-                .build();
+        Notice updatedNotice =
+                Notice.builder()
+                        .id(operateVO.getId())
+                        .comId(operateVO.getComId())
+                        .content(operateVO.getContent())
+                        .role(operateVO.getRole())
+                        .title(operateVO.getTitle())
+                        .time(LocalDateTime.parse(noticeTime, formatter))
+                        .createTime(existingNotice.getCreateTime())
+                        .updateTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
+                        .createUser(existingNotice.getCreateUser())
+                        .updateUser(currentUser.getCreateUser())
+                        .build();
 
         noticeMapper.updateById(updatedNotice);
     }
