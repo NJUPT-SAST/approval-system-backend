@@ -21,8 +21,8 @@ public class ReviewServiceImpl extends ServiceImpl<ReviewMapper, Review> impleme
     @Override
     public Integer reviewTotal(String code, Integer comId) {
         QueryWrapper<Review> wrapper = new QueryWrapper<Review>()
-                .eq("judgeId",code)
-                .eq("comId",comId);
+                .eq("judge_id",code)
+                .eq("com_id",comId);
         Integer count = Math.toIntExact(reviewMapper.selectCount(wrapper));
         return count;
     }
