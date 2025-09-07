@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompetitionController {
     private final CompetitionService competitionService;
 
+    //审核红点
     @GetMapping("/review/red-point")
     public Object reviewPoint(){
         return GlobalResponse.success(competitionService.reviewPoint());

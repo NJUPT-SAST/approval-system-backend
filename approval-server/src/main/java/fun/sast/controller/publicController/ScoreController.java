@@ -16,7 +16,7 @@ public class ScoreController {
 
     //评分红点
     @GetMapping("/score/red-point")
-    public Object scorepoint(){
+    public Object scorePoint(){
         return GlobalResponse.success(scoreService.scorePoint());
     }
 
