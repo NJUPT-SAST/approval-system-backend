@@ -1,4 +1,4 @@
-package fun.sast.controller.userController;
+package fun.sast.controller;
 
 import fun.sast.service.UserService;
 import lombok.RequiredArgsConstructor;

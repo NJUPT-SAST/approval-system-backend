@@ -1,4 +1,4 @@
-package fun.sast.controller.publicController;
+package fun.sast.controller;
 
 import fun.sast.annotation.RateLimited;
 import fun.sast.annotation.ResponseResult;
