@@ -75,4 +75,7 @@ public class Competition implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    /** 是否设置白名单 */
+    private Boolean isWhiteList;
 }
