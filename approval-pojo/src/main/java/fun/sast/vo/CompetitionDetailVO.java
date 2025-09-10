@@ -1,20 +1,15 @@
-package fun.sast.entity;
+package fun.sast.vo;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler;
-import java.io.Serializable;
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@AllArgsConstructor
-@Data
-@NoArgsConstructor
-public class Competition implements Serializable {
+@Builder
+public class CompetitionDetailVO {
     public static final Integer REVIEWED = 0;
     public static final Integer NOT_REVIEWED = 1;
 
@@ -23,6 +18,11 @@ public class Competition implements Serializable {
 
     /** 活动ID编号 */
     private Long id;
+
+    /**
+     * 活动负责人学工号
+     */
+    private String userCode;
 
     /** 比赛介绍 */
     private String introduce;
@@ -35,11 +35,6 @@ public class Competition implements Serializable {
 
     /** 团队人数限制 */
     private Integer minTeamMembers;
-
-    /**
-     * 活动负责人学工号
-     */
-    private String userCode;
 
     /** 比赛名称 */
     private String name;
@@ -71,12 +66,4 @@ public class Competition implements Serializable {
 
     /** 0 团队，1 个人 */
     private Integer type;
-
-    private LocalDateTime createTime;
-
-    private LocalDateTime updateTime;
-
-    private Long createUser;
-
-    private Long updateUser;
 }
