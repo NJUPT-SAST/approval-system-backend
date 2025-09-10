@@ -7,9 +7,13 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProvider;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import fun.sast.Exception.BaseException;
+import fun.sast.enums.ErrorEnum;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -52,6 +56,32 @@ public class OSSUtil {
         this.downloadExpiredTime = downloadExpiredTime;
     }
 
+    @Value("${file.OSS.bucket-url-prefix}")
+    private String bucketUrlPrefix;
+
+    /**
+     * 获取上传凭证
+     *
+     * @param objectName 文件名
+     * @param bucketNumber 1为公开，2为私有
+     * @return 带有凭证的url
+     */
+    public Map<String, String> getUploadCertificateOSS(String objectName, int bucketNumber) {
+        String baseFolderName = getBaseFolderName(bucketNumber);
+        String key = baseFolderName + "/" + objectName;
+        String clearUrl = endpoint + "/" + key;
+        HttpMethod method = HttpMethod.PUT;
+        GeneratePresignedUrlRequest request =
+                new GeneratePresignedUrlRequest(bucketName, key, method);
+        Date expiration = new Date(System.currentTimeMillis() + uploadExpiredTime * 60 * 1000);
+        request.setExpiration(expiration);
+        URL url = ossClient.generatePresignedUrl(request);
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url.toString());
+        map.put("clearUrl", clearUrl);
+        return map;
+    }
+
     /**
      * 判断字符串是否为Bucket上的文件地址
      *
@@ -71,16 +101,16 @@ public class OSSUtil {
     /**
      * 获取下载凭证
      *
-     * @param url 文件url例如https://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件url例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
      * @return 带有凭证的url
      */
     public String getDownloadCertificate(String url) {
-        log.info("获取从OSS下载凭证，文件地址：{}", url);
-        // String objectName = FileUtil.getObjectNameOSS(url);
-        // String key = privateFolder + "/" + objectName;
-        String key = FileUtil.getObjectNameOSS(url);
-        System.out.println(key);
-        System.out.println(key);
+        // 在获取凭证前校验前缀空值
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
+            throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
+        }
+
+        String key = extractObjectKey(url);
 
         // 设置预签名URL过期时间
         Date expiration = new Date(System.currentTimeMillis() + downloadExpiredTime * 60 * 1000);
@@ -90,13 +120,8 @@ public class OSSUtil {
         request.setExpiration(expiration);
         request.setMethod(HttpMethod.GET);
 
-        System.out.println(bucketName);
-
         return ossClient.generatePresignedUrl(request).toString();
     }
-
-    @Value("${file.OSS.bucket-url-prefix}")
-    private String bucketUrlPrefix;
 
     /**
      * 判断是否为合法 OSS 文件地址（是否以配置的前缀开头）
@@ -119,8 +144,36 @@ public class OSSUtil {
      */
     public String extractObjectKey(String url) {
         if (isLegalOSSUrl(url)) {
-            return url.substring(bucketUrlPrefix.length());
+            String key = url.substring(bucketUrlPrefix.length());
+            // 确保key开头没有多余的斜杠
+            if (key.startsWith("/")) {
+                key = key.substring(1);
+            }
+            return key;
         }
         return null;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param url 文件url
+     */
+    public void deleteFileOSS(String url, int folderNum) {
+        String folderName = getBaseFolderName(folderNum);
+        String objectName = extractObjectKey(url);
+        String key = folderName + "/" + objectName;
+        ossClient.deleteObject(bucketName, key);
+    }
+
+    /**
+     * 获取文件名
+     *
+     * @param number 1为公开，2为私有
+     * @return 文件名
+     */
+    private String getBaseFolderName(int number) {
+        if (FileUtil.PUBLIC_FOLDER == number) return publicFolder;
+        else return privateFolder;
     }
 }
