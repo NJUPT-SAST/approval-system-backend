@@ -2,14 +2,22 @@ package fun.sast.utils;
 
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
+
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
+@AllArgsConstructor
 public class FileUtil {
     public static final int PUBLIC_FOLDER = 1;
+
+    private final OSSUtil ossUtil;
 
     /**
      * 通过URL获取文件路径 OSS
@@ -43,6 +51,26 @@ public class FileUtil {
     }
 
     /**
+     * 向公共Bucket上传比赛封面（仅允许jpg png格式，且大小小于5M）
+     * 文件路径格式 //buckName.endpoint/comId/cover/fileName
+     *
+     * @param file  封面
+     * @param comId 比赛ID
+     * @return 封面的URL
+     */
+    public String uploadCover(MultipartFile file, Long comId) {
+        if (file.getSize() > 5242880) {
+            throw new BaseException(ErrorEnum.FILE_SIZE_ERROR);
+        }
+        // 文件路径格式 comId/cover/fileName
+        String objectName = comId +
+                "/cover/" +
+                file.getOriginalFilename();
+
+        return ossUtil.uploadFile(file, objectName, PUBLIC_FOLDER);
+    }
+
+    /**
      * @param urlString 文件的完整url
      * @return 文件名(不判断前缀)
      */
@@ -50,4 +78,6 @@ public class FileUtil {
         String objectName = getObjectNameOSS(urlString);
         return objectName.substring(objectName.lastIndexOf("/") + 1);
     }
+
+
 }

@@ -7,8 +7,11 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProvider;
 import com.aliyun.oss.common.auth.DefaultCredentialProvider;
 import com.aliyun.oss.model.GeneratePresignedUrlRequest;
+import com.aliyun.oss.model.PutObjectRequest;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
+
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
@@ -16,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -56,6 +60,27 @@ public class OSSUtil {
 
     @Value("${file.OSS.bucket-url-prefix}")
     private String bucketUrlPrefix;
+
+    /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @param objectName 文件名
+     * @param folder 文件存放位置
+     * @return 文件url
+     */
+    public String uploadFile(MultipartFile file, String objectName, int folder) {
+        try {
+            PutObjectRequest putObjectRequest = new PutObjectRequest(
+                    bucketName,
+                    objectName, // OSS上存储的路径和文件名
+                    file.getInputStream());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ossClient.putObject();
+    }
 
     /**
      * 判断字符串是否为Bucket上的文件地址

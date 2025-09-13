@@ -26,6 +26,7 @@ public enum ErrorEnum {
     OSS_FILE_NOT_EXIST(3006, "文件不存在"),
     INVALID_URL_ERROR(3007, "URL格式不合法"),
     TOO_MANY_REQUESTS(3008, "请求过于频繁"),
+    FILE_SIZE_ERROR(3009,"图片大小超出限制(5MB)"),
     SCORE_NOT_EXIST(4001, "评审结果不存在"),
     NO_RESULT(5002, "没有结果"),
     CONTEST_NOT_EXIST(6001, "比赛不存在"),

@@ -11,6 +11,7 @@ import fun.sast.mapper.*;
 import fun.sast.service.AdminService;
 import fun.sast.utils.FileUtil;
 import fun.sast.vo.CompetitionDetailVO;
+import fun.sast.vo.CompetitionManagerVO;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class AdminServiceImpl implements AdminService {
     private final ReviewMapper reviewMapper;
     private final UserMapper userMapper;
     private final DepartmentMapper departmentMapper;
+    private final JudgeMapper judgeMapper;
     private final FileUtil fileUtil;
 
     /**
@@ -45,44 +47,26 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void createCompetition(Competition competition, MultipartFile cover) {
         // 比较时间设置是否正确
-        if (competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime()) ||  // 提交开始时间不早于报名开始时间
-                competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime()) ||  // 评审开始时间不早于提交开始时间
-                competition.getRegBeginTime().isAfter(competition.getRegEndTime()) ||  // 报名截止时间不早于报名开始时间
-                competition.getRegEndTime().isAfter(competition.getSubmitEndTime()) ||  // 提交截止时间不早于报名截止时间
-                competition.getSubmitEndTime().isAfter(competition.getReviewEndTime())) {  // 评审截止时间不早于提交截止时间
-            throw new BaseException(ErrorEnum.DATE_ERROR);
-        }
+        validateCompetitionDates(competition);
 
         // 校验审批关系数据是否正确
-        // 主要是判断部门跟用户是否存在
-        Map<String, String> settings = competition.getReviewSettings();
-        if (settings == null) {
-            throw new BaseException(ErrorEnum.REVIEW_SETTINGS_ERROR);
-        }
-        settings.forEach((s, o) -> {
-            boolean userRes = userIsExist(o);
-            if (!"0".equals(s)) {
-                boolean depRes = depIsExist(Integer.valueOf(s));
-                if (!depRes) {
-                    throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
-                }
-            }
-            if (!userRes) {
-                throw new BaseException(ErrorEnum.USER_NOT_EXIST);
-            }
-        });
+        validateReviewSettings(competition.getReviewSettings());
+
         // 判断活动负责人是否存在
         if (!userIsExist(competition.getUserCode())) {
             throw new BaseException(ErrorEnum.USER_NOT_EXIST);
         }
+
         // 判断比赛团队人数限制是否正确
         if (competition.getMinTeamMembers() > competition.getMaxTeamMembers()) {
             throw new BaseException(ErrorEnum.LIMIT_ERROR);
         }
+
         // 判断比赛表单是否为空
         if (competition.getTable() == null) {
             throw new BaseException(ErrorEnum.SCHEMA_ERROR);
         }
+
         int result = competitionMapper.insert(competition);
         // 是否成功插入到数据库
         if (result <= 0) {
@@ -104,13 +88,9 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void editCompetition(Competition competition, MultipartFile cover) {
         // 比较时间设置是否正确
-        if (competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime()) ||  // 提交开始时间不早于报名开始时间
-                competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime()) ||  // 评审开始时间不早于提交开始时间
-                competition.getRegBeginTime().isAfter(competition.getRegEndTime()) ||  // 报名截止时间不早于报名开始时间
-                competition.getRegEndTime().isAfter(competition.getSubmitEndTime()) ||  // 提交截止时间不早于报名截止时间
-                competition.getSubmitEndTime().isAfter(competition.getReviewEndTime())) {  // 评审截止时间不早于提交截止时间
-            throw new BaseException(ErrorEnum.DATE_ERROR);
-        }
+        validateCompetitionDates(competition);
+
+        // 检查比赛是否存在
         QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", competition.getId());
         Competition temCompetition = competitionMapper.selectOne(queryWrapper);
@@ -119,31 +99,18 @@ public class AdminServiceImpl implements AdminService {
         }
 
         // 校验审批关系数据是否正确
-        // 主要是判断部门跟用户是否存在
-        Map<String, String> settings = competition.getReviewSettings();
-        if (settings == null) {
-            throw new BaseException(ErrorEnum.REVIEW_SETTINGS_ERROR);
-        }
-        settings.forEach((s, o) -> {
-            boolean userRes = userIsExist(o);
-            if (!"0".equals(s)) {
-                boolean depRes = depIsExist(Integer.valueOf(s));
-                if (!depRes) {
-                    throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
-                }
-            }
-            if (!userRes) {
-                throw new BaseException(ErrorEnum.USER_NOT_EXIST);
-            }
-        });
+        validateReviewSettings(competition.getReviewSettings());
+
         // 判断活动负责人是否存在
         if (!userIsExist(competition.getUserCode())) {
             throw new BaseException(ErrorEnum.USER_NOT_EXIST);
         }
+
         // 判断比赛团队人数限制是否正确
         if (competition.getMinTeamMembers() > competition.getMaxTeamMembers()) {
             throw new BaseException(ErrorEnum.LIMIT_ERROR);
         }
+
         // 判断比赛表单是否为空
         if (competition.getTable() == null) {
             throw new BaseException(ErrorEnum.SCHEMA_ERROR);
@@ -167,13 +134,12 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public void deleteCompetition(Long id) {
-        QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        Competition competition = competitionMapper.selectOne(queryWrapper);
+        // 检查比赛是否存在
+        Competition competition = competitionMapper.selectById(id);
         if (competition == null) {
             throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
-        competitionMapper.delete(queryWrapper);
+        competitionMapper.deleteById(id);
     }
 
     /**
@@ -235,20 +201,17 @@ public class AdminServiceImpl implements AdminService {
         Long subNum = workMapper.selectCount(new QueryWrapper<Work>().eq("com_id", comId));
 
         // 已审批数
-        Long revNum = reviewMapper.getReviewNum(comId);
+        Long revNum = reviewMapper.selectCount(new QueryWrapper<Review>().isNotNull("accept"));
 
-        ArrayList<ComMangerVo> resList = new ArrayList<>();
-        QueryWrapper<Judge> judgeQueryWrapper = new QueryWrapper<>();
+        ArrayList<CompetitionManagerVO> resList = new ArrayList<>();
 
         works.forEach(work -> {
             ArrayList<String> judges = new ArrayList<>();
-            ComMangerVo comMangerVo = new ComMangerVo();
+            CompetitionManagerVO comMangerVo = new CompetitionManagerVO();
             String workName = work.getWorkName();
             String userCode = work.getUserCode();
 
-            judgeQueryWrapper.eq("com_id", comId).eq("user_code", userCode);
-            List<Judge> judgeList = judgeMapper.selectList(judgeQueryWrapper);
-            judgeQueryWrapper.clear();
+            List<Judge> judgeList = judgeMapper.selectList(new QueryWrapper<Judge>().eq("com_id", comId).eq("user_code", userCode));
 
             // 判断是否分配评委
             if (judgeList.isEmpty()) {
@@ -256,7 +219,7 @@ public class AdminServiceImpl implements AdminService {
             } else {
                 judgeList.forEach(judge -> {
                     if (!userIsExist(judge.getJudgeCode())) {
-                        throw new LocalRuntimeException(ErrorEnum.USER_NOT_EXIST);
+                        throw new BaseException(ErrorEnum.USER_NOT_EXIST);
                     }
                     String judgeName = userMapper.selectById(judge.getJudgeCode()).getName();
                     judges.add(judgeName);
@@ -315,7 +278,7 @@ public class AdminServiceImpl implements AdminService {
         // 获取后缀
         String typeName;
         try {
-            typeName = FileUtil.getType(cover.getInputStream());
+            typeName = fileUtil.getType(cover.getInputStream());
         } catch (IOException e) {
             log.error("获取文件类型出错", e);
             return null;
@@ -336,5 +299,49 @@ public class AdminServiceImpl implements AdminService {
             case "jpg", "jpeg", "png" -> true;
             default -> false;
         };
+    }
+
+    /**
+     * 验证比赛时间设置是否正确
+     * @param competition 比赛信息
+     */
+    private void validateCompetitionDates(Competition competition) {
+        if (competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime()) ||  // 提交开始时间不早于报名开始时间
+                competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime()) ||  // 评审开始时间不早于提交开始时间
+                competition.getRegBeginTime().isAfter(competition.getRegEndTime()) ||  // 报名截止时间不早于报名开始时间
+                competition.getRegEndTime().isAfter(competition.getSubmitEndTime()) ||  // 提交截止时间不早于报名截止时间
+                competition.getSubmitEndTime().isAfter(competition.getReviewEndTime())) {  // 评审截止时间不早于提交截止时间
+            throw new BaseException(ErrorEnum.DATE_ERROR);
+        }
+    }
+
+    /**
+     * 校验审批关系数据是否正确
+     * 主要是判断部门跟用户是否存在
+     * @param settings 审批关系设置
+     */
+    private void validateReviewSettings(Map<String, String> settings) {
+        if (settings == null) {
+            throw new BaseException(ErrorEnum.REVIEW_SETTINGS_ERROR);
+        }
+        settings.forEach((departmentId, userCode) -> {
+            // 验证用户是否存在
+            if (!userIsExist(userCode)) {
+                throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+            }
+
+            // 如果部门ID不为"0"，验证部门是否存在
+            if (!"0".equals(departmentId)) {
+                try {
+                    Integer depId = Integer.valueOf(departmentId);
+                    if (!depIsExist(depId)) {
+                        throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
+                    }
+                } catch (NumberFormatException e) {
+                    // 如果部门ID不是有效整数，抛出部门不存在异常
+                    throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
+                }
+            }
+        });
     }
 }
