@@ -39,7 +39,7 @@
         <mockito.version>5.17.0</mockito.version>
         <bucket4j.version>8.10.1</bucket4j.version>
         <aspectj.version>1.9.24</aspectj.version>
-        <qcloud.version>5.6.227</qcloud.version>
+        <easyexcel.version>3.3.2</easyexcel.version>
 
     </properties>
 
@@ -179,9 +179,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.qcloud</groupId>
-                <artifactId>cos_api</artifactId>
-                <version>${qcloud.version}</version>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version> <!-- 或最新稳定版本 -->
             </dependency>
 
         </dependencies>

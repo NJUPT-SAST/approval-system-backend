@@ -26,4 +26,8 @@ public class Judge implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    private String judgeCode;
+
+    private String captainCode;
 }
