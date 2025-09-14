@@ -12,6 +12,8 @@ import fun.sast.enums.ErrorEnum;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -58,6 +60,29 @@ public class OSSUtil {
     private String bucketUrlPrefix;
 
     /**
+     * 获取上传凭证
+     *
+     * @param objectName 文件名
+     * @param bucketNumber 1为公开，2为私有
+     * @return 带有凭证的url
+     */
+    public Map<String, String> getUploadCertificateOSS(String objectName, int bucketNumber) {
+        String baseFolderName = getBaseFolderName(bucketNumber);
+        String key = baseFolderName + "/" + objectName;
+        String clearUrl = endpoint + "/" + key;
+        HttpMethod method = HttpMethod.PUT;
+        GeneratePresignedUrlRequest request =
+                new GeneratePresignedUrlRequest(bucketName, key, method);
+        Date expiration = new Date(System.currentTimeMillis() + uploadExpiredTime * 60 * 1000);
+        request.setExpiration(expiration);
+        URL url = ossClient.generatePresignedUrl(request);
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url.toString());
+        map.put("clearUrl", clearUrl);
+        return map;
+    }
+
+    /**
      * 判断字符串是否为Bucket上的文件地址
      *
      * @param content 字符串内容
@@ -85,17 +110,70 @@ public class OSSUtil {
             throw (new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST));
         }
 
-        // 提取文件名
-        String fileName = FileUtil.getObjectNameOSS(url);
+        String key = extractObjectKey(url);
 
         // 设置预签名URL过期时间
         Date expiration = new Date(System.currentTimeMillis() + downloadExpiredTime * 60 * 1000);
 
         // 创建预签名请求
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, fileName);
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key);
         request.setExpiration(expiration);
         request.setMethod(HttpMethod.GET);
 
         return ossClient.generatePresignedUrl(request).toString();
+    }
+
+    /**
+     * 判断是否为合法 OSS 文件地址（是否以配置的前缀开头）
+     *
+     * @param url 待校验的 OSS URL
+     * @return true 合法，false 非法
+     */
+    public boolean isLegalOSSUrl(String url) {
+        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
+            return false;
+        }
+        return url.startsWith(bucketUrlPrefix);
+    }
+
+    /**
+     * 去除 OSS URL 的前缀，获得相对路径
+     *
+     * @param url 完整 OSS URL
+     * @return 相对路径
+     */
+    public String extractObjectKey(String url) {
+        if (isLegalOSSUrl(url)) {
+            String key = url.substring(bucketUrlPrefix.length());
+            // 确保key开头没有多余的斜杠
+            if (key.startsWith("/")) {
+                key = key.substring(1);
+            }
+            return key;
+        }
+        return null;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param url 文件url
+     */
+    public void deleteFileOSS(String url, int folderNum) {
+        String folderName = getBaseFolderName(folderNum);
+        String objectName = extractObjectKey(url);
+        String key = folderName + "/" + objectName;
+        ossClient.deleteObject(bucketName, key);
+    }
+
+    /**
+     * 获取文件名
+     *
+     * @param number 1为公开，2为私有
+     * @return 文件名
+     */
+    private String getBaseFolderName(int number) {
+        if (FileUtil.PUBLIC_FOLDER == number) return publicFolder;
+        else return privateFolder;
     }
 }
