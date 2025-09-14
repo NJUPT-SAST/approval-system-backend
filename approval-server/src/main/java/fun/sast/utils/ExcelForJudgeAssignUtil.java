@@ -11,7 +11,6 @@ import fun.sast.mapper.*;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,10 +26,8 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
     private final ReviewMapper reviewMapper;
     private final UserMapper userMapper;
 
-    /** -- GETTER -- 获取解析结果 Map key = 作品ID value = 对应评委ID列表 */
     // 用于返回结果
-    @Getter private final Map<Long, List<String>> workJudgeMap = new HashMap<>();
-
+    private final Map<Long, List<String>> workJudgeMap = new HashMap<>();
     private final CompetitionMapper competitionMapper;
 
     @Override
@@ -52,18 +49,21 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
         User captain = userMapper.selectOne(userQuery);
         if (captain == null) throw new BaseException(ErrorEnum.USER_NOT_EXIST);
         Integer captainId = captain.getId();
+        System.out.println(captainId);
 
         // 活动id
-        Long comId = work.getComId();
+        Integer comId = work.getComId().intValue();
         QueryWrapper<Review> reviewQueryWrapper = new QueryWrapper<>();
         reviewQueryWrapper.eq("com_id", comId).eq("user_id", captainId);
         Review review = reviewMapper.selectOne(reviewQueryWrapper);
         QueryWrapper<Competition> competitionQueryWrapper = new QueryWrapper<>();
         competitionQueryWrapper.eq("id", comId).select("is_review");
         Competition competition = competitionMapper.selectOne(competitionQueryWrapper);
+        Competition competition1 = competitionMapper.selectById(comId);
 
         System.out.println(review);
         System.out.println(competition);
+        System.out.println(competition1);
 
         // 第 3 列及以后：评委学号
         List<String> newJudgeCodes = new ArrayList<>();
@@ -123,5 +123,10 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
         log.info("Excel 数据全部解析完成！");
+    }
+
+    /** 获取解析结果 Map key = 作品ID value = 对应评委ID列表 */
+    public Map<Long, List<String>> getWorkJudgeMap() {
+        return workJudgeMap;
     }
 }

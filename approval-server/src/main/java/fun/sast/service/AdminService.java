@@ -1,3 +1,10 @@
 package fun.sast.service;
 
-public interface AdminService {}
+import fun.sast.vo.CompetitionListVO;
+import fun.sast.vo.UserInfoVO;
+
+public interface AdminService {
+    CompetitionListVO getCompetitionList(Integer pageNo, Integer pageSize);
+
+    UserInfoVO getUserInfo(String userCode);
+}
