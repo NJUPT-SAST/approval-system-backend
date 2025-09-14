@@ -1,5 +1,5 @@
 
-package fun.sast.controller.userController;
+package fun.sast.controller;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
