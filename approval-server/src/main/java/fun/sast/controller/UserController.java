@@ -72,7 +72,6 @@ public class UserController {
      * @return 数据
      */
     @ResponseResult
-    @PassToken
     @OperateLog("获取比赛详情")
     @GetMapping("/com/info/{comId}")
     public Map<String, Object> getComInfo(@PathVariable Long comId) {

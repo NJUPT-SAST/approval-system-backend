@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 @RequiredArgsConstructor
 public class UserInterceptor implements HandlerInterceptor {
@@ -20,6 +24,13 @@ public class UserInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
 
     @Resource private UserMapper userMapper;
+    
+    // 定义不需要token验证的接口路径集合
+    private static final Set<String> OPTIONAL_AUTH_PATHS = new HashSet<>(Arrays.asList(
+            "/user/com/notice/list",
+            "/user/com/search",
+            "/user/com/list"
+    ));
 
     @Override
     public boolean preHandle(
@@ -29,8 +40,8 @@ public class UserInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Token");
         String requestPath = request.getRequestURI();
 
-        // 对于某些端点，允许未登录访问但仍尝试解析身份
-        boolean isOptionalAuth = requestPath.equals("/com/notice/list");
+        // 使用集合的contains方法判断当前路径是否不需要token验证
+        boolean isOptionalAuth = OPTIONAL_AUTH_PATHS.contains(requestPath);
 
         if (token == null || token.isBlank()) {
             if (isOptionalAuth) {
