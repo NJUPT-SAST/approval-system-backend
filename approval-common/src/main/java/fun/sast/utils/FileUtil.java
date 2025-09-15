@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileUtil {
 
-    private final OSSUtil ossUtil;
+    private final COSUtil cosUtil;
 
     /**
      * @param urlString 文件的完整url
@@ -45,8 +45,8 @@ public class FileUtil {
      *
      * @param url 文件的URL
      */
-    public void deleteFileOSS(String url, int folderNumber) {
-        ossUtil.deleteFileOSS(url, folderNumber);
+    public void deleteFileCOS(String url, int folderNumber) {
+        cosUtil.deleteFileCOS(url, folderNumber);
     }
 
     /**
@@ -75,7 +75,7 @@ public class FileUtil {
                         + CommonUtil.creatShortUUID()
                         + "-"
                         + filename;
-        return ossUtil.getUploadCertificateOSS(objectName, FileUtil.PRIVATE_FOLDER);
+        return cosUtil.getUploadCertificateCOS(objectName, FileUtil.PRIVATE_FOLDER);
     }
 
     public static final int PUBLIC_FOLDER = 1;
