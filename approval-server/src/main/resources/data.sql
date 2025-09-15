@@ -43,14 +43,14 @@ INSERT IGNORE INTO `file` (`id`, `com_id`, `user_code`, `input`, `url`)
 VALUES (2, 1, 'admin', '1', '文本.txt');
 
 -- insert initial competitions into the database
-INSERT IGNORE INTO `competition` (
+-- insert or update initial competitions
+INSERT INTO `competition` (
   `id`, `cover`, `introduce`, `is_review`, `max_team_members`, `min_team_members`,
   `name`, `reg_begin_time`, `reg_end_time`, `review_begin_time`, `review_end_time`,
   `review_settings`, `submit_begin_time`, `submit_end_time`, `table`, `type`,
   `user_code`, `create_time`, `update_time`, `create_user`, `update_user`
 )
 VALUES
--- 比赛 1：程序设计竞赛
 (1,
  'https://example.com/covers/contest1.png',
  '本次竞赛旨在锻炼同学们的编程能力和团队协作能力。',
@@ -65,7 +65,6 @@ VALUES
  'admin',
  NOW(), NOW(), 'admin', 'admin'),
 
--- 比赛 2：数学建模大赛
 (2,
  'https://example.com/covers/contest2.png',
  '通过真实问题的数学建模，培养学生建模和分析问题的能力。',
@@ -80,7 +79,6 @@ VALUES
  'review',
  NOW(), NOW(), 'admin', 'review'),
 
--- 比赛 3：英语演讲比赛
 (3,
  'https://example.com/covers/contest3.png',
  '锻炼学生的英语口语表达能力与临场发挥能力。',
@@ -93,7 +91,28 @@ VALUES
  '{"fields":[{"name":"演讲视频链接","type":"text"}]}',
  1,
  'judge',
- NOW(), NOW(), 'review', 'judge');
+ NOW(), NOW(), 'review', 'judge')
+
+ON DUPLICATE KEY UPDATE
+  `cover` = VALUES(`cover`),
+  `introduce` = VALUES(`introduce`),
+  `is_review` = VALUES(`is_review`),
+  `max_team_members` = VALUES(`max_team_members`),
+  `min_team_members` = VALUES(`min_team_members`),
+  `name` = VALUES(`name`),
+  `reg_begin_time` = VALUES(`reg_begin_time`),
+  `reg_end_time` = VALUES(`reg_end_time`),
+  `review_begin_time` = VALUES(`review_begin_time`),
+  `review_end_time` = VALUES(`review_end_time`),
+  `review_settings` = VALUES(`review_settings`),
+  `submit_begin_time` = VALUES(`submit_begin_time`),
+  `submit_end_time` = VALUES(`submit_end_time`),
+  `table` = VALUES(`table`),
+  `type` = VALUES(`type`),
+  `user_code` = VALUES(`user_code`),
+  `update_time` = NOW(),
+  `update_user` = VALUES(`update_user`);
+
 
 -- 学院表
 
@@ -116,10 +135,7 @@ VALUES
 (2, '2025005', '无人机编队控制系统', '{"功能":"路径规划","技术":"ROS"}', 1005, 1005);
 
 -- 评委分配表
-INSERT INTO `judge`
-(com_id, user_id, create_time, update_time, create_user, update_user, judge_code, captain_code)
-VALUES
-(1001, 2001, NOW(), NOW(), 0, 0, '', '');
+
 
 -- 审批状态表
 INSERT IGNORE INTO `review`
@@ -154,3 +170,10 @@ VALUES
 ('2', '2025004', MD5(CONCAT('2025004','123456')), '学生4', 0, '123456', NOW(), NOW(), 1, 1, 'txgc', '1112232'),
 -- work 5 队长
 ('2', '2025005', MD5(CONCAT('2025005','123456')), '学生5', 0, '123456', NOW(), NOW(), 1, 1, 'txgc', '1112232');
+
+
+INSERT INTO `team` (com_id, name, captain, member, teacher) VALUES
+(1, '智能家居队', 'B21010001', '["B21010011","B21010012"]', '["张老师"]'),
+(1, '校园导航队', 'B21010002', '["B21010021","B21010022"]', '["李老师"]'),
+(2, '环境监测队', 'B21020001', '["B21020011","B21020012"]', '["王老师"]'),
+(2, '无人机队',   'B21020002', '["B21020021","B21020022"]', '["赵老师"]');

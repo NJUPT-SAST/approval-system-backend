@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import fun.sast.Exception.BaseException;
 import fun.sast.entity.*;
 import fun.sast.enums.ErrorEnum;
+import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.*;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
 
     @Override
     public void invoke(Map<Integer, String> rowData, AnalysisContext context) {
+        User currentUser = userInterceptor.userHolder.get();
         // 第 1 列：作品 id
         Long workId = Long.valueOf(rowData.get(0));
 
@@ -42,8 +44,6 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
             throw new BaseException(ErrorEnum.WORK_NOT_EXIST);
         }
         String captainCode = work.getUserCode();
-
-        // 增加是否为评委
 
         // 活动id
         Integer comId = work.getComId().intValue();
@@ -60,13 +60,27 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
             throw new BaseException(ErrorEnum.ASSIGN_ERROR);
         }
 
-        System.out.println(review);
-        System.out.println(competition);
-
         // 第 3 列及以后：评委学号
         List<String> newJudgeCodes = new ArrayList<>();
         for (int i = 2; i < rowData.size(); i++) {
             String judgeCode = rowData.get(i);
+
+            QueryWrapper<User> wrapper = new QueryWrapper<>();
+            wrapper.eq("code", judgeCode);
+
+            User user = userMapper.selectOne(wrapper);
+
+            if (judgeCode == null || judgeCode.isBlank()) {
+                continue;
+            } else if (user == null) {
+                log.error("学号{}不存在", judgeCode);
+                throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+            } else if (user.getRole() != UserRoleEnum.JUDGE.getRole()
+                    && user.getRole() != UserRoleEnum.ADMIN.getRole()) {
+                log.error("{}不为评委");
+                throw new BaseException(ErrorEnum.REVIEW_SETTINGS_ERROR);
+            }
+
             if (judgeCode != null && !judgeCode.isBlank()) {
                 newJudgeCodes.add(judgeCode.trim());
             }
@@ -108,8 +122,8 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
             judge.setJudgeCode(judgeCode);
             judge.setCreateTime(LocalDateTime.now());
             judge.setUpdateTime(LocalDateTime.now());
-            judge.setCreateUser(0L);
-            judge.setUpdateUser(0L);
+            judge.setCreateUser(Long.valueOf(currentUser.getId()));
+            judge.setUpdateUser(Long.valueOf(currentUser.getId()));
             judgeMapper.insert(judge);
             log.info("新增评委: {} 对作品 {}", judgeCode, workId);
         }

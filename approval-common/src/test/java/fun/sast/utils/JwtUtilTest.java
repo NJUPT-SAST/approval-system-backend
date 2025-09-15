@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
-    private static final String TEST_SECRET = "test-secret-key-for-jwt-256-bit-long-string";
+    private static final String TEST_SECRET = "jwt";
     private static final long TEST_EXPIRATION = 3600000L; // 1小时，单位为毫秒
 
     /** 在每个测试方法执行前，设置 JwtUtil 实例。 我们手动创建实例，以便为测试提供密钥和过期时间。 */
@@ -26,8 +26,9 @@ class JwtUtilTest {
     /** 测试用例，用于验证 JWT 是否成功创建并包含正确的声明。 */
     @Test
     void testCreateJwt_Success() {
-        String testCode = "user123";
+        String testCode = "admin";
         String token = jwtUtil.createJwt(testCode);
+        System.out.println(token);
         assertNotNull(token, "生成的令牌不应为空");
         assertFalse(token.isEmpty(), "生成的令牌不应为空字符串");
 
@@ -54,6 +55,7 @@ class JwtUtilTest {
         String testCode = "testUser456";
         String token = jwtUtil.createJwt(testCode);
         String resolvedCode = jwtUtil.resolveJwt(token);
+        System.out.println(resolvedCode);
         assertEquals(testCode, resolvedCode, "解析出的 code 应该与原始 code 匹配");
     }
 
