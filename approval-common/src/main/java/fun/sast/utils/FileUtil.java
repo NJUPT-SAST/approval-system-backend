@@ -6,26 +6,33 @@ import fun.sast.enums.ErrorEnum;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import lombok.AllArgsConstructor;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
+@RequiredArgsConstructor
 @Component
 @AllArgsConstructor
 public class FileUtil {
-    public static final int PUBLIC_FOLDER = 1;
 
-    private final OSSUtil ossUtil;
+    private final COSUtil cosUtil;
 
     /**
-     * 通过URL获取文件路径 OSS
+     * @param urlString 文件的完整url
+     * @return 文件名(不判断前缀)
+     */
+    public static String getFileName(String urlString) {
+        String objectName = getObjectKey(urlString);
+        return objectName.substring(objectName.lastIndexOf("/") + 1);
+    }
+
+    /**
+     * 通过URL获取文件路径
      *
      * @param urlString 文件的地址 例：https://endpoint/path/filename.zip,不校验前缀
      * @return 文件路径 例：path/filename.zip
      */
-    public static String getObjectNameOSS(String urlString) {
+    public static String getObjectKey(String urlString) {
         URL url;
         try {
             urlString = urlString.trim();
@@ -37,19 +44,45 @@ public class FileUtil {
     }
 
     /**
-     * 判断是否为合法 OSS 文件地址（是否以配置的前缀开头）
+     * 删除文件
      *
-     * @param url 待校验的 OSS URL
-     * @param bucketUrlPrefix 配置的 OSS 前缀
-     * @return true 合法，false 非法
+     * @param url 文件的URL
      */
-    public static boolean isLegalOSSUrl(String url, String bucketUrlPrefix) {
-        if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
-            return false;
-        }
-        return url.startsWith(bucketUrlPrefix);
+    public void deleteFileCOS(String url, int folderNumber) {
+        cosUtil.deleteFileCOS(url, folderNumber);
     }
 
+    /**
+     * 获取上传文件的凭证
+     *
+     * @param filename 文件名
+     * @param comId 比赛ID
+     * @param id 文件的ID
+     * @param input 文件的输入
+     * @return 上传文件的凭证
+     */
+    public Map<String, String> getUploadCertificate(
+            String filename, Long comId, Long id, String input) {
+        String typeName = CommonUtil.getTypeByFilename(filename);
+        if (!CommonUtil.isAllowUploadType(typeName)) {
+            throw new BaseException(ErrorEnum.INVALID_FILE_TYPE_ERROR);
+        }
+        // 文件路径格式 comId/work/teamId/input-fileName
+        String objectName =
+                comId
+                        + "/work/"
+                        + id
+                        + "/"
+                        + input
+                        + "-"
+                        + CommonUtil.creatShortUUID()
+                        + "-"
+                        + filename;
+        return cosUtil.getUploadCertificateCOS(objectName, FileUtil.PRIVATE_FOLDER);
+    }
+
+    public static final int PUBLIC_FOLDER = 1;
+    public static final int PRIVATE_FOLDER = 2;
     /**
      * 向公共Bucket上传比赛封面（仅允许jpg png格式，且大小小于5M）
      * 文件路径格式 //buckName.endpoint/comId/cover/fileName
@@ -70,14 +103,6 @@ public class FileUtil {
         return ossUtil.uploadFile(file, objectName, PUBLIC_FOLDER);
     }
 
-    /**
-     * @param urlString 文件的完整url
-     * @return 文件名(不判断前缀)
-     */
-    public static String getFileName(String urlString) {
-        String objectName = getObjectNameOSS(urlString);
-        return objectName.substring(objectName.lastIndexOf("/") + 1);
-    }
 
 
 }
