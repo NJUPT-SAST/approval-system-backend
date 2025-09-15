@@ -70,10 +70,13 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
-        String noticeTime = operateVO.getTime().toString();
+        LocalDateTime noticeTime = operateVO.getTime();
+        String noticeTimeStr;
         // 前端未传值，设置为当前时间
-        if (noticeTime == null || noticeTime.isBlank()) {
-            noticeTime = LocalDateTime.now().format(formatter);
+        if (noticeTime == null) {
+            noticeTimeStr = LocalDateTime.now().format(formatter);
+        }else{
+            noticeTimeStr = noticeTime.toString();
         }
 
         // 转换为Notice实体，并填充其他字段信息
@@ -83,7 +86,7 @@ public class NoticeServiceImpl implements NoticeService {
                         .content(operateVO.getContent())
                         .role(operateVO.getRole())
                         .title(operateVO.getTitle())
-                        .time(LocalDateTime.parse(noticeTime, formatter))
+                        .time(LocalDateTime.parse(noticeTimeStr, formatter))
                         .createTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
                         .updateTime(null)
                         .createUser(currentUser.getCreateUser())
@@ -100,10 +103,13 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
         }
 
-        String noticeTime = operateVO.getTime().toString();
-        // 如果时间为空，设置为当前时间
-        if (noticeTime == null || noticeTime.isBlank()) {
-            noticeTime = LocalDateTime.now().format(formatter);
+        LocalDateTime noticeTime = operateVO.getTime();
+        String noticeTimeStr;
+        // 前端未传值，设置为当前时间
+        if (noticeTime == null) {
+            noticeTimeStr = LocalDateTime.now().format(formatter);
+        }else{
+            noticeTimeStr = noticeTime.toString();
         }
 
         Notice updatedNotice =
@@ -113,7 +119,7 @@ public class NoticeServiceImpl implements NoticeService {
                         .content(operateVO.getContent())
                         .role(operateVO.getRole())
                         .title(operateVO.getTitle())
-                        .time(LocalDateTime.parse(noticeTime, formatter))
+                        .time(LocalDateTime.parse(noticeTimeStr, formatter))
                         .createTime(existingNotice.getCreateTime())
                         .updateTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
                         .createUser(existingNotice.getCreateUser())

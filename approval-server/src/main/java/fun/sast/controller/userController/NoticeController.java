@@ -28,6 +28,9 @@ public class NoticeController {
     @ResponseResult
     public void releaseNotice(@RequestBody NoticeOperateVO vo, HttpServletRequest request) {
         User currentUser = UserInterceptor.userHolder.get();
+        if(currentUser.getRole() != 3) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
+        }
         try {
             noticeService.releaseNotice(vo, currentUser);
         } catch (Exception e) {
@@ -45,6 +48,9 @@ public class NoticeController {
     @ResponseResult
     public void updateNotice(@RequestBody NoticeOperateVO vo) {
         User currentUser = UserInterceptor.userHolder.get();
+        if(currentUser.getRole() != 3) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
+        }
         try {
             noticeService.updateNotice(vo, currentUser);
         } catch (Exception e) {
@@ -60,8 +66,11 @@ public class NoticeController {
      */
     @DeleteMapping("/del")
     @ResponseResult
-    public void deleteNotice(@PathVariable Integer id) {
+    public void deleteNotice(@RequestParam Integer id) {
         User currentUser = UserInterceptor.userHolder.get();
+        if(currentUser.getRole() != 3) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
+        }
         try {
             noticeService.deleteNotice(id, currentUser);
         } catch (Exception e) {
