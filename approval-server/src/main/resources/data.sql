@@ -118,3 +118,4 @@ INSERT IGNORE INTO `file` (`com_id`, `user_code`, `input`, `url`)
 VALUES (1, 'student', '项目报告', 'reports/project_report.pdf'),
        (2, 'admin', '演示文稿', 'presentations/demo.pptx'),
        (1, 'student', '源代码', 'code/main.zip');
+

@@ -272,20 +272,9 @@ public class AdminServiceImpl implements AdminService {
      *
      * @param cover 比赛封面
      * @param comId 比赛id
-     * @return 封面在OSS里的url
+     * @return 封面在COS里的url
      */
     public String writeUploadImage(MultipartFile cover, Long comId) {
-        // 获取后缀
-        String typeName;
-        try {
-            typeName = fileUtil.getType(cover.getInputStream());
-        } catch (IOException e) {
-            log.error("获取文件类型出错", e);
-            return null;
-        }
-        if (typeName != null && !isImage(typeName)) {
-            throw new BaseException(ErrorEnum.INVALID_FILE_TYPE_ERROR);
-        }
         return fileUtil.uploadCover(cover, comId);
     }
 
@@ -343,5 +332,35 @@ public class AdminServiceImpl implements AdminService {
                 }
             }
         });
+    }
+
+    /**
+     * 获取比赛管理员信息
+     * @param comMangerVo 比赛管理员信息
+     * @param num 总数
+     * @param pageNum 页码
+     * @param pageSize 页大小
+     * @param regNum 报名数
+     * @param subNum 提交数
+     * @param revNum 审批数
+     * @param comName 比赛名称
+     * @return 比赛管理员信息
+     */
+    public Map<String, Object> getComMangerMap(List<CompetitionManagerVO> comMangerVo, int num, Integer pageNum,
+                                               Integer pageSize, Long regNum, Long subNum, Long revNum, String comName) {
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("records", comMangerVo);
+        resultMap.put("total", num);
+        resultMap.put("pageNum", pageNum);
+        resultMap.put("pageSize", pageSize);
+        resultMap.put("regNum", regNum);
+        resultMap.put("subNum", subNum);
+        resultMap.put("revNum", revNum);
+        // 如果不为空就添加comId
+        if(!comMangerVo.isEmpty()) {
+            resultMap.put("comId", comMangerVo.get(0).getComId());
+        }
+        resultMap.put("comName", comName);
+        return resultMap;
     }
 }
