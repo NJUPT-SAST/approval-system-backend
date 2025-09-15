@@ -14,16 +14,20 @@ spring:
       host: localhost
       port: 6379
 
+
+
 file:
-  OSS:
-    endpoint: oss-cn-hangzhou.aliyuncs.com
-    accessKeyId: mock-access-key
-    accessKeySecret: mock-access-secret
+  COS:
+    secretId: mock-access-key
+    secretKey: mock-access-secret
+    region: ap-nanjing
     bucketName: mock-bucket
-    publicFolder: public
-    privateFolder: private
+    publicFolder:
+    privateFolder:
     uploadExpiredTime: 60
-    downloadExpiredTime: 60
-    bucket-url-prefix: https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/
+    downloadExpiredTime: 1
+    bucket-url-prefix: https://mock-bucket.cos.ap-nanjing.myqcloud.com/
+
+
 server:
   port: 9090
