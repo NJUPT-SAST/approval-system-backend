@@ -41,13 +41,11 @@ public class JwtUtil {
     }
 
     /**
-     * @param token
+     * @param token 含有code的token
      * @return 提取code字段
      */
     public String resolveJwt(String token) {
         try {
-            System.out.println("Resolving JWT with secret: '" + secret + "'");
-            System.out.println("Token to resolve: " + token);
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
             DecodedJWT verify = jwtVerifier.verify(token);
 

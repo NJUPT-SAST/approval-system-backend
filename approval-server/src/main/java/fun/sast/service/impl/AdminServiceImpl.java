@@ -1,9 +1,6 @@
 package fun.sast.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import fun.sast.Exception.BaseException;
 import fun.sast.entity.*;
 import fun.sast.enums.ErrorEnum;
@@ -15,15 +12,13 @@ import fun.sast.vo.CompetitionManagerVO;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.baomidou.mybatisplus.extension.ddl.DdlScriptErrorHandler.PrintlnLogErrorHandler.log;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
      * @param cover 比赛封面
      */
     @Override
+    @Transactional
     public void createCompetition(Competition competition, MultipartFile cover) {
         // 比较时间设置是否正确
         validateCompetitionDates(competition);
@@ -86,6 +82,7 @@ public class AdminServiceImpl implements AdminService {
      * @param cover 封面
      */
     @Override
+    @Transactional
     public void editCompetition(Competition competition, MultipartFile cover) {
         // 比较时间设置是否正确
         validateCompetitionDates(competition);
@@ -132,6 +129,7 @@ public class AdminServiceImpl implements AdminService {
      *
      * @param id 比赛id
      */
+    @Transactional
     @Override
     public void deleteCompetition(Long id) {
         // 检查比赛是否存在
@@ -295,11 +293,11 @@ public class AdminServiceImpl implements AdminService {
      * @param competition 比赛信息
      */
     private void validateCompetitionDates(Competition competition) {
-        if (competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime()) ||  // 提交开始时间不早于报名开始时间
-                competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime()) ||  // 评审开始时间不早于提交开始时间
-                competition.getRegBeginTime().isAfter(competition.getRegEndTime()) ||  // 报名截止时间不早于报名开始时间
-                competition.getRegEndTime().isAfter(competition.getSubmitEndTime()) ||  // 提交截止时间不早于报名截止时间
-                competition.getSubmitEndTime().isAfter(competition.getReviewEndTime())) {  // 评审截止时间不早于提交截止时间
+        if ((competition.getRegBeginTime() != null && competition.getSubmitBeginTime() != null && competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime())) ||  // 提交开始时间不早于报名开始时间
+                (competition.getSubmitBeginTime() != null && competition.getReviewBeginTime() != null && competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime())) ||  // 评审开始时间不早于提交开始时间
+                (competition.getRegBeginTime() != null && competition.getRegEndTime() != null && competition.getRegBeginTime().isAfter(competition.getRegEndTime())) ||  // 报名截止时间不早于报名开始时间
+                (competition.getRegEndTime() != null && competition.getSubmitEndTime() != null && competition.getRegEndTime().isAfter(competition.getSubmitEndTime())) ||  // 提交截止时间不早于报名截止时间
+                (competition.getSubmitEndTime() != null && competition.getReviewEndTime() != null && competition.getSubmitEndTime().isAfter(competition.getReviewEndTime()))) {  // 评审截止时间不早于提交截止时间
             throw new BaseException(ErrorEnum.DATE_ERROR);
         }
     }
