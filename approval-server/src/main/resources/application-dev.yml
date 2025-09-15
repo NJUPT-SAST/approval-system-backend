@@ -5,9 +5,9 @@ jwt:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review
-    username: root
-    password: 111111
+    url: jdbc:mysql://localhost:3306/approval_system_backend
+    username: Hunger
+    password:
 
   data:
     redis:

@@ -81,6 +81,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

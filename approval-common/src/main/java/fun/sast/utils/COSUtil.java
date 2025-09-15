@@ -7,9 +7,11 @@ import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpMethodName;
 import com.qcloud.cos.model.GeneratePresignedUrlRequest;
+import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.region.Region;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Component
@@ -63,7 +66,7 @@ public class COSUtil {
      * @param folderType 1为公开，2为私有
      * @return 带有凭证的url
      */
-    public Map<String, String> getUploadCertificateCOS(String objectName, int folderType) {
+    public Map<String, String> getUploadCertificate(String objectName, int folderType) {
         String folder = (folderType == 1) ? publicFolder : privateFolder;
         String key = folder + "/" + objectName;
         String clearUrl = endpoint + "/" + key;
@@ -141,5 +144,26 @@ public class COSUtil {
         String folder = (folderType == 1) ? publicFolder : privateFolder;
         String key = folder + "/" + extractObjectKey(url);
         cosClient.deleteObject(bucketName, key);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param file 文件
+     * @param objectName 文件名
+     * @param folder 文件夹类型
+     * @return 带有凭证的url
+     */
+    public String uploadFile(MultipartFile file, String objectName, int folder) {
+        String folderName = (folder == 1) ? publicFolder : privateFolder;
+        String key = folderName + "/" + objectName;
+        try {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(file.getSize());
+            cosClient.putObject(bucketName, key, file.getInputStream(), objectMetadata);
+            return endpoint + "/" + key;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

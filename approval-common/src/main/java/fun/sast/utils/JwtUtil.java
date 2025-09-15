@@ -41,7 +41,7 @@ public class JwtUtil {
     }
 
     /**
-     * @param token
+     * @param token 含有code的token
      * @return 提取code字段
      */
     public String resolveJwt(String token) {
@@ -62,6 +62,7 @@ public class JwtUtil {
         } catch (TokenExpiredException e) {
             throw new BaseException(ErrorEnum.EXPIRED_LOGIN);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(ErrorEnum.TOKEN_ERROR);
         }
     }
