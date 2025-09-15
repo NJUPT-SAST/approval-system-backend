@@ -127,23 +127,6 @@ CREATE TABLE IF NOT EXISTS `judge` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评委表';
 
--- create judge table
-CREATE TABLE IF NOT EXISTS `review`  (
-    `id`            VARCHAR(64) NOT NULL COMMENT '主键ID',
-    `com_id`        BIGINT(20) NOT NULL COMMENT '活动id',
-    `user_id`       BIGINT(20) NOT NULL COMMENT '队长id',
-    `judge_id`      BIGINT(20) DEFAULT NULL COMMENT '审批人id',
-    `accept`        TINYINT(1) DEFAULT NULL COMMENT '是否通过，1=通过，0=不通过',
-    `opinion`       VARCHAR(255) DEFAULT NULL COMMENT '审批意见',
-    `create_time`   DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `create_user`   BIGINT(20) DEFAULT NULL COMMENT '创建用户ID',
-    `update_user`   BIGINT(20) DEFAULT NULL COMMENT '更新用户ID',
-    PRIMARY KEY (`id`),
-    KEY `idx_com_user` (`com_id`, `user_id`),
-    KEY `idx_judge` (`judge_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作品审核表';
-
 -- review表中增加userCode
 CREATE TABLE IF NOT EXISTS `review` (
     `id` VARCHAR(64) NOT NULL COMMENT '主键ID',
@@ -160,11 +143,11 @@ CREATE TABLE IF NOT EXISTS `review` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作品审核表';
 
-CREATE TABLE IF NOT EXISTS `team`(
-    `id` BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-    `com_id` BIGINT NOT NULL COMMENT '比赛ID',
-    `name` VARCHAR(255) DEFAULT NULL COMMENT '队伍名称（仅团队赛）',
-    `captain` VARCHAR(50) NOT NULL COMMENT '队长学号',
-    `member` JSON DEFAULT NULL COMMENT '成员JSON，不含队长',
-    `teacher` JSON DEFAULT NULL COMMENT '指导老师JSON'
+CREATE TABLE IF NOT EXISTS `team` (
+  `com_id` INT NOT NULL COMMENT '比赛ID',
+  `name` VARCHAR(100) NOT NULL COMMENT '队伍名称',
+  `captain` VARCHAR(20) NOT NULL COMMENT '队长学号',
+  `member` JSON NOT NULL COMMENT '队员学号列表',
+  `teacher` JSON NOT NULL COMMENT '指导老师列表',
+  PRIMARY KEY (`com_id`, `captain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='参赛队伍表';

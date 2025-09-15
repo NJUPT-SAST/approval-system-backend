@@ -126,13 +126,19 @@ INSERT IGNORE INTO department (id, name, create_user, update_user) VALUES
 (6, '材料科学与工程学院', NULL, NULL);
 
 -- 作品表
-INSERT INTO `work` (`com_id`, `user_code`, `work_name`, `schema_content`, `create_user`, `update_user`)
+-- 插入参赛作品数据
+INSERT INTO `work` (`id`, `com_id`, `user_code`, `work_name`, `schema_content`, `create_user`, `update_user`)
 VALUES
-(1, '2025001', '智能家居控制系统', '{"功能":"远程控制家电","技术":"ESP8266"}', 1001, 1001),
-(1, '2025002', '校园导航小程序', '{"功能":"地图导航","技术":"微信小程序"}', 1002, 1002),
-(1, '2025003', '基于LoRa的环境监测', '{"功能":"空气质量检测","技术":"LoRa+MQTT"}', 1003, 1003),
-(2, '2025004', '智能语音助手', '{"功能":"语音交互","技术":"NLP"}', 1004, 1004),
-(2, '2025005', '无人机编队控制系统', '{"功能":"路径规划","技术":"ROS"}', 1005, 1005);
+(1, 1, '2025001', '智能家居控制系统', '{"功能":"远程控制家电","技术":"ESP8266"}', 1001, 1001),
+(2, 1, '2025002', '校园导航小程序', '{"功能":"地图导航","技术":"微信小程序"}', 1002, 1002),
+(3, 1, '2025003', '基于LoRa的环境监测', '{"功能":"空气质量检测","技术":"LoRa+MQTT"}', 1003, 1003),
+(4, 2, '2025004', '智能语音助手', '{"功能":"语音交互","技术":"NLP"}', 1004, 1004),
+(5, 2, '2025005', '无人机编队控制系统', '{"功能":"路径规划","技术":"ROS"}', 1005, 1005)
+ON DUPLICATE KEY UPDATE
+  work_name = VALUES(work_name),
+  schema_content = VALUES(schema_content),
+  update_user = VALUES(update_user),
+  update_time = CURRENT_TIMESTAMP;
 
 -- 评委分配表
 
@@ -143,19 +149,19 @@ INSERT IGNORE INTO `review`
  `create_time`, `update_time`, `create_user`, `update_user`)
 VALUES
 -- 作品1（智能家居控制系统），分配给评委2001
-('rev1', 1, 2025001, 2001, NULL, '', NOW(), NOW(), 1, 1),
+('rev1', 1, 2025001, 2001, 1, '', NOW(), NOW(), 1, 1),
 
 -- 作品2（校园导航小程序），分配给评委2001
-('rev2', 1, 2025002, 2001, NULL, '', NOW(), NOW(), 1, 1),
+('rev2', 1, 2025002, 2001, 1, '', NOW(), NOW(), 1, 1),
 
 -- 作品3（基于LoRa的环境监测），分配给评委2001
-('rev3', 1, 2025003, 2001, NULL, '', NOW(), NOW(), 1, 1),
+('rev3', 1, 2025003, 2001, 0, '', NOW(), NOW(), 1, 1),
 
 -- 作品4（智能语音助手），分配给评委2001
-('rev4', 2, 2025004, 2001, NULL, '', NOW(), NOW(), 1, 1),
+('rev4', 2, 2025004, 2001, 0, '', NOW(), NOW(), 1, 1),
 
 -- 作品5（无人机编队控制系统），分配给评委2001
-('rev5', 2, 2025005, 2001, NULL, '', NOW(), NOW(), 1, 1);
+('rev5', 2, 2025005, 2001, 1, '', NOW(), NOW(), 1, 1);
 
 -- 添加缺失的学生用户
 INSERT IGNORE INTO `user` (`dep_id`, `code`, `password`, `name`, `role`, `salt`, `create_time`, `update_time`, `create_user`, `update_user`, `major`, `contact`)
@@ -176,4 +182,8 @@ INSERT INTO `team` (com_id, name, captain, member, teacher) VALUES
 (1, '智能家居队', 'B21010001', '["B21010011","B21010012"]', '["张老师"]'),
 (1, '校园导航队', 'B21010002', '["B21010021","B21010022"]', '["李老师"]'),
 (2, '环境监测队', 'B21020001', '["B21020011","B21020012"]', '["王老师"]'),
-(2, '无人机队',   'B21020002', '["B21020021","B21020022"]', '["赵老师"]');
+(2, '无人机队',   'B21020002', '["B21020021","B21020022"]', '["赵老师"]')
+ON DUPLICATE KEY UPDATE
+  name = VALUES(name),
+  member = VALUES(member),
+  teacher = VALUES(teacher);

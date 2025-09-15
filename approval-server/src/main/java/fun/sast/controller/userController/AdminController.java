@@ -1,6 +1,7 @@
 package fun.sast.controller.userController;
 
 import com.alibaba.excel.EasyExcel;
+import fun.sast.annotation.RateLimited;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.AdminService;
 import fun.sast.service.FileService;
@@ -39,6 +40,7 @@ public class AdminController {
         return adminService.getUserInfo(code);
     }
 
+    @RateLimited
     @GetMapping("/exportWorkData")
     public void exportWorkData(HttpServletResponse response, @RequestParam long comId) {
         // 设置响应头
