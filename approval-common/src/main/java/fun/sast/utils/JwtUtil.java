@@ -46,6 +46,8 @@ public class JwtUtil {
      */
     public String resolveJwt(String token) {
         try {
+            System.out.println("Resolving JWT with secret: '" + secret + "'");
+            System.out.println("Token to resolve: " + token);
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(secret)).build();
             DecodedJWT verify = jwtVerifier.verify(token);
 
@@ -62,6 +64,7 @@ public class JwtUtil {
         } catch (TokenExpiredException e) {
             throw new BaseException(ErrorEnum.EXPIRED_LOGIN);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(ErrorEnum.TOKEN_ERROR);
         }
     }
