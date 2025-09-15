@@ -10,7 +10,6 @@ import lombok.Builder;
 @Builder
 public class CompetitionDetailVO {
 
-
     /** 封面url */
     private String cover;
 
