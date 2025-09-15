@@ -99,12 +99,12 @@ VALUES
 
 -- 初始化部门数据
 INSERT IGNORE INTO department (id, name, create_user, update_user) VALUES
-(1, '计算机学院、软件学院、网络空间安全学院', 'admin', 'admin'),
-(2, '通信与信息工程学院', 'admin', 'admin'),
-(3, '电子与光学工程学院、柔性电子（未来技术）学院', 'admin', 'admin'),
-(4, '集成电路科学与工程学院', 'admin', 'admin'),
-(5, '自动化学院、人工智能学院', 'admin', 'admin'),
-(6, '材料科学与工程学院', 'admin', 'admin');
+(1, '计算机学院、软件学院、网络空间安全学院', NULL, NULL),
+(2, '通信与信息工程学院', NULL, NULL),
+(3, '电子与光学工程学院、柔性电子（未来技术）学院', NULL, NULL),
+(4, '集成电路科学与工程学院', NULL, NULL),
+(5, '自动化学院、人工智能学院', NULL, NULL),
+(6, '材料科学与工程学院', NULL, NULL);
 
 -- 作品表
 INSERT INTO `work` (`com_id`, `user_code`, `work_name`, `schema_content`, `create_user`, `update_user`)

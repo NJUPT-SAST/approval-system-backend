@@ -43,27 +43,25 @@ public class ExcelForJudgeAssignUtil extends AnalysisEventListener<Map<Integer, 
         }
         String captainCode = work.getUserCode();
 
-        // 查用户表，把学号转成 userId
-        QueryWrapper<User> userQuery = new QueryWrapper<>();
-        userQuery.eq("code", captainCode);
-        User captain = userMapper.selectOne(userQuery);
-        if (captain == null) throw new BaseException(ErrorEnum.USER_NOT_EXIST);
-        Integer captainId = captain.getId();
-        System.out.println(captainId);
+        // 增加是否为评委
 
         // 活动id
         Integer comId = work.getComId().intValue();
         QueryWrapper<Review> reviewQueryWrapper = new QueryWrapper<>();
-        reviewQueryWrapper.eq("com_id", comId).eq("user_id", captainId);
+        reviewQueryWrapper.eq("com_id", comId).eq("user_code", captainCode);
         Review review = reviewMapper.selectOne(reviewQueryWrapper);
         QueryWrapper<Competition> competitionQueryWrapper = new QueryWrapper<>();
-        competitionQueryWrapper.eq("id", comId).select("is_review");
+        competitionQueryWrapper.eq("id", comId);
         Competition competition = competitionMapper.selectOne(competitionQueryWrapper);
-        Competition competition1 = competitionMapper.selectById(comId);
+
+        // 判断比赛是否需要审核和作品是否审核
+        if (Boolean.TRUE.equals(competition.getIsReview()) // 比赛需要审核,作品未审核通过
+                && (review == null || !Boolean.TRUE.equals(review.isAccept()))) {
+            throw new BaseException(ErrorEnum.ASSIGN_ERROR);
+        }
 
         System.out.println(review);
         System.out.println(competition);
-        System.out.println(competition1);
 
         // 第 3 列及以后：评委学号
         List<String> newJudgeCodes = new ArrayList<>();
