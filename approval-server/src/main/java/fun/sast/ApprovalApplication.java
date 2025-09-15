@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 @Slf4j
 @SpringBootApplication
 @MapperScan("fun.sast.mapper")
-@ComponentScan(basePackages = {"fun.sast"})
 public class ApprovalApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApprovalApplication.class, args);
