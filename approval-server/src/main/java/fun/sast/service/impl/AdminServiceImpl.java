@@ -9,16 +9,15 @@ import fun.sast.service.AdminService;
 import fun.sast.utils.FileUtil;
 import fun.sast.vo.CompetitionDetailVO;
 import fun.sast.vo.CompetitionManagerVO;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -148,7 +147,8 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public CompetitionDetailVO getCompetitionInfo(Long id) {
-        Competition competition = competitionMapper.selectOne(new QueryWrapper<Competition>().eq("id", id));
+        Competition competition =
+                competitionMapper.selectOne(new QueryWrapper<Competition>().eq("id", id));
         if (competition == null) {
             throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
@@ -203,43 +203,57 @@ public class AdminServiceImpl implements AdminService {
 
         ArrayList<CompetitionManagerVO> resList = new ArrayList<>();
 
-        works.forEach(work -> {
-            ArrayList<String> judges = new ArrayList<>();
-            CompetitionManagerVO comMangerVo = new CompetitionManagerVO();
-            String workName = work.getWorkName();
-            String userCode = work.getUserCode();
+        works.forEach(
+                work -> {
+                    ArrayList<String> judges = new ArrayList<>();
+                    CompetitionManagerVO comMangerVo = new CompetitionManagerVO();
+                    String workName = work.getWorkName();
+                    String userCode = work.getUserCode();
 
-            List<Judge> judgeList = judgeMapper.selectList(new QueryWrapper<Judge>().eq("com_id", comId).eq("user_code", userCode));
+                    List<Judge> judgeList =
+                            judgeMapper.selectList(
+                                    new QueryWrapper<Judge>()
+                                            .eq("com_id", comId)
+                                            .eq("user_code", userCode));
 
-            // 判断是否分配评委
-            if (judgeList.isEmpty()) {
-                comMangerVo.setIsAssignJudge(0);
-            } else {
-                judgeList.forEach(judge -> {
-                    if (!userIsExist(judge.getJudgeCode())) {
-                        throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+                    // 判断是否分配评委
+                    if (judgeList.isEmpty()) {
+                        comMangerVo.setIsAssignJudge(0);
+                    } else {
+                        judgeList.forEach(
+                                judge -> {
+                                    if (!userIsExist(judge.getJudgeCode())) {
+                                        throw new BaseException(ErrorEnum.USER_NOT_EXIST);
+                                    }
+                                    String judgeName =
+                                            userMapper.selectById(judge.getJudgeCode()).getName();
+                                    judges.add(judgeName);
+                                });
+                        comMangerVo.setIsAssignJudge(1);
                     }
-                    String judgeName = userMapper.selectById(judge.getJudgeCode()).getName();
-                    judges.add(judgeName);
-                });
-                comMangerVo.setIsAssignJudge(1);
-            }
 
-            comMangerVo.setUserCode(userCode);
-            comMangerVo.setJudges(judges);
-            comMangerVo.setComId(comId);
-            comMangerVo.setFileName(workName);
-            resList.add(comMangerVo);
-        });
+                    comMangerVo.setUserCode(userCode);
+                    comMangerVo.setJudges(judges);
+                    comMangerVo.setComId(comId);
+                    comMangerVo.setFileName(workName);
+                    resList.add(comMangerVo);
+                });
 
         QueryWrapper<Competition> competitionQueryWrapper = new QueryWrapper<>();
         competitionQueryWrapper.eq("id", comId);
         String comName = competitionMapper.selectOne(competitionQueryWrapper).getName();
 
         // 返回结果集、提交作品数量、报名数、提交材料数、评审数
-        return getComMangerMap(resList, Math.toIntExact(subNum), pageNum, pageSize, regNum, subNum, revNum, comName);
+        return getComMangerMap(
+                resList,
+                Math.toIntExact(subNum),
+                pageNum,
+                pageSize,
+                regNum,
+                subNum,
+                revNum,
+                comName);
     }
-
 
     /**
      * 判断是否存在这个部门
@@ -290,50 +304,71 @@ public class AdminServiceImpl implements AdminService {
 
     /**
      * 验证比赛时间设置是否正确
+     *
      * @param competition 比赛信息
      */
     private void validateCompetitionDates(Competition competition) {
-        if ((competition.getRegBeginTime() != null && competition.getSubmitBeginTime() != null && competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime())) ||  // 提交开始时间不早于报名开始时间
-                (competition.getSubmitBeginTime() != null && competition.getReviewBeginTime() != null && competition.getSubmitBeginTime().isAfter(competition.getReviewBeginTime())) ||  // 评审开始时间不早于提交开始时间
-                (competition.getRegBeginTime() != null && competition.getRegEndTime() != null && competition.getRegBeginTime().isAfter(competition.getRegEndTime())) ||  // 报名截止时间不早于报名开始时间
-                (competition.getRegEndTime() != null && competition.getSubmitEndTime() != null && competition.getRegEndTime().isAfter(competition.getSubmitEndTime())) ||  // 提交截止时间不早于报名截止时间
-                (competition.getSubmitEndTime() != null && competition.getReviewEndTime() != null && competition.getSubmitEndTime().isAfter(competition.getReviewEndTime()))) {  // 评审截止时间不早于提交截止时间
+        if ((competition.getRegBeginTime() != null
+                        && competition.getSubmitBeginTime() != null
+                        && competition.getRegBeginTime().isAfter(competition.getSubmitBeginTime()))
+                || // 提交开始时间不早于报名开始时间
+                (competition.getSubmitBeginTime() != null
+                        && competition.getReviewBeginTime() != null
+                        && competition
+                                .getSubmitBeginTime()
+                                .isAfter(competition.getReviewBeginTime()))
+                || // 评审开始时间不早于提交开始时间
+                (competition.getRegBeginTime() != null
+                        && competition.getRegEndTime() != null
+                        && competition.getRegBeginTime().isAfter(competition.getRegEndTime()))
+                || // 报名截止时间不早于报名开始时间
+                (competition.getRegEndTime() != null
+                        && competition.getSubmitEndTime() != null
+                        && competition.getRegEndTime().isAfter(competition.getSubmitEndTime()))
+                || // 提交截止时间不早于报名截止时间
+                (competition.getSubmitEndTime() != null
+                        && competition.getReviewEndTime() != null
+                        && competition
+                                .getSubmitEndTime()
+                                .isAfter(competition.getReviewEndTime()))) { // 评审截止时间不早于提交截止时间
             throw new BaseException(ErrorEnum.DATE_ERROR);
         }
     }
 
     /**
-     * 校验审批关系数据是否正确
-     * 主要是判断部门跟用户是否存在
+     * 校验审批关系数据是否正确 主要是判断部门跟用户是否存在
+     *
      * @param settings 审批关系设置
      */
     private void validateReviewSettings(Map<String, String> settings) {
         if (settings == null) {
             throw new BaseException(ErrorEnum.REVIEW_SETTINGS_ERROR);
         }
-        settings.forEach((departmentId, userCode) -> {
-            // 验证用户是否存在
-            if (!userIsExist(userCode)) {
-                throw new BaseException(ErrorEnum.USER_NOT_EXIST);
-            }
-
-            // 如果部门ID不为"0"，验证部门是否存在
-            if (!"0".equals(departmentId)) {
-                try {
-                    Integer depId = Integer.valueOf(departmentId);
-                    if (!depIsExist(depId)) {
-                        throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
+        settings.forEach(
+                (departmentId, userCode) -> {
+                    // 验证用户是否存在
+                    if (!userIsExist(userCode)) {
+                        throw new BaseException(ErrorEnum.USER_NOT_EXIST);
                     }
-                } catch (NumberFormatException e) {
-                    // 如果部门ID不是有效整数，抛出部门不存在异常
-                    throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
-                }
-            }
-        });
+
+                    // 如果部门ID不为"0"，验证部门是否存在
+                    if (!"0".equals(departmentId)) {
+                        try {
+                            Integer depId = Integer.valueOf(departmentId);
+                            if (!depIsExist(depId)) {
+                                throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
+                            }
+                        } catch (NumberFormatException e) {
+                            // 如果部门ID不是有效整数，抛出部门不存在异常
+                            throw new BaseException(ErrorEnum.DEP_NOT_EXIST);
+                        }
+                    }
+                });
     }
 
     /**
      * 获取比赛管理员信息
+     *
      * @param comMangerVo 比赛管理员信息
      * @param num 总数
      * @param pageNum 页码
@@ -344,8 +379,15 @@ public class AdminServiceImpl implements AdminService {
      * @param comName 比赛名称
      * @return 比赛管理员信息
      */
-    public Map<String, Object> getComMangerMap(List<CompetitionManagerVO> comMangerVo, int num, Integer pageNum,
-                                               Integer pageSize, Long regNum, Long subNum, Long revNum, String comName) {
+    public Map<String, Object> getComMangerMap(
+            List<CompetitionManagerVO> comMangerVo,
+            int num,
+            Integer pageNum,
+            Integer pageSize,
+            Long regNum,
+            Long subNum,
+            Long revNum,
+            String comName) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("records", comMangerVo);
         resultMap.put("total", num);
@@ -355,7 +397,7 @@ public class AdminServiceImpl implements AdminService {
         resultMap.put("subNum", subNum);
         resultMap.put("revNum", revNum);
         // 如果不为空就添加comId
-        if(!comMangerVo.isEmpty()) {
+        if (!comMangerVo.isEmpty()) {
             resultMap.put("comId", comMangerVo.get(0).getComId());
         }
         resultMap.put("comName", comName);

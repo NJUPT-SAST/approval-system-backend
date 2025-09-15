@@ -3,15 +3,13 @@ package fun.sast.vo;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler;
-import lombok.Builder;
-
 import java.time.LocalDateTime;
 import java.util.Map;
+import lombok.Builder;
 
 @Builder
 public class CompetitionDetailVO {
-    public static final Integer REVIEWED = 0;
-    public static final Integer NOT_REVIEWED = 1;
+
 
     /** 封面url */
     private String cover;
@@ -19,9 +17,7 @@ public class CompetitionDetailVO {
     /** 活动ID编号 */
     private Long id;
 
-    /**
-     * 活动负责人学工号
-     */
+    /** 活动负责人学工号 */
     private String userCode;
 
     /** 比赛介绍 */

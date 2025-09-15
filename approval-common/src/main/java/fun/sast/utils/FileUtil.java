@@ -3,7 +3,6 @@ package fun.sast.utils;
 import cn.hutool.core.io.FileTypeUtil;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -87,12 +86,10 @@ public class FileUtil {
         return cosUtil.getUploadCertificate(objectName, FileUtil.PRIVATE_FOLDER);
     }
 
-
     /**
-     * 向公共Bucket上传比赛封面（仅允许jpg png格式，且大小小于5M）
-     * 文件路径格式 //buckName.endpoint/comId/cover/fileName
+     * 向公共Bucket上传比赛封面（仅允许jpg png格式，且大小小于5M） 文件路径格式 //buckName.endpoint/comId/cover/fileName
      *
-     * @param file  封面
+     * @param file 封面
      * @param comId 比赛ID
      * @return 封面的URL
      */
@@ -112,9 +109,7 @@ public class FileUtil {
             throw new BaseException(ErrorEnum.INVALID_FILE_TYPE_ERROR);
         }
         // 文件路径格式 comId/cover/fileName
-        String objectName = comId +
-                "/cover/" +
-                file.getOriginalFilename();
+        String objectName = comId + "/cover/" + file.getOriginalFilename();
 
         return cosUtil.uploadFile(file, objectName, PUBLIC_FOLDER);
     }
@@ -125,6 +120,4 @@ public class FileUtil {
             default -> false;
         };
     }
-
-
 }

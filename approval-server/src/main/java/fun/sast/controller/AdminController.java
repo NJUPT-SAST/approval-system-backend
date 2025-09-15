@@ -5,10 +5,10 @@ import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.Competition;
 import fun.sast.service.AdminService;
 import fun.sast.vo.CompetitionDetailVO;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -21,7 +21,7 @@ public class AdminController {
      * 创建活动
      *
      * @param competition 比赛（活动）
-     * @param cover       封面
+     * @param cover 封面
      * @return 比赛id
      */
     @PostMapping("/com/create")
@@ -71,16 +71,16 @@ public class AdminController {
     /**
      * 管理活动
      *
-     * @param comId    活动id
-     * @param pageNum  当前页数
+     * @param comId 活动id
+     * @param pageNum 当前页数
      * @param pageSize 每页大小
      * @return 活动管理界面的信息
      */
     @GetMapping("/com/manager")
-    public Map<String, Object> comManager(@RequestParam Long comId,
-                                          @RequestParam(defaultValue = "1") Integer pageNum,
-                                          @RequestParam(defaultValue = "10") Integer pageSize
-    ) {
+    public Map<String, Object> comManager(
+            @RequestParam Long comId,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
         return adminService.getComMangerInfo(pageNum, pageSize, comId);
     }
 }

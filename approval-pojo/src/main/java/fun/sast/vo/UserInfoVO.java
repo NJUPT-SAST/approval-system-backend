@@ -11,7 +11,7 @@ public class UserInfoVO {
     /** 用户姓名 */
     private String name;
 
-    /** 用户学号*/
+    /** 用户学号 */
     private String code;
 
     /** 角色 */

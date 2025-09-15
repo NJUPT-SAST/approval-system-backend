@@ -5,5 +5,4 @@ import fun.sast.entity.Team;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeamMapper extends BaseMapper<Team> {
-}
+public interface TeamMapper extends BaseMapper<Team> {}

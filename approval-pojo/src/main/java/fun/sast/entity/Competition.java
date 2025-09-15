@@ -4,11 +4,10 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.Fastjson2TypeHandler;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,9 +41,7 @@ public class Competition implements Serializable {
     @JSONField(name = "min_team_members")
     private Integer minTeamMembers;
 
-    /**
-     * 活动负责人学工号
-     */
+    /** 活动负责人学工号 */
     @JSONField(name = "user_code")
     private String userCode;
 

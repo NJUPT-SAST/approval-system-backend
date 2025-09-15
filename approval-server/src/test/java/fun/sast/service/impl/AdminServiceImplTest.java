@@ -1,9 +1,15 @@
 package fun.sast.service.impl;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.alibaba.fastjson2.JSONObject;
 import fun.sast.entity.Competition;
 import fun.sast.mapper.*;
 import fun.sast.utils.FileUtil;
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -11,29 +17,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 class AdminServiceImplTest {
 
-    @Mock
-    private CompetitionMapper competitionMapper;
+    @Mock private CompetitionMapper competitionMapper;
 
-    @Mock
-    private UserMapper userMapper;
+    @Mock private UserMapper userMapper;
 
-    @Mock
-    private DepartmentMapper departmentMapper;
+    @Mock private DepartmentMapper departmentMapper;
 
-    @Mock
-    private FileUtil fileUtil;
+    @Mock private FileUtil fileUtil;
 
-    @InjectMocks
-    private AdminServiceImpl adminService;
+    @InjectMocks private AdminServiceImpl adminService;
 
     @BeforeEach
     void setUp() {
@@ -58,7 +52,8 @@ class AdminServiceImplTest {
         when(competitionMapper.updateById(any(Competition.class))).thenReturn(1);
         when(userMapper.exists(any())).thenReturn(true);
         when(cover.isEmpty()).thenReturn(false);
-        when(fileUtil.uploadCover(any(MultipartFile.class), anyLong())).thenReturn("http://example.com/cover.jpg");
+        when(fileUtil.uploadCover(any(MultipartFile.class), anyLong()))
+                .thenReturn("http://example.com/cover.jpg");
 
         // 执行测试
         assertDoesNotThrow(() -> adminService.createCompetition(competition, cover));
@@ -105,7 +100,8 @@ class AdminServiceImplTest {
         when(competitionMapper.updateById(any(Competition.class))).thenReturn(1);
         when(userMapper.exists(any())).thenReturn(true);
         when(cover.isEmpty()).thenReturn(false);
-        when(fileUtil.uploadCover(any(MultipartFile.class), anyLong())).thenReturn("http://example.com/cover.jpg");
+        when(fileUtil.uploadCover(any(MultipartFile.class), anyLong()))
+                .thenReturn("http://example.com/cover.jpg");
 
         // 执行测试
         assertDoesNotThrow(() -> adminService.editCompetition(competition, cover));
@@ -172,12 +168,15 @@ class AdminServiceImplTest {
         competition.setReviewEndTime(LocalDateTime.of(2023, 1, 30, 0, 0));
 
         // 执行测试
-        assertDoesNotThrow(() -> {
-            // 使用反射调用私有方法
-            java.lang.reflect.Method method = AdminServiceImpl.class.getDeclaredMethod("validateCompetitionDates", Competition.class);
-            method.setAccessible(true);
-            method.invoke(adminService, competition);
-        });
+        assertDoesNotThrow(
+                () -> {
+                    // 使用反射调用私有方法
+                    java.lang.reflect.Method method =
+                            AdminServiceImpl.class.getDeclaredMethod(
+                                    "validateCompetitionDates", Competition.class);
+                    method.setAccessible(true);
+                    method.invoke(adminService, competition);
+                });
     }
 
     @Test
@@ -188,12 +187,16 @@ class AdminServiceImplTest {
         competition.setSubmitBeginTime(LocalDateTime.of(2023, 1, 5, 0, 0));
 
         // 执行测试和验证
-        assertThrows(Exception.class, () -> {
-            // 使用反射调用私有方法
-            java.lang.reflect.Method method = AdminServiceImpl.class.getDeclaredMethod("validateCompetitionDates", Competition.class);
-            method.setAccessible(true);
-            method.invoke(adminService, competition);
-        });
+        assertThrows(
+                Exception.class,
+                () -> {
+                    // 使用反射调用私有方法
+                    java.lang.reflect.Method method =
+                            AdminServiceImpl.class.getDeclaredMethod(
+                                    "validateCompetitionDates", Competition.class);
+                    method.setAccessible(true);
+                    method.invoke(adminService, competition);
+                });
     }
 
     @Test

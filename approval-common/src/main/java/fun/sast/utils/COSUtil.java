@@ -8,12 +8,9 @@ import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpMethodName;
 import com.qcloud.cos.model.GeneratePresignedUrlRequest;
 import com.qcloud.cos.model.ObjectMetadata;
-import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import fun.sast.Exception.BaseException;
 import fun.sast.enums.ErrorEnum;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -148,7 +145,6 @@ public class COSUtil {
         String key = folder + "/" + extractObjectKey(url);
         cosClient.deleteObject(bucketName, key);
     }
-
 
     /**
      * 上传文件

@@ -16,9 +16,7 @@ public class Judge implements Serializable {
     /** 评委id */
     private Integer id;
 
-    /**
-     * 评委学工号
-     */
+    /** 评委学工号 */
     private String judgeCode;
 
     /** 授权人id */
