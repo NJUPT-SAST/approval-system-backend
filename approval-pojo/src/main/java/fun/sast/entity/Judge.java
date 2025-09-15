@@ -26,4 +26,10 @@ public class Judge implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    /** 评委学号 */
+    private String judgeCode;
+
+    /** 队长学号 */
+    private String captainCode;
 }

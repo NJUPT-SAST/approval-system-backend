@@ -34,4 +34,6 @@ public class Review implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    private String userCode;
 }
