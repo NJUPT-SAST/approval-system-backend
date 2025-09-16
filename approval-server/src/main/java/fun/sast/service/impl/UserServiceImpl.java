@@ -19,7 +19,6 @@ import fun.sast.utils.JwtUtil;
 import fun.sast.utils.RedisUtil;
 import fun.sast.vo.UserLoginVO;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -100,13 +99,19 @@ public class UserServiceImpl implements UserService {
         // 实际应用中，这里应该查询用户已报名的比赛
         // 假设我们有一个关联表user_competition记录用户报名信息
         IPage<Competition> page = new Page<>(cur, limit);
-        
+
         // 假设存在user_competition表，关联userId和competitionId
         QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
         // 使用参数化查询避免SQL注入
-        queryWrapper.lambda().inSql(Competition::getId, String.format("SELECT com_id FROM user_competition WHERE user_id = %d", user.getId()));
+        queryWrapper
+                .lambda()
+                .inSql(
+                        Competition::getId,
+                        String.format(
+                                "SELECT com_id FROM user_competition WHERE user_id = %d",
+                                user.getId()));
         queryWrapper.orderByDesc("id");
-        
+
         try {
             IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
             Map<String, Object> result = new HashMap<>();
@@ -159,23 +164,60 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> searchComName(String key, Integer cur, Integer limit) {
         try {
+            // 参数校验
             if (cur == null || cur < 1) {
                 cur = 1;
             }
             if (limit == null || limit < 1 || limit > 100) {
                 limit = 10;
             }
-            IPage<Competition> page = new Page<>(cur, limit);
-            QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
-            queryWrapper.like("name", key).eq("is_review", Competition.REVIEWED);
-            IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
+            if (key == null) {
+                key = "";
+            }
 
+            log.info("搜索比赛: 关键词={}, 当前页码={}, 每页条数={}", key, cur, limit);
+
+            // 构建分页对象
+            IPage<Competition> page = new Page<>(cur, limit);
+            
+            // 构建查询条件
+            QueryWrapper<Competition> queryWrapper = new QueryWrapper<>();
+            // 只查询已审批的比赛
+            queryWrapper.eq("is_review", Competition.REVIEWED);
+            
+            // 如果有搜索关键词，则进行模糊搜索
+            if (!key.isEmpty()) {
+                final String searchKey = key; // 创建final副本用于lambda表达式
+                queryWrapper.and(wrapper -> wrapper
+                        .like("name", searchKey)        // 按比赛名称搜索
+                        .or().like("introduce", searchKey)  // 按比赛介绍搜索
+                );
+            }
+            
+            // 按创建时间倒序排序，确保最新的比赛在前
+            queryWrapper.orderByDesc("create_time");
+            
+            // 执行分页查询
+            IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
+            
+            // 构建返回结果
             Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
             result.put("total", competitionPage.getTotal());
+            result.put("pageNum", cur);
+            result.put("pageSize", limit);
+            result.put("pages", competitionPage.getPages());
             result.put("list", competitionPage.getRecords());
+            
+            log.info("搜索比赛结果: 总条数={}, 总页数={}", competitionPage.getTotal(), competitionPage.getPages());
             return result;
+        } catch (BaseException e) {
+            // 处理已定义的业务异常
+            log.error("搜索比赛失败: 关键词={}, 错误信息={}", key, e.getMessage());
+            throw e;
         } catch (Exception e) {
-            log.error("搜索比赛名称失败: key={}", key, e);
+            // 处理未定义的系统异常
+            log.error("搜索比赛失败: 关键词={}", key, e);
             throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
     }

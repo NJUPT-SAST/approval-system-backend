@@ -20,7 +20,7 @@ public class JwtUtil {
     private final long expiration;
 
     public JwtUtil(
-            @Value("${jwt.secret:default-jwt-secret}") String secret, 
+            @Value("${jwt.secret:default-jwt-secret}") String secret,
             @Value("${jwt.expiration:864000000}") long expiration) {
         this.secret = secret;
         this.expiration = expiration;

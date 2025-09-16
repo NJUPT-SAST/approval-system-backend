@@ -7,13 +7,12 @@ import fun.sast.utils.JwtUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
 @RequiredArgsConstructor
@@ -24,13 +23,11 @@ public class UserInterceptor implements HandlerInterceptor {
     private final JwtUtil jwtUtil;
 
     @Resource private UserMapper userMapper;
-    
+
     // 定义不需要token验证的接口路径集合
-    private static final Set<String> OPTIONAL_AUTH_PATHS = new HashSet<>(Arrays.asList(
-            "/user/com/notice/list",
-            "/user/com/search",
-            "/user/com/list"
-    ));
+    private static final Set<String> OPTIONAL_AUTH_PATHS =
+            new HashSet<>(
+                    Arrays.asList("/user/com/notice/list", "/user/com/search", "/user/com/list"));
 
     @Override
     public boolean preHandle(
