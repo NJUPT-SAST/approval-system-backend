@@ -75,7 +75,7 @@ public class NoticeServiceImpl implements NoticeService {
         // 前端未传值，设置为当前时间
         if (noticeTime == null) {
             noticeTimeStr = LocalDateTime.now().format(formatter);
-        }else{
+        } else {
             noticeTimeStr = noticeTime.toString();
         }
 
@@ -108,7 +108,7 @@ public class NoticeServiceImpl implements NoticeService {
         // 前端未传值，设置为当前时间
         if (noticeTime == null) {
             noticeTimeStr = LocalDateTime.now().format(formatter);
-        }else{
+        } else {
             noticeTimeStr = noticeTime.toString();
         }
 

@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface WhiteListMapper extends BaseMapper<WhiteList> {
-}
+public interface WhiteListMapper extends BaseMapper<WhiteList> {}

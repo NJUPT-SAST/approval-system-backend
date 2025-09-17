@@ -28,7 +28,7 @@ public class NoticeController {
     @ResponseResult
     public void releaseNotice(@RequestBody NoticeOperateVO vo, HttpServletRequest request) {
         User currentUser = UserInterceptor.userHolder.get();
-        if(currentUser.getRole() != 3) {
+        if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);
         }
         try {
@@ -48,7 +48,7 @@ public class NoticeController {
     @ResponseResult
     public void updateNotice(@RequestBody NoticeOperateVO vo) {
         User currentUser = UserInterceptor.userHolder.get();
-        if(currentUser.getRole() != 3) {
+        if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);
         }
         try {
@@ -68,7 +68,7 @@ public class NoticeController {
     @ResponseResult
     public void deleteNotice(@RequestParam Integer id) {
         User currentUser = UserInterceptor.userHolder.get();
-        if(currentUser.getRole() != 3) {
+        if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);
         }
         try {

@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface TeamMapper extends BaseMapper {
-}
+public interface TeamMapper extends BaseMapper {}

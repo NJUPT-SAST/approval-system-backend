@@ -15,13 +15,15 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/admin/com")
 public class WhiteListController {
-    @Autowired
-    private WhiteListService whiteListService;
+    @Autowired private WhiteListService whiteListService;
 
     @PostMapping("/whitelist")
-    public void setWhiteList(@RequestParam Long comId, @RequestParam Boolean isEnable, @RequestParam(required = false) MultipartFile excelFile) {
+    public void setWhiteList(
+            @RequestParam Long comId,
+            @RequestParam Boolean isEnable,
+            @RequestParam(required = false) MultipartFile excelFile) {
         User currentUser = UserInterceptor.userHolder.get();
-        if(currentUser.getRole() != 3) {
+        if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);
         }
         whiteListService.operateWhiteList(comId, isEnable, excelFile);
