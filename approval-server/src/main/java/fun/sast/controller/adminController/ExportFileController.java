@@ -1,6 +1,7 @@
-package fun.sast.controller.userController;
+package fun.sast.controller.adminController;
 
 import fun.sast.Exception.BaseException;
+import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ExportFileController {
     private final FileService fileService;
 
+    @ResponseResult
     @GetMapping("/exportComInfo")
     public void exportComInfo(HttpServletResponse response, @RequestParam Long comId) {
         User currentUser = UserInterceptor.userHolder.get();
@@ -27,6 +29,7 @@ public class ExportFileController {
         fileService.exportComInfo(response, comId);
     }
 
+    @ResponseResult
     @GetMapping("/exportWork")
     public void exportWork(HttpServletResponse response, @RequestParam Long comId,@RequestParam String userCode) {
         User currentUser = UserInterceptor.userHolder.get();

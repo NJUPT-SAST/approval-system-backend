@@ -1,4 +1,4 @@
-package fun.sast.controller.userController;
+package fun.sast.controller.adminController;
 
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
@@ -8,14 +8,16 @@ import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.NoticeService;
 import fun.sast.vo.NoticeOperateVO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin/notice")
+@RequiredArgsConstructor
 public class NoticeController {
 
-    @Autowired private NoticeService noticeService;
+    private final NoticeService noticeService;
 
     /**
      * 发布公告

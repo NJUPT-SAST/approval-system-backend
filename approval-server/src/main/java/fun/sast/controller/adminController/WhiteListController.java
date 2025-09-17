@@ -1,10 +1,12 @@
-package fun.sast.controller.userController;
+package fun.sast.controller.adminController;
 
 import fun.sast.Exception.BaseException;
+import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.WhiteListService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin/com")
+@RequiredArgsConstructor
 public class WhiteListController {
-    @Autowired private WhiteListService whiteListService;
+    private final WhiteListService whiteListService;
 
+    @ResponseResult
     @PostMapping("/whitelist")
     public void setWhiteList(
             @RequestParam Long comId,
