@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.sast.mapper.ReviewMapper">
+
+    <!--获取审核比赛列表-->
+    <resultMap id="comInfoMap" type="fun.sast.vo.ComListForReview">
+        <id column="id" property="id"/>
+        <result column="review_begin_time" property="startDate"/>
+        <result column="review_end_time" property="endDate"/>
+        <result column="name" property="title"/>
+        <result column="completed_num" property="completedNum"/>
+        <result column="total_num" property="totalNum"/>
+    </resultMap>
+    <select id="getComInfo" resultMap="comInfoMap">
+        SELECT competition.id,
+               name,
+               review_begin_time,
+               review_end_time,
+               IF(#{code} = JSON_OBJECT(review_settings, '$.0'), (
+                   (SELECT COUNT(*)
+                    FROM review
+                    WHERE review.accept IS NOT NULL
+                      AND review.com_id = competition.id
+                      AND review.user_code NOT IN
+                          (SELECT user.code FROM user WHERE JSON_CONTAINS(JSON_KEYS(review_settings), CONCAT('$.',user.dep_id))))),
+                  (SELECT COUNT(*)
+                   FROM review
+                   WHERE review.accept IS NOT NULL
+                     AND review.com_id = competition.id
+                     AND review.user_code IN
+                         (SELECT user.code FROM user WHERE user.dep_id = #{dep_id}))) AS 'completed_num',
+                IF(#{code} = JSON_OBJECT(review_settings, '$.0'),
+                    (SELECT COUNT(*)
+                     FROM review
+                     WHERE review.com_id = competition.id
+                       AND review.user_code NOT IN (SELECT user.code
+                                                    FROM user
+                                                    WHERE JSON_CONTAINS_PATH(review_settings,'one', CONCAT('$.',user.dep_id)))),
+                    (SELECT COUNT(*)
+                     FROM review
+                     WHERE review.com_id = competition.id
+                       AND review.user_code IN
+                           (SELECT user.code FROM user WHERE user.dep_id = #{dep_id}))) AS 'total_num'
+        FROM competition
+        WHERE is_review = 1
+          AND review_settings LIKE '%' #{code} '%'
+        ORDER BY review_begin_time DESC
+    </select>
+    <select id="getComCount" resultType="java.lang.Integer"></select>
+    <select id="getReviewCount" resultType="java.lang.Integer"></select>
+
+</mapper>

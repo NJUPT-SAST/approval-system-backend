@@ -25,6 +25,12 @@ public class ReviewController {
         return GlobalResponse.success(reviewService.reviewTotal(user.getCode(), comId));
     }
 
+    //获取审核作品信息
+    @GetMapping("/review/program-info")
+    public Object reviewInfo(Integer id){
+        return GlobalResponse.success();
+    }
+
 
 
 }
