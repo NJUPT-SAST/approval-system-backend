@@ -1,7 +1,5 @@
 package fun.sast.service;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
 import fun.sast.vo.UserLoginVO;
@@ -13,7 +11,7 @@ public interface UserService {
 
     Map<String, Object> getSignedComList(User user, Integer cur, Integer limit);
 
-    Map<String, Object> getComInfo(String comId);
+    Map<String, Object> getComInfo(Long comId);
 
     /**
      * 获取用户在指定比赛中的报名信息
@@ -27,12 +25,6 @@ public interface UserService {
     Map<String, Object> searchComName(String key, Integer cur, Integer limit);
 
     Map<String, Object> getTeamInfo(User user, Long comId);
-
-    JSONObject getComSchemaTemplate(Long comId);
-
-    JSONArray getComSchema(User user, Long comId);
-
-    void uploadComSchema(User user, Long comId, String jsonData);
 
     void signUpCom(User user, String jsonData);
 

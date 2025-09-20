@@ -1,14 +1,10 @@
 package fun.sast.controller;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
-import fun.sast.annotation.CheckRole;
 import fun.sast.annotation.OperateLog;
-import fun.sast.annotation.PassToken;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
-import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
 import java.util.Map;
@@ -24,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
-@CheckRole(UserRoleEnum.STUDENT)
 @Slf4j
 public class UserController {
     private UserService userService;
@@ -42,7 +37,6 @@ public class UserController {
      * @return 数据
      */
     @ResponseResult
-    @PassToken
     @OperateLog("获取所有比赛列表")
     @GetMapping("/com/list")
     public Map<String, Object> getAllComList(
@@ -77,7 +71,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取比赛详情")
     @GetMapping("/com/info/{comId}")
-    public Map<String, Object> getComInfo(@PathVariable String comId) {
+    public Map<String, Object> getComInfo(@PathVariable Long comId) {
         return userService.getComInfo(comId);
     }
 
@@ -124,54 +118,12 @@ public class UserController {
     }
 
     /**
-     * 获取需要提交的资料表单
-     *
-     * @param comId 比赛ID
-     * @return 表单Schema
-     */
-    @ResponseResult
-    @OperateLog("获取需要提交的资料表单")
-    @GetMapping("/com/schema/{comId}")
-    public JSONObject getComSchemaTemplate(@PathVariable Long comId) {
-        return userService.getComSchemaTemplate(comId);
-    }
-
-    /**
-     * 提交作品资料表单
-     *
-     * @param comId 比赛ID
-     * @param jsonData 表单数据
-     */
-    @ResponseResult
-    @OperateLog("提交作品资料表单")
-    @PostMapping("/com/uploadSchema/{comId}")
-    public void uploadComSchema(@PathVariable Long comId, @RequestBody String jsonData) {
-        User user = UserInterceptor.userHolder.get();
-        userService.uploadComSchema(user, comId, jsonData);
-    }
-
-    /**
-     * 获取已提交的资料表单
-     *
-     * @param comId 比赛ID
-     * @return 表单数据
-     */
-    @ResponseResult
-    @OperateLog("获取已提交的资料表单")
-    @GetMapping("/com/getSchema/{comId}")
-    public JSONArray getComSchema(@PathVariable Long comId) {
-        User user = UserInterceptor.userHolder.get();
-        return userService.getComSchema(user, comId);
-    }
-
-    /**
      * 根据关键词搜索比赛
      *
      * @param key 关键词
      * @return 比赛列表
      */
     @ResponseResult
-    @PassToken
     @OperateLog("查找比赛")
     @GetMapping("/com/search")
     public Map<String, Object> searchCom(
@@ -209,13 +161,12 @@ public class UserController {
     /**
      * 修改比赛报名信息
      *
-     * @param comId 比赛ID
      * @param jsonData 修改后的报名信息
      */
     @ResponseResult
     @OperateLog("修改比赛报名信息")
-    @PostMapping("/com/updateSignUpInfo/{comId}")
-    public void updateComSignUpInfo(@PathVariable Long comId, @RequestBody String jsonData) {
+    @PostMapping("/com/updateSignUpInfo")
+    public void updateComSignUpInfo(@RequestBody String jsonData) {
         User user = UserInterceptor.userHolder.get();
         userService.updateComSignUpInfo(user, jsonData);
     }

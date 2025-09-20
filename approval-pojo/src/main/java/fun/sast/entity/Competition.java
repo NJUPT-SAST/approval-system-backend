@@ -68,7 +68,7 @@ public class Competition implements Serializable {
     private Integer type;
 
     /** 活动负责人学号 */
-    private Integer userCode;
+    private String userCode;
 
     private LocalDateTime createTime;
 

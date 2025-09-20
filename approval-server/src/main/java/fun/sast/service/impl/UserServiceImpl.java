@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService {
             }
 
             // 如果是团队赛，修改队伍名称和成员信息
-            if (Competition.TEAM == competition.getType()) {
+            if (Competition.TEAM.equals(competition.getType())) {
                 String teamName = data.getString("teamName");
                 if (teamName != null && !teamName.trim().isEmpty()) {
                     team.setName(teamName);
@@ -219,12 +219,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // 查询比赛详情 - String参数版本
+    // 查询比赛详情
     @Override
-    public Map<String, Object> getComInfo(String comId) {
+    public Map<String, Object> getComInfo(Long comId) {
         try {
             // 1. 参数校验
-            if (comId == null || comId.isEmpty()) {
+            if (comId == null || comId <= 0) {
                 throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
             }
 
@@ -264,12 +264,6 @@ public class UserServiceImpl implements UserService {
             log.error("查询比赛详情失败: 比赛ID={}", comId, e);
             throw new BaseException(ErrorEnum.COMMON_ERROR);
         }
-    }
-
-    // 查询比赛详情 - Long参数版本（解决编译错误）
-    public Map<String, Object> getComInfo(Long comId) {
-        // 调用String版本的方法
-        return getComInfo(String.valueOf(comId));
     }
 
     /**
@@ -560,104 +554,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // 查询比赛报名表单模板
-    @Override
-    public JSONObject getComSchemaTemplate(Long comId) {
-        if (comId == null || comId <= 0) {
-            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
-        }
-        // 检查比赛是否存在
-        Competition competition = competitionMapper.selectById(comId);
-        if (competition == null) {
-            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
-        }
-        JSONObject template = new JSONObject();
-        JSONArray fields = new JSONArray();
-
-        // 示例：添加基本字段
-        JSONObject field1 = new JSONObject();
-        field1.put("name", "teamName");
-        field1.put("label", "团队名称");
-        field1.put("type", "text");
-        field1.put("required", true);
-        fields.add(field1);
-
-        JSONObject field2 = new JSONObject();
-        field2.put("name", "teamMembers");
-        field2.put("label", "团队成员");
-        field2.put("type", "array");
-        field2.put("required", true);
-        fields.add(field2);
-
-        template.put("fields", fields);
-        template.put("comId", comId);
-        return template;
-    }
-
-    // 查询用户已报名的比赛表单数据
-    @Override
-    public JSONArray getComSchema(User user, Long comId) {
-        if (user == null) {
-            throw new BaseException(ErrorEnum.NO_LOGIN);
-        }
-        if (comId == null || comId <= 0) {
-            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
-        }
-        // 实际应用中，这里应该查询用户针对该比赛的报名表单数据
-        JSONArray schema = new JSONArray();
-        // 示例数据
-        JSONObject data = new JSONObject();
-        data.put("comId", comId);
-        data.put("userId", user.getId());
-        data.put("submitted", false);
-        schema.add(data);
-        return schema;
-    }
-
-    // 提交比赛报名表单
-    @Override
-    public void uploadComSchema(User user, Long comId, String jsonData) {
-        // 参数校验
-        if (user == null) {
-            throw new BaseException(ErrorEnum.NO_LOGIN);
-        }
-        if (comId == null || comId <= 0) {
-            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
-        }
-        if (jsonData == null || jsonData.trim().isEmpty()) {
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
-        }
-
-        // 业务逻辑校验 - 检查比赛是否存在
-        Competition competition = competitionMapper.selectById(comId);
-        if (competition == null) {
-            throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
-        }
-        // 可以添加更多业务校验，例如检查比赛是否已截止报名等
-
-        try {
-            // 校验JSON格式
-            JSONObject data = JSONObject.parseObject(jsonData);
-            if (data.isEmpty()) {
-                throw new BaseException(ErrorEnum.COMMON_ERROR);
-            }
-
-            // 可以添加表单字段校验
-            // 例如检查必填字段是否存在
-            if (!data.containsKey("teamName")) {
-                throw new BaseException(ErrorEnum.COMMON_ERROR);
-            }
-            // 保存数据到数据库...
-            log.info("用户 {} 上传比赛 {} 的表单数据成功", user.getId(), comId);
-        } catch (JSONException e) {
-            log.error("上传表单数据失败：JSON格式无效", e);
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
-        } catch (Exception e) {
-            log.error("上传表单数据失败", e);
-            throw new BaseException(ErrorEnum.COMMON_ERROR);
-        }
-    }
-
     // 报名比赛
     @Override
     public void signUpCom(User user, String jsonData) {
@@ -724,7 +620,7 @@ public class UserServiceImpl implements UserService {
             team.setCaptain(user.getCode());
 
             // 如果是团队赛，设置队伍名称和成员信息
-            if (Competition.TEAM == competition.getType()) {
+            if (Competition.TEAM.equals(competition.getType())) {
                 String teamName = data.getString("teamName");
                 if (teamName == null || teamName.trim().isEmpty()) {
                     throw new BaseException(ErrorEnum.TEAM_NAME_EMPTY);
