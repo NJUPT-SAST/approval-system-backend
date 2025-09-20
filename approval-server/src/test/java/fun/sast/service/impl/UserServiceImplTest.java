@@ -1,325 +1,408 @@
 package fun.sast.service.impl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import fun.sast.Exception.BaseException;
 import fun.sast.entity.Competition;
+import fun.sast.entity.Team;
+import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
+import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.CompetitionMapper;
-import fun.sast.utils.JwtUtil;
-import fun.sast.utils.RedisUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import fun.sast.mapper.TeamMapper;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImplTest.class);
+    @Mock private CompetitionMapper competitionMapper;
 
-    @Mock
-    private JwtUtil jwtUtil;
+    @Mock private TeamMapper teamMapper;
 
-    @Mock
-    private CompetitionMapper competitionMapper;
+    @InjectMocks private UserServiceImpl userService;
 
-    @Mock
-    private RedisUtil redisUtil;
-
-    @InjectMocks
-    private UserServiceImpl userService;
-
-    private List<Competition> mockCompetitionList;
+    private User testUser;
+    private Competition testCompetition;
+    private String validJsonData;
 
     @BeforeEach
     void setUp() {
-        // 初始化测试数据
-        mockCompetitionList = new ArrayList<>();
-        
-        Competition comp1 = new Competition();
-        comp1.setId(1);
-        comp1.setName("人工智能大赛");
-        comp1.setIntroduce("这是一场关于人工智能技术的比赛");
-        comp1.setIsReview(Competition.REVIEWED);
-        mockCompetitionList.add(comp1);
-        
-        Competition comp2 = new Competition();
-        comp2.setId(2);
-        comp2.setName("大数据挑战赛");
-        comp2.setIntroduce("面向大数据分析领域的挑战赛");
-        comp2.setIsReview(Competition.REVIEWED);
-        mockCompetitionList.add(comp2);
-        
-        Competition comp3 = new Competition();
-        comp3.setId(3);
-        comp3.setName("未审批比赛");
-        comp3.setIntroduce("这个比赛尚未通过审批");
-        comp3.setIsReview(Competition.NOT_REVIEWED);
-        mockCompetitionList.add(comp3);
+        // 初始化测试用户
+        testUser = new User();
+        testUser.setId(1);
+        testUser.setCode("123456");
+        testUser.setName("Test User");
+
+        // 清理ThreadLocal，确保测试独立性
+        UserInterceptor.userHolder.remove();
+        UserInterceptor.competitionIdHolder.remove();
+
+        // 初始化测试比赛
+        testCompetition = new Competition();
+        testCompetition.setId(1);
+        testCompetition.setName("Test Competition");
+        testCompetition.setIsReview(Competition.REVIEWED); // 已审批
+        testCompetition.setType(Competition.TEAM); // 团队赛
+        testCompetition.setMinTeamMembers(2);
+        testCompetition.setMaxTeamMembers(5);
+
+        // 设置当前时间在报名时间范围内，使用yyyy-MM-dd HH:mm:ss格式
+        testCompetition.setRegBeginTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() - 10000)));
+        testCompetition.setRegEndTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() + 10000)));
+
+        // 初始化有效的JSON数据
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("comId", 1L);
+        jsonObject.put("teamName", "Test Team");
+
+        JSONArray teamMember = new JSONArray();
+        JSONObject member1 = new JSONObject();
+        member1.put("code", "654321");
+        member1.put("name", "Member One");
+        teamMember.add(member1);
+        jsonObject.put("teamMember", teamMember);
+
+        validJsonData = jsonObject.toString();
     }
 
-    /**
-     * 测试正常搜索比赛功能
-     */
     @Test
-    void testSearchComName_Success() {
-        // 准备模拟数据
-        String searchKey = "人工智能";
-        Integer curPage = 1;
-        Integer pageSize = 10;
-        
-        // 准备预期结果
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(0)); // 只有"人工智能大赛"应该被匹配
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(curPage, pageSize);
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
+    void testSignUpCom_Success() {
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+        when(teamMapper.selectOne(any(QueryWrapper.class))).thenReturn(null); // 用户未报名过
+        when(teamMapper.insert(any(Team.class))).thenReturn(1); // 插入成功
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
         // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertTrue((boolean) result.get("success"));
-        assertEquals(expectedResults.size(), ((Number)result.get("total")).intValue());
-        assertEquals(curPage, ((Number)result.get("pageNum")).intValue());
-        assertEquals(pageSize, ((Number)result.get("pageSize")).intValue());
-        assertEquals(1, ((Number)result.get("pages")).intValue());
-        
-        List<Competition> actualList = (List<Competition>) result.get("list");
-        assertNotNull(actualList);
-        assertEquals(expectedResults.size(), actualList.size());
-        assertEquals(expectedResults.get(0).getName(), actualList.get(0).getName());
-        
-        log.info("测试搜索比赛成功: 关键词={}, 结果数量={}", searchKey, actualList.size());
+        assertDoesNotThrow(() -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证mock调用
+        verify(competitionMapper).selectById(1L);
+        verify(teamMapper).selectOne(any(QueryWrapper.class));
+        verify(teamMapper).insert(any(Team.class));
     }
 
-    /**
-     * 测试空关键词搜索
-     */
     @Test
-    void testSearchComName_EmptyKey() {
-        // 准备模拟数据
-        String searchKey = "";
-        Integer curPage = 1;
-        Integer pageSize = 10;
-        
-        // 准备预期结果 - 只包含已审批的比赛
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(0));
-        expectedResults.add(mockCompetitionList.get(1));
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(curPage, pageSize);
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
-        // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertTrue((boolean) result.get("success"));
-        assertEquals(expectedResults.size(), ((Number)result.get("total")).intValue());
-        
-        List<Competition> actualList = (List<Competition>) result.get("list");
-        assertNotNull(actualList);
-        assertEquals(expectedResults.size(), actualList.size());
-        
-        log.info("测试空关键词搜索成功: 结果数量={}", actualList.size());
+    void testSignUpCom_UserIsNull() {
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(BaseException.class, () -> userService.signUpCom(null, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.NO_LOGIN, exception.getErrorEnum());
     }
 
-    /**
-     * 测试空参数处理
-     */
     @Test
-    void testSearchComName_NullParameters() {
-        // 准备模拟数据
-        String searchKey = null;
-        Integer curPage = null;
-        Integer pageSize = null;
-        
-        // 准备预期结果 - 只包含已审批的比赛
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(0));
-        expectedResults.add(mockCompetitionList.get(1));
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(1, 10); // 应该使用默认值
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
-        // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertTrue((boolean) result.get("success"));
-        assertEquals(expectedResults.size(), ((Number)result.get("total")).intValue());
-        assertEquals(1, ((Number)result.get("pageNum")).intValue()); // 验证使用了默认页码
-        assertEquals(10, ((Number)result.get("pageSize")).intValue()); // 验证使用了默认每页条数
-        
-        log.info("测试空参数处理成功: 使用默认页码={}, 默认每页条数={}", 
-                 result.get("pageNum"), result.get("pageSize"));
+    void testSignUpCom_JsonDataIsNull() {
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(BaseException.class, () -> userService.signUpCom(testUser, null));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.JSON_DATA_EMPTY, exception.getErrorEnum());
     }
 
-    /**
-     * 测试边界条件 - 页码小于1
-     */
     @Test
-    void testSearchComName_PageLessThanOne() {
-        // 准备模拟数据
-        String searchKey = "比赛";
-        Integer curPage = 0; // 小于1的页码
-        Integer pageSize = 5;
-        
-        // 准备预期结果
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(0));
-        expectedResults.add(mockCompetitionList.get(1));
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(1, pageSize); // 应该使用默认值1
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
-        // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertEquals(1, ((Number)result.get("pageNum")).intValue()); // 验证页码被修正为1
-        
-        log.info("测试页码小于1边界条件成功: 页码被修正为{}", result.get("pageNum"));
+    void testSignUpCom_JsonDataEmpty() {
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(BaseException.class, () -> userService.signUpCom(testUser, ""));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.JSON_DATA_EMPTY, exception.getErrorEnum());
     }
 
-    /**
-     * 测试边界条件 - 每页条数大于100
-     */
     @Test
-    void testSearchComName_PageSizeGreaterThanOneHundred() {
-        // 准备模拟数据
-        String searchKey = "比赛";
-        Integer curPage = 1;
-        Integer pageSize = 200; // 大于100的页码
-        
-        // 准备预期结果
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(0));
-        expectedResults.add(mockCompetitionList.get(1));
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(curPage, 10); // 应该使用默认值10
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
-        // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertEquals(10, ((Number)result.get("pageSize")).intValue()); // 验证每页条数被修正为10
-        
-        log.info("测试每页条数大于100边界条件成功: 每页条数被修正为{}", result.get("pageSize"));
+    void testSignUpCom_JsonFormatError() {
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, "invalid json"));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.JSON_FORMAT_ERROR, exception.getErrorEnum());
     }
 
-    /**
-     * 测试异常处理
-     */
     @Test
-    void testSearchComName_Exception() {
-        // 准备模拟数据
-        String searchKey = "测试关键词";
-        Integer curPage = 1;
-        Integer pageSize = 10;
-        
-        // 设置mock行为抛出异常
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenThrow(new RuntimeException("Database error"));
-        
-        // 执行测试方法并验证异常
-        try {
-            userService.searchComName(searchKey, curPage, pageSize);
-            // 如果没有抛出异常，测试失败
-            assertTrue(false, "Expected BaseException to be thrown");
-        } catch (BaseException e) {
-            // 验证异常类型和错误码
-            assertEquals(ErrorEnum.COMMON_ERROR, e.getErrorEnum());
-            log.info("测试异常处理成功: 正确捕获并转换异常");
+    void testSignUpCom_CompetitionNotExist() {
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(null);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.CONTEST_NOT_EXIST, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_CompetitionNotReviewed() {
+        // 修改比赛状态为未审批
+        testCompetition.setIsReview(Competition.NOT_REVIEWED);
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.CONTEST_NOT_REVIEWED, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_AlreadySignedUp() {
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 模拟用户已报名
+        Team existingTeam = new Team();
+        existingTeam.setId(1L);
+        existingTeam.setComId(1L);
+        existingTeam.setCaptain("123456");
+        when(teamMapper.selectOne(any(QueryWrapper.class))).thenReturn(existingTeam);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.ALREADY_SIGNED_UP_CONTEST, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_TeamNameEmpty() {
+        // 创建缺少团队名称的JSON数据
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("comId", 1L);
+        // 不设置团队名称
+
+        JSONArray teamMember = new JSONArray();
+        JSONObject member1 = new JSONObject();
+        member1.put("code", "654321");
+        member1.put("name", "Member One");
+        teamMember.add(member1);
+        jsonObject.put("teamMember", teamMember);
+
+        String jsonDataWithoutTeamName = jsonObject.toString();
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+        when(teamMapper.selectOne(any(QueryWrapper.class))).thenReturn(null);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> userService.signUpCom(testUser, jsonDataWithoutTeamName));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.TEAM_NAME_EMPTY, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_TeamMembersEmpty() {
+        // 创建团队成员为空的JSON数据
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("comId", 1L);
+        jsonObject.put("teamName", "Test Team");
+        jsonObject.put("teamMember", new JSONArray()); // 空成员数组
+
+        String jsonDataWithEmptyMembers = jsonObject.toString();
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+        when(teamMapper.selectOne(any(QueryWrapper.class))).thenReturn(null);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> userService.signUpCom(testUser, jsonDataWithEmptyMembers));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.TEAM_MEMBERS_EMPTY, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_TeamSaveFailed() {
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+        when(teamMapper.selectOne(any(QueryWrapper.class))).thenReturn(null);
+        when(teamMapper.insert(any(Team.class))).thenReturn(0); // 插入失败
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.TEAM_SAVE_FAILED, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_RegistrationTimeNotStarted() {
+        // 设置报名时间未开始，使用yyyy-MM-dd HH:mm:ss格式
+        testCompetition.setRegBeginTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() + 10000)));
+        testCompetition.setRegEndTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() + 20000)));
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.SIGN_UP_TIME_NOT_STARTED, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_RegistrationTimeEnded() {
+        // 设置报名时间已结束，使用yyyy-MM-dd HH:mm:ss格式
+        testCompetition.setRegBeginTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() - 20000)));
+        testCompetition.setRegEndTime(
+                formatDateToPattern(new Date(System.currentTimeMillis() - 10000)));
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.SIGN_UP_TIME_EXPIRED, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_TimeFormatError() {
+        // 设置时间格式错误
+        testCompetition.setRegBeginTime("invalid_time_format");
+        testCompetition.setRegEndTime("invalid_time_format");
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class, () -> userService.signUpCom(testUser, validJsonData));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.DATE_FORMAT_ERROR, exception.getErrorEnum());
+    }
+
+    @Test
+    void testSignUpCom_TeamSizeExceedLimit() {
+        // 创建超出人数限制的团队成员数据
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("comId", 1L);
+        jsonObject.put("teamName", "Test Team");
+
+        JSONArray teamMember = new JSONArray();
+        // 添加5个成员，加上队长总共6人，超过最大限制5人
+        for (int i = 0; i < 5; i++) {
+            JSONObject member = new JSONObject();
+            member.put("code", "member" + i);
+            member.put("name", "Member " + i);
+            teamMember.add(member);
         }
+        jsonObject.put("teamMember", teamMember);
+
+        String jsonDataWithTooManyMembers = jsonObject.toString();
+
+        // 配置mock行为
+        when(competitionMapper.selectById(1L)).thenReturn(testCompetition);
+
+        // 设置competitionIdHolder
+        UserInterceptor.competitionIdHolder.set(1L);
+
+        // 执行测试方法，预期抛出异常
+        BaseException exception =
+                assertThrows(
+                        BaseException.class,
+                        () -> userService.signUpCom(testUser, jsonDataWithTooManyMembers));
+
+        // 验证异常信息
+        assertEquals(ErrorEnum.LIMIT_ERROR, exception.getErrorEnum());
     }
 
-    /**
-     * 测试通过介绍内容搜索
-     */
-    @Test
-    void testSearchComName_SearchByIntroduce() {
-        // 准备模拟数据
-        String searchKey = "大数据";
-        Integer curPage = 1;
-        Integer pageSize = 10;
-        
-        // 准备预期结果
-        List<Competition> expectedResults = new ArrayList<>();
-        expectedResults.add(mockCompetitionList.get(1)); // 只有"大数据挑战赛"的介绍包含"大数据"
-        
-        // 创建分页对象
-        IPage<Competition> page = new Page<>(curPage, pageSize);
-        page.setRecords(expectedResults);
-        page.setTotal(expectedResults.size());
-        page.setPages(1);
-        
-        // 设置mock行为
-        when(competitionMapper.selectPage(any(IPage.class), any())).thenReturn(page);
-        
-        // 执行测试方法
-        Map<String, Object> result = userService.searchComName(searchKey, curPage, pageSize);
-        
-        // 验证结果
-        assertNotNull(result);
-        assertTrue((boolean) result.get("success"));
-        assertEquals(expectedResults.size(), ((Number)result.get("total")).intValue());
-        
-        List<Competition> actualList = (List<Competition>) result.get("list");
-        assertNotNull(actualList);
-        assertEquals(expectedResults.size(), actualList.size());
-        assertEquals(expectedResults.get(0).getId(), ((Number)actualList.get(0).getId()).intValue());
-        
-        log.info("测试通过介绍内容搜索成功: 关键词={}, 结果数量={}", searchKey, actualList.size());
+    @AfterEach
+    void tearDown() {
+        // 清理ThreadLocal，避免测试污染
+        UserInterceptor.userHolder.remove();
+        UserInterceptor.competitionIdHolder.remove();
+    }
+
+    /** 将Date对象格式化为yyyy-MM-dd HH:mm:ss格式的字符串 */
+    private String formatDateToPattern(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date);
     }
 }

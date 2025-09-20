@@ -14,38 +14,37 @@ CREATE TABLE IF NOT EXISTS `user`
     `salt`        varchar(50)  NOT NULL COMMENT '密码加盐值',
     `major`       varchar(50)  NOT NULL COMMENT '专业',
     `contact`     varchar(50)  NOT NULL COMMENT '手机号',
+    `signed_competitions` TEXT DEFAULT NULL COMMENT '用户报名的比赛ID列表（JSON格式）',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_code` (`code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 
--- create competition table
 CREATE TABLE IF NOT EXISTS `competition`
 (
-    `id`              int(11)      NOT NULL AUTO_INCREMENT COMMENT '活动ID编号',
-    `cover`           varchar(255) DEFAULT NULL COMMENT '封面url',
-    `introduce`       text COMMENT '比赛介绍',
-    `is_review`       int(11)     DEFAULT NULL COMMENT '是否已经审批(0-已审批,1-未审批)',
-    `max_team_members` int(11)     DEFAULT NULL COMMENT '团队人数上限',
-    `min_team_members` int(11)     DEFAULT NULL COMMENT '团队人数下限',
-    `name`            varchar(255) DEFAULT NULL COMMENT '比赛名称',
-    `reg_begin_time`  varchar(50) DEFAULT NULL COMMENT '报名开始时间',
-    `reg_end_time`    varchar(50) DEFAULT NULL COMMENT '报名结束时间',
-    `review_begin_time` varchar(50) DEFAULT NULL COMMENT '评审开始时间',
-    `review_end_time` varchar(50) DEFAULT NULL COMMENT '评审结束时间',
-    `review_settings` text COMMENT '评审设置',
-    `submit_begin_time` varchar(50) DEFAULT NULL COMMENT '活动提交开始时间',
-    `submit_end_time` varchar(50) DEFAULT NULL COMMENT '活动提交结束时间',
-    `table`           longtext COMMENT '表单schema(JSON格式)',
-    `type`            int(11)     DEFAULT NULL COMMENT '比赛类型(0-团队,1-个人)',
-    `user_code`       int(11)     DEFAULT NULL COMMENT '活动负责人学号',
-    `create_time`     datetime    DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `update_time`     datetime    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    `create_user`     bigint(20)  DEFAULT NULL COMMENT '创建用户',
-    `update_user`     bigint(20)  DEFAULT NULL COMMENT '更新用户',
-    PRIMARY KEY (`id`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='比赛表';
+     `id` INT NOT NULL AUTO_INCREMENT COMMENT '活动ID编号',
+     `cover` VARCHAR(255) DEFAULT NULL COMMENT '封面url',
+     `introduce` TEXT DEFAULT NULL COMMENT '比赛介绍',
+     `is_review` INT DEFAULT NULL COMMENT '是否已经审批（0-已审批，1-未审批）',
+     `max_team_members` INT DEFAULT NULL COMMENT '团队人数上限',
+     `min_team_members` INT DEFAULT NULL COMMENT '团队人数下限',
+     `name` VARCHAR(255) NOT NULL COMMENT '比赛名称',
+     `reg_begin_time` VARCHAR(50) DEFAULT NULL COMMENT '报名开始时间',
+     `reg_end_time` VARCHAR(50) DEFAULT NULL COMMENT '报名结束时间',
+     `review_begin_time` VARCHAR(50) DEFAULT NULL COMMENT '评审开始时间',
+     `review_end_time` VARCHAR(50) DEFAULT NULL COMMENT '评审结束时间',
+     `review_settings` JSON DEFAULT NULL COMMENT '评审设置（JSON格式）',
+     `submit_begin_time` VARCHAR(50) DEFAULT NULL COMMENT '活动提交开始时间',
+     `submit_end_time` VARCHAR(50) DEFAULT NULL COMMENT '活动提交结束时间',
+     `table` JSON DEFAULT NULL COMMENT '表单schema（JSON格式）',
+     `type` INT DEFAULT NULL COMMENT '参与类型（0-团队，1-个人）',
+     `user_code` INT DEFAULT NULL COMMENT '活动负责人学号',
+     `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
+     `update_time` DATETIME DEFAULT NULL COMMENT '更新时间',
+     `create_user` BIGINT DEFAULT NULL COMMENT '创建人ID',
+     `update_user` BIGINT DEFAULT NULL COMMENT '更新人ID',
+     PRIMARY KEY (`id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT = '比赛活动表';
 
 -- create file table
 CREATE TABLE IF NOT EXISTS `file`

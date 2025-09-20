@@ -13,9 +13,16 @@ public interface UserService {
 
     Map<String, Object> getSignedComList(User user, Integer cur, Integer limit);
 
-    Map<String, Object> getComInfo(Long comId);
+    Map<String, Object> getComInfo(String comId);
 
-    Map<String, Object> getComSignUpInfo(Long comId);
+    /**
+     * 获取用户在指定比赛中的报名信息
+     *
+     * @param user 当前登录用户
+     * @param comId 比赛ID
+     * @return 报名信息
+     */
+    Map<String, Object> getComSignUpInfo(User user, Long comId);
 
     Map<String, Object> searchComName(String key, Integer cur, Integer limit);
 
@@ -29,7 +36,13 @@ public interface UserService {
 
     void signUpCom(User user, String jsonData);
 
-    User authenticate(String code, String password);
+    /**
+     * 修改比赛报名信息
+     *
+     * @param user 当前登录用户
+     * @param jsonData 修改的报名信息
+     */
+    void updateComSignUpInfo(User user, String jsonData);
 
     /**
      * 用户登录
@@ -38,12 +51,4 @@ public interface UserService {
      * @param captcha 验证码ID
      */
     UserLoginVO login(UserLoginDTO userLoginDTO, String captcha);
-
-    /**
-     * 验证用户信息
-     *
-     * @param code 学号
-     * @param password 密码
-     * @return 用户信息
-     */
 }

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class UserInterceptor implements HandlerInterceptor {
 
     public static final ThreadLocal<User> userHolder = new ThreadLocal<>();
+    public static final ThreadLocal<Long> competitionIdHolder = new ThreadLocal<>();
 
     private final JwtUtil jwtUtil;
 
@@ -89,5 +90,6 @@ public class UserInterceptor implements HandlerInterceptor {
             Object handler,
             Exception ex) {
         userHolder.remove();
+        competitionIdHolder.remove();
     }
 }

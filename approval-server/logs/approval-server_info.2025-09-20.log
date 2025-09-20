@@ -1,0 +1,44 @@
+2025-09-20 14:17:41.081 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 28284 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-20 14:17:41.082 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-20 14:17:41.083 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 14:17:41.524 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-20 14:17:41.527 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-20 14:17:41.551 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2025-09-20 14:17:42.067 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-20 14:17:42.076 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-20 14:17:42.078 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-20 14:17:42.078 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-20 14:17:42.134 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-20 14:17:42.134 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1018 ms
+2025-09-20 14:17:42.280 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-20 14:17:42.515 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@e521067
+2025-09-20 14:17:42.516 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-20 14:17:43.146 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'loginController' defined in file [D:\soc\approval-system-backend\approval-server\target\classes\fun\sast\controller\LoginController.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'userServiceImpl' defined in file [D:\soc\approval-system-backend\approval-server\target\classes\fun\sast\service\impl\UserServiceImpl.class]: Unsatisfied dependency expressed through constructor parameter 4: Error creating bean with name 'teamMapper' defined in file [D:\soc\approval-system-backend\approval-server\target\classes\fun\sast\mapper\TeamMapper.class]: fun/sast/entity/Team
+2025-09-20 14:17:43.155 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-20 14:17:43.159 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-20 14:17:43.161 [main] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+2025-09-20 14:17:43.170 [main] INFO  o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-20 14:26:01.227 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 16656 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-20 14:26:01.228 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-20 14:26:01.228 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-20 14:26:01.592 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-20 14:26:01.593 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-20 14:26:01.614 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2025-09-20 14:26:02.030 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-20 14:26:02.038 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-20 14:26:02.039 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-20 14:26:02.039 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-20 14:26:02.081 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-20 14:26:02.082 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 826 ms
+2025-09-20 14:26:02.201 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-20 14:26:02.369 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5350ab17
+2025-09-20 14:26:02.371 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-20 14:26:03.206 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-20 14:26:03.215 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-09-20 14:26:03.221 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-20 14:26:03.225 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-20 14:26:03.232 [main] INFO  o.s.b.a.logging.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
