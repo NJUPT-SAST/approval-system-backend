@@ -33,11 +33,13 @@ public class JwtUtil {
         Date now = new Date();
         Date expDate = new Date(now.getTime() + expiration);
 
-        return JWT.create()
+        String token = JWT.create()
                 .withClaim("code", code) // 添加自定义字段
                 .withIssuedAt(now) // 设置签发时间
                 .withExpiresAt(expDate) // 设置过期时间
                 .sign(Algorithm.HMAC256(secret)); // 使用密钥签名
+        System.out.println(token);
+        return token;
     }
 
     /**

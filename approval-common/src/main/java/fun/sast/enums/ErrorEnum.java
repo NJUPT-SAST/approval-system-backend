@@ -42,7 +42,7 @@ public enum ErrorEnum {
     USER_EXIST(7002, "用户已存在"),
     FILE_NOT_EXIST(8001, "文件不存在"),
     FILE_EXPIRED_ERROR(8002, "文件已过期，请重新提交"),
-    NOTICE_ERROR(9001, "公告发布失败"),
+    NOTICE_ERROR(9001, "公告操作失败"),
     NOTICE_NOT_EXIST(9002, "公告不存在"),
     IMPORT_ERROR(10000, "导入失败"),
     EXPORT_COMINFO_ERROR(10001, "导出参赛信息失败"),

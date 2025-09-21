@@ -18,11 +18,11 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public JSONObject getSchema(Long comId) {
-        if(comId == null) {
+        if (comId == null) {
             throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
         Competition competition = competitionMapper.selectById(comId);
-        if(competition == null) {
+        if (competition == null) {
             throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }
 
@@ -31,6 +31,4 @@ public class CompetitionServiceImpl implements CompetitionService {
 
         return resultData;
     }
-
-
 }

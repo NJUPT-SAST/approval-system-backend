@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
-public interface ScoreMapper extends BaseMapper<Score> {
-}
+public interface ScoreMapper extends BaseMapper<Score> {}

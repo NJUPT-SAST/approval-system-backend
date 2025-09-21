@@ -1,5 +1,7 @@
 package fun.sast.service.impl;
 
+import static com.baomidou.mybatisplus.core.toolkit.IdWorker.getId;
+
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -14,7 +16,7 @@ import fun.sast.mapper.*;
 import fun.sast.service.FileService;
 import fun.sast.utils.FileUtil;
 import fun.sast.utils.OSSUtil;
-
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -23,16 +25,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import static com.baomidou.mybatisplus.core.toolkit.IdWorker.getId;
 
 @Service
 @RequiredArgsConstructor
@@ -260,33 +258,39 @@ public class FileServiceImpl implements FileService {
         }
         String competitionName = competition.getName();
 
-        Work work = workMapper.selectOne(new QueryWrapper<Work>().eq("com_id", comId).eq("user_code", userCode));
+        Work work =
+                workMapper.selectOne(
+                        new QueryWrapper<Work>().eq("com_id", comId).eq("user_code", userCode));
         if (work == null) {
             throw new BaseException(ErrorEnum.WORK_NOT_EXIST);
         }
         String workName = work.getWorkName();
 
         // 校验作品是否有文件
-        List<File> files = fileMapper.selectList(new QueryWrapper<File>().eq("work_id", work.getId()));
+        List<File> files =
+                fileMapper.selectList(new QueryWrapper<File>().eq("work_id", work.getId()));
         if (CollectionUtils.isEmpty(files)) {
             throw new BaseException(ErrorEnum.FILE_NOT_EXIST);
         }
 
         // 组装文件信息
         List<Map<String, String>> fileInfoList = new ArrayList<>();
-        for(File file : files){
-            Map<String,String> fileInfo = new HashMap<>();
+        for (File file : files) {
+            Map<String, String> fileInfo = new HashMap<>();
             // 文件名优先用input字段，没有则用oss地址提取的文件名
-            String fileName = StringUtils.hasText(file.getInput())? file.getInput() : FileUtil.getFileName(file.getUrl());
-            fileInfo.put("fileName",fileName);
-            fileInfo.put("ossUrl",file.getUrl()); //附件原始的oss地址
+            String fileName =
+                    StringUtils.hasText(file.getInput())
+                            ? file.getInput()
+                            : FileUtil.getFileName(file.getUrl());
+            fileInfo.put("fileName", fileName);
+            fileInfo.put("ossUrl", file.getUrl()); // 附件原始的oss地址
             fileInfoList.add(fileInfo);
         }
 
-        //生成zip文件名（比赛名称-作品名称-队长学号.zip）
+        // 生成zip文件名（比赛名称-作品名称-队长学号.zip）
         String zipFileName = competitionName + "-" + workName + ".zip";
 
-        //打包下载
-        fileUtil.downloadPackFile(response,fileInfoList,zipFileName);
+        // 打包下载
+        fileUtil.downloadPackFile(response, fileInfoList, zipFileName);
     }
 }

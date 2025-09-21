@@ -39,6 +39,6 @@ CREATE TABLE IF NOT EXISTS `notice` (
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `create_user` bigint(20) DEFAULT NULL COMMENT '创建用户',
   `update_user` bigint(20) DEFAULT NULL COMMENT '更新用户',
-  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标志：0=未删除，1=已删除'
+  `is_deleted` TINYINT(1) DEFAULT 0 COMMENT '逻辑删除标志：0=未删除，1=已删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='公告表';

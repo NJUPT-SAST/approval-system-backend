@@ -12,7 +12,6 @@ import fun.sast.enums.ErrorEnum;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,10 +21,8 @@ import org.springframework.util.StringUtils;
 @Slf4j
 @Component
 public class OSSUtil {
-    @Getter
-    private final OSS ossClient;
-    @Getter
-    private final String bucketName;
+    @Getter private final OSS ossClient;
+    @Getter private final String bucketName;
     private final String endpoint;
     private final String publicFolder;
     private final String privateFolder;

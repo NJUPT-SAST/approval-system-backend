@@ -2,11 +2,13 @@ package fun.sast.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import fun.sast.Exception.BaseException;
+import fun.sast.entity.Competition;
 import fun.sast.entity.Notice;
 import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
+import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
 import fun.sast.vo.NoticeOperateVO;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeMapper noticeMapper;
+    private final CompetitionMapper competitionMapper;
 
     // 已经登陆显示相应角色的公告
     // 未登录获取普通角色的公告
@@ -70,6 +73,10 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
+        Competition competition = competitionMapper.selectById(operateVO.getComId());
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+        }
         LocalDateTime noticeTime = operateVO.getTime();
         String noticeTimeStr;
         // 前端未传值，设置为当前时间
@@ -86,14 +93,17 @@ public class NoticeServiceImpl implements NoticeService {
                         .content(operateVO.getContent())
                         .role(operateVO.getRole())
                         .title(operateVO.getTitle())
-                        .time(LocalDateTime.parse(noticeTimeStr, formatter))
-                        .createTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
+                        .time(noticeTime)
+                        .createTime(LocalDateTime.now())
                         .updateTime(null)
                         .createUser(currentUser.getCreateUser())
                         .updateUser(null)
                         .build();
 
-        noticeMapper.insert(notice);
+        int result = noticeMapper.insert(notice);
+        if (result <= 0) {
+            throw new BaseException(ErrorEnum.NOTICE_ERROR);
+        }
     }
 
     @Override
@@ -126,7 +136,10 @@ public class NoticeServiceImpl implements NoticeService {
                         .updateUser(currentUser.getCreateUser())
                         .build();
 
-        noticeMapper.updateById(updatedNotice);
+        int result = noticeMapper.updateById(updatedNotice);
+        if (result <= 0) {
+            throw new BaseException(ErrorEnum.NOTICE_ERROR);
+        }
     }
 
     @Override
@@ -136,6 +149,9 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
         }
 
-        noticeMapper.deleteById(noticeId);
+        int result = noticeMapper.deleteById(noticeId);
+        if(result <= 0) {
+            throw new BaseException(ErrorEnum.NOTICE_ERROR);
+        }
     }
 }

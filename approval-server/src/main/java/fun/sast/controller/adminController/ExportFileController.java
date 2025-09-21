@@ -31,7 +31,8 @@ public class ExportFileController {
 
     @ResponseResult
     @GetMapping("/exportWork")
-    public void exportWork(HttpServletResponse response, @RequestParam Long comId,@RequestParam String userCode) {
+    public void exportWork(
+            HttpServletResponse response, @RequestParam Long comId, @RequestParam String userCode) {
         User currentUser = UserInterceptor.userHolder.get();
         if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);

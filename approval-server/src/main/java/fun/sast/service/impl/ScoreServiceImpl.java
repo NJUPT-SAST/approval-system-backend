@@ -17,10 +17,6 @@ import fun.sast.mapper.UserMapper;
 import fun.sast.mapper.WorkMapper;
 import fun.sast.service.ScoreService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -40,22 +39,28 @@ public class ScoreServiceImpl implements ScoreService {
     private final UserMapper userMapper;
     private final DepartmentMapper departmentMapper;
 
-    private final ObjectMapper objectMapper; //用于解析Work的schemaContent字段
+    private final ObjectMapper objectMapper; // 用于解析Work的schemaContent字段
 
     @Override
     public void exportScore(Integer comId, HttpServletResponse response) {
         try {
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setContentType(
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("review-result_" + comId + "_" + System.currentTimeMillis(), StandardCharsets.UTF_8).replaceAll("\\+", "%20");
-            response.setHeader("Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
+            String fileName =
+                    URLEncoder.encode(
+                                    "review-result_" + comId + "_" + System.currentTimeMillis(),
+                                    StandardCharsets.UTF_8)
+                            .replaceAll("\\+", "%20");
+            response.setHeader(
+                    "Content-Disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
             // 获取数据
             Map<String, Object> dataMap = dataList(comId);
             Integer maxJudgeNum = (Integer) dataMap.get("maxJudgeNum");
             List<List<Object>> excelData = (List<List<Object>>) dataMap.get("excelData");
 
-            //写入Excel
+            // 写入Excel
             EasyExcel.write(response.getOutputStream())
                     .head(head(maxJudgeNum)) // 动态表头
                     .autoCloseStream(Boolean.FALSE)
@@ -103,15 +108,17 @@ public class ScoreServiceImpl implements ScoreService {
     private Map<String, Object> dataList(Integer comId) {
         // 获取该比赛所有作品的评分数据
         QueryWrapper<Score> scoreQueryWrapper = new QueryWrapper<>();
-        scoreQueryWrapper.eq("com_id", comId)
+        scoreQueryWrapper
+                .eq("com_id", comId)
                 .select("id", "com_id", "judge_id", "option", "score", "user_id");
         List<Score> allScores = scoreMapper.selectList(scoreQueryWrapper);
         if (allScores.isEmpty()) {
             throw new BaseException(ErrorEnum.SCORE_NOT_EXIST);
         }
 
-        //按队长Id分组：key: userId, value: 该队长的所有评审记录List<Score>
-        Map<String,List<Score>> scoreGroupByUserId = allScores.stream().collect(Collectors.groupingBy(Score::getUserId));
+        // 按队长Id分组：key: userId, value: 该队长的所有评审记录List<Score>
+        Map<String, List<Score>> scoreGroupByUserId =
+                allScores.stream().collect(Collectors.groupingBy(Score::getUserId));
 
         // 统计最大评委数用于生成表头
         int maxJudgeNum = 0;
@@ -133,7 +140,8 @@ public class ScoreServiceImpl implements ScoreService {
             List<Object> rowData = ListUtils.newArrayList();
 
             // 固定列： 作品信息，通过userId查work
-            workQueryWrapper.eq("com_id", comId)
+            workQueryWrapper
+                    .eq("com_id", comId)
                     .eq("user_code", userId)
                     .select("id", "work_name", "schema_content");
             Work work = workMapper.selectOne(workQueryWrapper);
@@ -146,8 +154,7 @@ public class ScoreServiceImpl implements ScoreService {
             rowData.add(work.getId());
 
             // 固定列：队长信息，通过userId查user+department
-            userQueryWrapper.eq("code", userId)
-                    .select("code", "dep_id");
+            userQueryWrapper.eq("code", userId).select("code", "dep_id");
             User leader = userMapper.selectOne(userQueryWrapper);
             if (leader == null) {
                 log.error("未找到队长ID {} 的用户信息", userId);
@@ -178,7 +185,7 @@ public class ScoreServiceImpl implements ScoreService {
             }
             rowData.add(workType);
 
-            //动态列：评委信息
+            // 动态列：评委信息
             for (Score score : workScores) {
                 String judgeCode = null;
                 if (score.getJudgeId() != null) {
@@ -202,7 +209,6 @@ public class ScoreServiceImpl implements ScoreService {
                 rowData.add(""); // 评委工号
                 rowData.add(""); // 评委评分
                 rowData.add(""); // 评委意见
-
             }
 
             excelData.add(rowData);
@@ -218,7 +224,9 @@ public class ScoreServiceImpl implements ScoreService {
             JsonNode node = objectMapper.readTree(work.getSchemaContent());
             for (JsonNode item : node) {
                 if ("项目组别".equals(item.get("input").asText())) {
-                    return item.get("content").asText() != null ? item.get("content").asText() : null;
+                    return item.get("content").asText() != null
+                            ? item.get("content").asText()
+                            : null;
                 }
             }
         } catch (IOException e) {
