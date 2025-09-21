@@ -1,22 +1,21 @@
 package fun.sast.controller.adminController;
 
 import fun.sast.annotation.ResponseResult;
-import fun.sast.service.ReviewService;
+import fun.sast.service.ScoreService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class ReviewController {
+public class ScoreController {
 
-    private final ReviewService reviewService;
+    private final ScoreService scoreService;
 
     @ResponseResult
     @GetMapping("/data/result")
-    public void exportReviewResult(@RequestParam Integer comId, HttpServletResponse response) {
-        reviewService.exportReviewResult(comId, response);
+    public void exportScore(@RequestParam Integer comId, HttpServletResponse response) {
+        scoreService.exportScore(comId, response);
     }
 }
