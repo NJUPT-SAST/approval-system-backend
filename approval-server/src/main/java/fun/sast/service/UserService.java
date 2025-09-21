@@ -2,16 +2,21 @@ package fun.sast.service;
 
 import fun.sast.dto.UserLoginDTO;
 import fun.sast.entity.User;
+import fun.sast.vo.CompetitionBriefVO;
+import fun.sast.vo.CompetitionDetailVO;
+import fun.sast.vo.CompetitionSignUpInfoVO;
+import fun.sast.vo.PageResultVO;
+import fun.sast.vo.SearchCompetitionResultVO;
+import fun.sast.vo.TeamInfoVO;
 import fun.sast.vo.UserLoginVO;
-import java.util.Map;
 
 public interface UserService {
 
-    Map<String, Object> getAllComList(Integer cur, Integer limit);
+    PageResultVO<CompetitionBriefVO> getAllComList(Integer cur, Integer limit);
 
-    Map<String, Object> getSignedComList(User user, Integer cur, Integer limit);
+    PageResultVO<CompetitionBriefVO> getSignedComList(User user, Integer cur, Integer limit);
 
-    Map<String, Object> getComInfo(Long comId);
+    CompetitionDetailVO getComInfo(Long comId);
 
     /**
      * 获取用户在指定比赛中的报名信息
@@ -20,11 +25,11 @@ public interface UserService {
      * @param comId 比赛ID
      * @return 报名信息
      */
-    Map<String, Object> getComSignUpInfo(User user, Long comId);
+    CompetitionSignUpInfoVO getComSignUpInfo(User user, Long comId);
 
-    Map<String, Object> searchComName(String key, Integer cur, Integer limit);
+    SearchCompetitionResultVO searchComName(String key, Integer cur, Integer limit);
 
-    Map<String, Object> getTeamInfo(User user, Long comId);
+    TeamInfoVO getTeamInfo(User user, Long comId);
 
     void signUpCom(User user, String jsonData);
 

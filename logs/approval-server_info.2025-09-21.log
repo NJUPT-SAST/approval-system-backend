@@ -314,3 +314,7 @@ Error starting ApplicationContext. To display the condition evaluation report re
 2025-09-21 14:03:58.193 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
 2025-09-21 14:03:58.198 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 2.562 seconds (process running for 3.074)
 2025-09-21 14:03:58.200 [main] INFO  fun.sast.ApprovalApplication - server started
+2025-09-21 14:24:17.734 [SpringApplicationShutdownHook] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-21 14:24:17.745 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-21 14:24:17.768 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-21 14:24:17.774 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

@@ -7,7 +7,12 @@ import fun.sast.annotation.ResponseResult;
 import fun.sast.entity.User;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.service.UserService;
-import java.util.Map;
+import fun.sast.vo.CompetitionBriefVO;
+import fun.sast.vo.CompetitionDetailVO;
+import fun.sast.vo.CompetitionSignUpInfoVO;
+import fun.sast.vo.PageResultVO;
+import fun.sast.vo.SearchCompetitionResultVO;
+import fun.sast.vo.TeamInfoVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,7 +44,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取所有比赛列表")
     @GetMapping("/com/list")
-    public Map<String, Object> getAllComList(
+    public PageResultVO<CompetitionBriefVO> getAllComList(
             @RequestParam(defaultValue = "1") Integer cur,
             @RequestParam(defaultValue = "10") Integer limit) {
         return userService.getAllComList(cur, limit);
@@ -55,7 +60,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取已报名比赛列表")
     @GetMapping("/com/signList")
-    public Map<String, Object> getSignedComList(
+    public PageResultVO<CompetitionBriefVO> getSignedComList(
             @RequestParam(defaultValue = "1") Integer cur,
             @RequestParam(defaultValue = "10") Integer limit) {
         User user = UserInterceptor.userHolder.get();
@@ -71,7 +76,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取比赛详情")
     @GetMapping("/com/info/{comId}")
-    public Map<String, Object> getComInfo(@PathVariable Long comId) {
+    public CompetitionDetailVO getComInfo(@PathVariable Long comId) {
         return userService.getComInfo(comId);
     }
 
@@ -84,7 +89,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取用户在指定比赛中的报名信息")
     @GetMapping("/com/signup/info/{comId}")
-    public Map<String, Object> getUserComInfo(@PathVariable Long comId) {
+    public CompetitionSignUpInfoVO getUserComInfo(@PathVariable Long comId) {
         User user = UserInterceptor.userHolder.get();
         return userService.getComSignUpInfo(user, comId);
     }
@@ -98,7 +103,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取比赛团队信息")
     @GetMapping("/com/teamInfo/{comId}")
-    public Map<String, Object> getTeamInfo(@PathVariable Long comId) {
+    public TeamInfoVO getTeamInfo(@PathVariable Long comId) {
         User user = UserInterceptor.userHolder.get();
         return userService.getTeamInfo(user, comId);
     }
@@ -112,7 +117,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("获取比赛报名信息")
     @GetMapping("/com/signInfo/{comId}")
-    public Map<String, Object> getComSignUpInfo(@PathVariable Long comId) {
+    public CompetitionSignUpInfoVO getComSignUpInfo(@PathVariable Long comId) {
         User user = UserInterceptor.userHolder.get();
         return userService.getComSignUpInfo(user, comId);
     }
@@ -126,7 +131,7 @@ public class UserController {
     @ResponseResult
     @OperateLog("查找比赛")
     @GetMapping("/com/search")
-    public Map<String, Object> searchCom(
+    public SearchCompetitionResultVO searchCom(
             @RequestParam(defaultValue = "") String key,
             @RequestParam(defaultValue = "1") Integer cur,
             @RequestParam(defaultValue = "10") Integer limit) {
