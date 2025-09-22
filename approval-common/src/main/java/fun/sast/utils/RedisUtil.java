@@ -1,5 +1,8 @@
 package fun.sast.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,6 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class RedisUtil {
     @Resource private RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper =
+            new ObjectMapper()
+                    .registerModule(new JavaTimeModule())
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     /**
      * 设置缓存（没有时间限制）
@@ -74,5 +81,13 @@ public class RedisUtil {
         } else {
             return -2L;
         }
+    }
+
+    /** 泛型获取对象，并自动转 User / 自定义类型 */
+    public <T> T get(String key, Class<T> clazz) {
+        Object obj = get(key);
+        if (obj == null) return null;
+        // 使用 ObjectMapper 转换
+        return objectMapper.convertValue(obj, clazz);
     }
 }
