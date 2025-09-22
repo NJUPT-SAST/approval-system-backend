@@ -1,6 +1,7 @@
 package fun.sast.service.impl;
 
 import static com.baomidou.mybatisplus.core.toolkit.IdWorker.getId;
+
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -25,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -41,9 +41,6 @@ public class FileServiceImpl implements FileService {
     private final WorkMapper workMapper;
     private final TeamMapper teamMapper;
     private final UserMapper userMapper;
-
-    @Value("${file.OSS.bucket-url-prefix:}")
-    String prefix;
 
     /**
      * @param url 文件存储的url，如http://baiyaoshi.oss-cn-hangzhou.aliyuncs.com/文本.txt,在这里实现身份判断

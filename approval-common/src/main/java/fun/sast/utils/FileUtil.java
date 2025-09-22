@@ -8,15 +8,13 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
-import lombok.RequiredArgsConstructor;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -94,8 +92,6 @@ public class FileUtil {
                         + filename;
         return cosUtil.getUploadCertificateCOS(objectName, FileUtil.PRIVATE_FOLDER);
     }
-
-
 
     /**
      * 批量下载文件，多个附件打包成zip
