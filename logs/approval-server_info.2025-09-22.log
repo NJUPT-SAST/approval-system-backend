@@ -1,0 +1,114 @@
+2025-09-22 14:32:46.930 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 23.0.2 with PID 19344 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend)
+2025-09-22 14:32:46.931 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-22 14:32:46.931 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-22 14:32:47.469 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-22 14:32:47.471 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-22 14:32:47.499 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+2025-09-22 14:32:48.032 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-22 14:32:48.041 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:32:48.041 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-22 14:32:48.042 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-22 14:32:48.098 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-22 14:32:48.099 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1122 ms
+2025-09-22 14:32:48.326 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-22 14:32:48.664 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7ce30c0b
+2025-09-22 14:32:48.664 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-22 14:32:49.767 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:32:49.782 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
+2025-09-22 14:32:49.789 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 3.442 seconds (process running for 4.078)
+2025-09-22 14:32:49.791 [main] INFO  fun.sast.ApprovalApplication - server started
+2025-09-22 14:43:36.574 [http-nio-9090-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-22 14:43:36.574 [http-nio-9090-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-22 14:43:36.576 [http-nio-9090-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-09-22 14:44:27.008 [http-nio-9090-exec-9] DEBUG fun.sast.mapper.UserMapper.selectList - ==>  Preparing: SELECT id,dep_id,name,code,password,role,major,contact,create_time,update_time,create_user,update_user,salt FROM user WHERE (code = ?)
+2025-09-22 14:44:27.036 [http-nio-9090-exec-9] DEBUG fun.sast.mapper.UserMapper.selectList - ==> Parameters: admin(String)
+2025-09-22 14:44:27.079 [http-nio-9090-exec-9] DEBUG fun.sast.mapper.UserMapper.selectList - <==      Total: 1
+2025-09-22 14:44:47.927 [http-nio-9090-exec-3] DEBUG fun.sast.mapper.UserMapper.selectList - ==>  Preparing: SELECT id,dep_id,name,code,password,role,major,contact,create_time,update_time,create_user,update_user,salt FROM user WHERE (code = ?)
+2025-09-22 14:44:47.928 [http-nio-9090-exec-3] DEBUG fun.sast.mapper.UserMapper.selectList - ==> Parameters: admin(String)
+2025-09-22 14:44:47.930 [http-nio-9090-exec-3] DEBUG fun.sast.mapper.UserMapper.selectList - <==      Total: 1
+2025-09-22 14:44:55.380 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.UserMapper.selectList - ==>  Preparing: SELECT id,dep_id,name,code,password,role,major,contact,create_time,update_time,create_user,update_user,salt FROM user WHERE (code = ?)
+2025-09-22 14:44:55.381 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.UserMapper.selectList - ==> Parameters: admin(String)
+2025-09-22 14:44:55.382 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.UserMapper.selectList - <==      Total: 1
+2025-09-22 14:44:55.383 [http-nio-9090-exec-10] INFO  fun.sast.service.impl.UserServiceImpl - 查询比赛详情: 比赛ID=1
+2025-09-22 14:44:55.383 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.CompetitionMapper.selectById - ==>  Preparing: SELECT id,cover,introduce,is_review,max_team_members,min_team_members,name,reg_begin_time,reg_end_time,review_begin_time,review_end_time,review_settings,submit_begin_time,submit_end_time,`table`,type,user_code,create_time,update_time,create_user,update_user FROM competition WHERE id=?
+2025-09-22 14:44:55.384 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.CompetitionMapper.selectById - ==> Parameters: 1(Long)
+2025-09-22 14:44:55.390 [http-nio-9090-exec-10] DEBUG fun.sast.mapper.CompetitionMapper.selectById - <==      Total: 1
+2025-09-22 14:44:55.393 [http-nio-9090-exec-10] INFO  fun.sast.service.impl.UserServiceImpl - 查询比赛详情成功: 比赛ID=1, 比赛名称=全国大学生科技创新大赛
+2025-09-22 14:45:10.584 [http-nio-9090-exec-8] DEBUG fun.sast.mapper.UserMapper.selectList - ==>  Preparing: SELECT id,dep_id,name,code,password,role,major,contact,create_time,update_time,create_user,update_user,salt FROM user WHERE (code = ?)
+2025-09-22 14:45:10.584 [http-nio-9090-exec-8] DEBUG fun.sast.mapper.UserMapper.selectList - ==> Parameters: admin(String)
+2025-09-22 14:45:10.586 [http-nio-9090-exec-8] DEBUG fun.sast.mapper.UserMapper.selectList - <==      Total: 1
+2025-09-22 14:45:15.264 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.UserMapper.selectList - ==>  Preparing: SELECT id,dep_id,name,code,password,role,major,contact,create_time,update_time,create_user,update_user,salt FROM user WHERE (code = ?)
+2025-09-22 14:45:15.265 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.UserMapper.selectList - ==> Parameters: admin(String)
+2025-09-22 14:45:15.266 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.UserMapper.selectList - <==      Total: 1
+2025-09-22 14:45:15.267 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.CompetitionMapper.selectById - ==>  Preparing: SELECT id,cover,introduce,is_review,max_team_members,min_team_members,name,reg_begin_time,reg_end_time,review_begin_time,review_end_time,review_settings,submit_begin_time,submit_end_time,`table`,type,user_code,create_time,update_time,create_user,update_user FROM competition WHERE id=?
+2025-09-22 14:45:15.267 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.CompetitionMapper.selectById - ==> Parameters: 1(Long)
+2025-09-22 14:45:15.268 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.CompetitionMapper.selectById - <==      Total: 1
+2025-09-22 14:45:15.269 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.TeamMapper.selectList - ==>  Preparing: SELECT id,com_id,name,captain,member,teacher,create_user,update_user,create_time,update_time FROM team WHERE (com_id = ? AND captain = ?)
+2025-09-22 14:45:15.269 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.TeamMapper.selectList - ==> Parameters: 1(Long), admin(String)
+2025-09-22 14:45:15.273 [http-nio-9090-exec-6] DEBUG fun.sast.mapper.TeamMapper.selectList - <==      Total: 1
+2025-09-22 14:45:15.414 [http-nio-9090-exec-6] INFO  fun.sast.service.impl.UserServiceImpl - 用户 9 查询比赛 1 的团队信息成功
+2025-09-22 14:46:59.483 [SpringApplicationShutdownHook] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-22 14:46:59.489 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-22 14:46:59.512 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-22 14:46:59.519 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-22 14:47:01.691 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 23.0.2 with PID 17952 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend)
+2025-09-22 14:47:01.691 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-22 14:47:01.692 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-22 14:47:02.235 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-22 14:47:02.236 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-22 14:47:02.264 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2025-09-22 14:47:02.762 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-22 14:47:02.773 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:47:02.775 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-22 14:47:02.775 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-22 14:47:02.862 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-22 14:47:02.863 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1123 ms
+2025-09-22 14:47:03.083 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-22 14:47:03.357 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7019d619
+2025-09-22 14:47:03.358 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-22 14:47:04.312 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:47:04.324 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
+2025-09-22 14:47:04.329 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 3.076 seconds (process running for 3.819)
+2025-09-22 14:47:04.331 [main] INFO  fun.sast.ApprovalApplication - server started
+2025-09-22 14:47:13.198 [SpringApplicationShutdownHook] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2025-09-22 14:47:13.205 [tomcat-shutdown] INFO  o.s.boot.web.embedded.tomcat.GracefulShutdown - Graceful shutdown complete
+2025-09-22 14:47:13.221 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-22 14:47:13.225 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-22 14:56:43.036 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 16832 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend)
+2025-09-22 14:56:43.038 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-22 14:56:43.039 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-22 14:56:43.753 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-22 14:56:43.758 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-22 14:56:43.815 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2025-09-22 14:56:44.578 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-22 14:56:44.592 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:56:44.594 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-22 14:56:44.594 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-22 14:56:44.687 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-22 14:56:44.688 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1590 ms
+2025-09-22 14:56:45.243 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-22 14:56:45.541 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@22e813fc
+2025-09-22 14:56:45.543 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-22 14:56:47.762 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:56:47.847 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
+2025-09-22 14:56:47.870 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 5.403 seconds (process running for 5.776)
+2025-09-22 14:56:47.890 [main] INFO  fun.sast.ApprovalApplication - server started
+2025-09-22 14:58:10.538 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 23.0.2 with PID 35588 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend)
+2025-09-22 14:58:10.539 [main] DEBUG fun.sast.ApprovalApplication - Running with Spring Boot v3.5.3, Spring v6.2.8
+2025-09-22 14:58:10.539 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-22 14:58:11.022 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-22 14:58:11.027 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-22 14:58:11.053 [main] INFO  o.s.d.r.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+2025-09-22 14:58:11.481 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-22 14:58:11.488 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:58:11.489 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-22 14:58:11.490 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-22 14:58:11.557 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-22 14:58:11.557 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 974 ms
+2025-09-22 14:58:11.748 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-22 14:58:11.982 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@296676c4
+2025-09-22 14:58:11.983 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-22 14:58:12.792 [main] INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-22 14:58:12.807 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
+2025-09-22 14:58:12.812 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 2.664 seconds (process running for 3.22)
+2025-09-22 14:58:12.814 [main] INFO  fun.sast.ApprovalApplication - server started
