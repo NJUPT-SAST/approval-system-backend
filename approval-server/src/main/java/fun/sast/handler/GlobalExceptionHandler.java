@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     /** 处理自定义异常 */
     @ExceptionHandler(BaseException.class)
     public GlobalResponse<ErrorEnum> exceptionHandler(BaseException ex) {
-        log.error("异常信息：{}", ex.getMessage());
+        log.error("异常信息：{}", ex.getMessage(), ex);
         return GlobalResponse.failure(ex.getErrorEnum());
     }
 

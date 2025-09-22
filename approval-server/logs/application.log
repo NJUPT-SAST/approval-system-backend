@@ -1,0 +1,128 @@
+2025-09-17 14:51:03.554 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 29392 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-17 14:51:03.555 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-17 14:51:03.911 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-17 14:51:03.912 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-17 14:51:03.936 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2025-09-17 14:51:04.357 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-17 14:51:04.365 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:04.366 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-17 14:51:04.366 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-17 14:51:04.425 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-17 14:51:04.427 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 845 ms
+2025-09-17 14:51:04.554 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-17 14:51:04.725 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37ffe4f3
+2025-09-17 14:51:04.727 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-17 14:51:05.438 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:05.445 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-09-17 14:51:05.451 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-17 14:51:05.456 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-17 14:51:05.462 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-17 14:51:05.470 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 9090 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 9090 or configure this application to listen on another port.
+
+2025-09-17 14:51:33.338 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 34852 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-17 14:51:33.339 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-17 14:51:33.694 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-17 14:51:33.695 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-17 14:51:33.719 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2025-09-17 14:51:34.128 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-17 14:51:34.135 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:34.137 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-17 14:51:34.137 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-17 14:51:34.195 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-17 14:51:34.196 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 830 ms
+2025-09-17 14:51:34.302 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-17 14:51:34.451 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37ffe4f3
+2025-09-17 14:51:34.452 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-17 14:51:35.120 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:35.126 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-09-17 14:51:35.131 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-17 14:51:35.135 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-17 14:51:35.141 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-17 14:51:35.149 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 9090 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 9090 or configure this application to listen on another port.
+
+2025-09-17 14:51:56.546 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 15144 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-17 14:51:56.547 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-17 14:51:56.912 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-17 14:51:56.913 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-17 14:51:56.936 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2025-09-17 14:51:57.357 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-17 14:51:57.364 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:57.366 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-17 14:51:57.366 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-17 14:51:57.435 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-17 14:51:57.436 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 859 ms
+2025-09-17 14:51:57.548 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-17 14:51:57.707 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@782cc5fa
+2025-09-17 14:51:57.708 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-17 14:51:58.360 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-17 14:51:58.365 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-09-17 14:51:58.370 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2025-09-17 14:51:58.375 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2025-09-17 14:51:58.382 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-09-17 14:51:58.390 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 9090 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 9090 or configure this application to listen on another port.
+
+2025-09-17 15:09:34.235 [main] INFO  fun.sast.ApprovalApplication - Starting ApprovalApplication using Java 17.0.11 with PID 22456 (D:\soc\approval-system-backend\approval-server\target\classes started by Josda in D:\soc\approval-system-backend\approval-server)
+2025-09-17 15:09:34.236 [main] INFO  fun.sast.ApprovalApplication - No active profile set, falling back to 1 default profile: "default"
+2025-09-17 15:09:34.624 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-09-17 15:09:34.626 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-09-17 15:09:34.652 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+2025-09-17 15:09:35.087 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 9090 (http)
+2025-09-17 15:09:35.094 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-9090"]
+2025-09-17 15:09:35.097 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-09-17 15:09:35.097 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.42]
+2025-09-17 15:09:35.161 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-09-17 15:09:35.162 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 896 ms
+2025-09-17 15:09:35.284 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-09-17 15:09:35.444 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@708dfe10
+2025-09-17 15:09:35.445 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-09-17 15:09:36.138 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-9090"]
+2025-09-17 15:09:36.152 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 9090 (http) with context path '/'
+2025-09-17 15:09:36.157 [main] INFO  fun.sast.ApprovalApplication - Started ApprovalApplication in 2.222 seconds (process running for 2.494)
+2025-09-17 15:09:36.160 [main] INFO  fun.sast.ApprovalApplication - server started
+2025-09-17 15:10:48.907 [http-nio-9090-exec-4] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-09-17 15:10:48.908 [http-nio-9090-exec-4] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-09-17 15:10:48.908 [http-nio-9090-exec-4] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2025-09-17 15:11:24.049 [http-nio-9090-exec-3] ERROR f.s.handler.GlobalExceptionHandler - 异常信息：账号或者密码错误
+2025-09-17 15:12:24.649 [http-nio-9090-exec-5] ERROR f.s.handler.GlobalExceptionHandler - 异常信息：账号或者密码错误

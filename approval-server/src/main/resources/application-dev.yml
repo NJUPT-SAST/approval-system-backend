@@ -7,7 +7,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/review
     username: root
-    password: 111111
+    password: yunkai1023
+    # SQL初始化配置
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
 
   data:
     redis:
@@ -31,3 +37,11 @@ file:
 
 server:
   port: 9090
+  # HTTP编码配置
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+    uri-encoding: UTF-8

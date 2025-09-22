@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.sast.mapper.TeamMapper">
+    <!-- 根据比赛ID和队长学号查询队伍信息 -->
+    <select id="selectByComIdAndCaptain" resultType="fun.sast.entity.Team">
+        SELECT * FROM team WHERE com_id = #{comId} AND captain = #{captain}
+    </select>
+    
+    <!-- 根据用户ID查询已报名的比赛ID列表 -->
+    <select id="selectSignedComIdsByUserId" resultType="java.lang.Long">
+        SELECT com_id FROM team WHERE create_user = #{userId}
+    </select>
+</mapper>

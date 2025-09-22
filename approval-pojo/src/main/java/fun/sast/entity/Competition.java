@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class Competition implements Serializable {
     public static final Integer REVIEWED = 0;
     public static final Integer NOT_REVIEWED = 1;
+    public static final Integer TEAM = 0;
+    public static final Integer PERSONAL = 1;
 
     /** 封面url */
     private String cover;
@@ -59,14 +61,14 @@ public class Competition implements Serializable {
     private String submitEndTime;
 
     /** 表单 schema */
-    @TableField(typeHandler = Fastjson2TypeHandler.class)
+    @TableField(value = "`table`", typeHandler = Fastjson2TypeHandler.class)
     private JSONObject table;
 
     /** 0 团队，1 个人 */
     private Integer type;
 
     /** 活动负责人学号 */
-    private Integer userCode;
+    private String userCode;
 
     private LocalDateTime createTime;
 
