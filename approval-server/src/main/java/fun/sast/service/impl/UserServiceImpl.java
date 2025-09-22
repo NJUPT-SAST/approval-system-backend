@@ -20,15 +20,15 @@ import fun.sast.mapper.UserMapper;
 import fun.sast.service.UserService;
 import fun.sast.utils.JwtUtil;
 import fun.sast.utils.RedisUtil;
-import fun.sast.vo.UserLoginVO;
 import fun.sast.vo.CompetitionBriefVO;
 import fun.sast.vo.CompetitionDetailVO;
 import fun.sast.vo.CompetitionSignUpInfoVO;
 import fun.sast.vo.PageResultVO;
 import fun.sast.vo.SearchCompetitionResultVO;
+import fun.sast.vo.TeacherMemberVO;
 import fun.sast.vo.TeamInfoVO;
 import fun.sast.vo.TeamMemberVO;
-import fun.sast.vo.TeacherMemberVO;
+import fun.sast.vo.UserLoginVO;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -69,20 +69,22 @@ public class UserServiceImpl implements UserService {
             IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
 
             // 将Competition对象转换为CompetitionBriefVO对象
-            List<CompetitionBriefVO> competitionBriefList = competitionPage.getRecords().stream()
-                    .map(competition -> {
-                        Integer status = calculateCompetitionStatus(competition);
-                        return CompetitionBriefVO.builder()
-                                .id(competition.getId().longValue())
-                                .name(competition.getName())
-                                .cover(competition.getCover())
-                                .status(status)
-                                .regBeginTime(competition.getRegBeginTime())
-                                .regEndTime(competition.getRegEndTime())
-                                .isSigned(false) // 默认未报名，在Controller层会根据用户实际情况更新
-                                .build();
-                    })
-                    .collect(Collectors.toList());
+            List<CompetitionBriefVO> competitionBriefList =
+                    competitionPage.getRecords().stream()
+                            .map(
+                                    competition -> {
+                                        Integer status = calculateCompetitionStatus(competition);
+                                        return CompetitionBriefVO.builder()
+                                                .id(competition.getId().longValue())
+                                                .name(competition.getName())
+                                                .cover(competition.getCover())
+                                                .status(status)
+                                                .regBeginTime(competition.getRegBeginTime())
+                                                .regEndTime(competition.getRegEndTime())
+                                                .isSigned(false) // 默认未报名，在Controller层会根据用户实际情况更新
+                                                .build();
+                                    })
+                            .collect(Collectors.toList());
 
             return PageResultVO.<CompetitionBriefVO>builder()
                     .total(competitionPage.getTotal())
@@ -191,7 +193,8 @@ public class UserServiceImpl implements UserService {
 
     // 分页查询用户已报名的比赛列表
     @Override
-    public PageResultVO<CompetitionBriefVO> getSignedComList(User user, Integer cur, Integer limit) {
+    public PageResultVO<CompetitionBriefVO> getSignedComList(
+            User user, Integer cur, Integer limit) {
         // 参数校验
         if (user == null) {
             throw new BaseException(ErrorEnum.USER_NOT_EXIST);
@@ -226,20 +229,22 @@ public class UserServiceImpl implements UserService {
             IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
 
             // 将Competition对象转换为CompetitionBriefVO对象
-            List<CompetitionBriefVO> competitionBriefList = competitionPage.getRecords().stream()
-                    .map(competition -> {
-                        Integer status = calculateCompetitionStatus(competition);
-                        return CompetitionBriefVO.builder()
-                                .id(competition.getId().longValue())
-                                .name(competition.getName())
-                                .cover(competition.getCover())
-                                .status(status)
-                                .regBeginTime(competition.getRegBeginTime())
-                                .regEndTime(competition.getRegEndTime())
-                                .isSigned(true) // 已报名的比赛
-                                .build();
-                    })
-                    .collect(Collectors.toList());
+            List<CompetitionBriefVO> competitionBriefList =
+                    competitionPage.getRecords().stream()
+                            .map(
+                                    competition -> {
+                                        Integer status = calculateCompetitionStatus(competition);
+                                        return CompetitionBriefVO.builder()
+                                                .id(competition.getId().longValue())
+                                                .name(competition.getName())
+                                                .cover(competition.getCover())
+                                                .status(status)
+                                                .regBeginTime(competition.getRegBeginTime())
+                                                .regEndTime(competition.getRegEndTime())
+                                                .isSigned(true) // 已报名的比赛
+                                                .build();
+                                    })
+                            .collect(Collectors.toList());
 
             return PageResultVO.<CompetitionBriefVO>builder()
                     .total(competitionPage.getTotal())
@@ -280,24 +285,25 @@ public class UserServiceImpl implements UserService {
             Integer status = calculateCompetitionStatus(competition);
 
             // 4. 构建CompetitionDetailVO对象
-            CompetitionDetailVO detailVO = CompetitionDetailVO.builder()
-                    .id(comId)
-                    .name(competition.getName())
-                    .cover(competition.getCover())
-                    .introduce(competition.getIntroduce())
-                    .status(status)
-                    .regBegin(competition.getRegBeginTime())
-                    .regEnd(competition.getRegEndTime())
-                    .submitBegin(competition.getSubmitBeginTime())
-                    .submitEnd(competition.getSubmitEndTime())
-                    .reviewBegin(competition.getReviewBeginTime())
-                    .reviewEnd(competition.getReviewEndTime())
-                    .type(competition.getType())
-                    .minTeamMembers(competition.getMinTeamMembers())
-                    .maxTeamMembers(competition.getMaxTeamMembers())
-                    .isSigned(false) // 默认未报名，在Controller层会根据用户实际情况更新
-                    .isCaptain(false) // 默认不是队长，在Controller层会根据用户实际情况更新
-                    .build();
+            CompetitionDetailVO detailVO =
+                    CompetitionDetailVO.builder()
+                            .id(comId)
+                            .name(competition.getName())
+                            .cover(competition.getCover())
+                            .introduce(competition.getIntroduce())
+                            .status(status)
+                            .regBegin(competition.getRegBeginTime())
+                            .regEnd(competition.getRegEndTime())
+                            .submitBegin(competition.getSubmitBeginTime())
+                            .submitEnd(competition.getSubmitEndTime())
+                            .reviewBegin(competition.getReviewBeginTime())
+                            .reviewEnd(competition.getReviewEndTime())
+                            .type(competition.getType())
+                            .minTeamMembers(competition.getMinTeamMembers())
+                            .maxTeamMembers(competition.getMaxTeamMembers())
+                            .isSigned(false) // 默认未报名，在Controller层会根据用户实际情况更新
+                            .isCaptain(false) // 默认不是队长，在Controller层会根据用户实际情况更新
+                            .build();
 
             log.info("查询比赛详情成功: 比赛ID={}, 比赛名称={}", comId, competition.getName());
             return detailVO;
@@ -395,27 +401,29 @@ public class UserServiceImpl implements UserService {
             }
 
             // 查询用户在该比赛中的团队信息
-            Team team = teamMapper.selectOne(
-                    new QueryWrapper<Team>()
-                            .eq("com_id", comId)
-                            .eq("captain", user.getCode()));
+            Team team =
+                    teamMapper.selectOne(
+                            new QueryWrapper<Team>()
+                                    .eq("com_id", comId)
+                                    .eq("captain", user.getCode()));
 
             // 构建CompetitionSignUpInfoVO对象
-            CompetitionSignUpInfoVO signUpInfoVO = CompetitionSignUpInfoVO.builder()
-                    .success(true)
-                    .comId(comId)
-                    .comName(competition.getName())
-                    .type(competition.getType())
-                    .isTeam(Competition.TEAM.equals(competition.getType()))
-                    .isReviewed(competition.getIsReview())
-                    .maxTeamMembers(competition.getMaxTeamMembers())
-                    .minTeamMembers(competition.getMinTeamMembers())
-                    .regBeginTime(competition.getRegBeginTime())
-                    .regEndTime(competition.getRegEndTime())
-                    .submitBeginTime(competition.getSubmitBeginTime())
-                    .submitEndTime(competition.getSubmitEndTime())
-                    .hasSignedUp(team != null)
-                    .build();
+            CompetitionSignUpInfoVO signUpInfoVO =
+                    CompetitionSignUpInfoVO.builder()
+                            .success(true)
+                            .comId(comId)
+                            .comName(competition.getName())
+                            .type(competition.getType())
+                            .isTeam(Competition.TEAM.equals(competition.getType()))
+                            .isReviewed(competition.getIsReview())
+                            .maxTeamMembers(competition.getMaxTeamMembers())
+                            .minTeamMembers(competition.getMinTeamMembers())
+                            .regBeginTime(competition.getRegBeginTime())
+                            .regEndTime(competition.getRegEndTime())
+                            .submitBeginTime(competition.getSubmitBeginTime())
+                            .submitEndTime(competition.getSubmitEndTime())
+                            .hasSignedUp(team != null)
+                            .build();
 
             // 如果用户已报名该比赛，添加报名详情
             if (team != null) {
@@ -432,15 +440,16 @@ public class UserServiceImpl implements UserService {
                         List<TeamMemberVO> members = new ArrayList<>();
                         for (Object obj : teamMember) {
                             JSONObject memberJson = (JSONObject) obj;
-                            TeamMemberVO memberVO = TeamMemberVO.builder()
-                                    .id(memberJson.getInteger("id"))
-                                    .code(memberJson.getString("code"))
-                                    .name(memberJson.getString("name"))
-                                    .depId(memberJson.getInteger("depId"))
-                                    .departmentName(memberJson.getString("departmentName"))
-                                    .major(memberJson.getString("major"))
-                                    .contact(memberJson.getString("contact"))
-                                    .build();
+                            TeamMemberVO memberVO =
+                                    TeamMemberVO.builder()
+                                            .id(memberJson.getInteger("id"))
+                                            .code(memberJson.getString("code"))
+                                            .name(memberJson.getString("name"))
+                                            .depId(memberJson.getInteger("depId"))
+                                            .departmentName(memberJson.getString("departmentName"))
+                                            .major(memberJson.getString("major"))
+                                            .contact(memberJson.getString("contact"))
+                                            .build();
                             members.add(memberVO);
                         }
                         signUpInfoVO.setMembers(members);
@@ -457,14 +466,15 @@ public class UserServiceImpl implements UserService {
                         List<TeacherMemberVO> teachers = new ArrayList<>();
                         for (Object obj : teacherMember) {
                             JSONObject teacherJson = (JSONObject) obj;
-                            TeacherMemberVO teacherVO = TeacherMemberVO.builder()
-                                    .id(teacherJson.getInteger("id"))
-                                    .code(teacherJson.getString("code"))
-                                    .name(teacherJson.getString("name"))
-                                    .depId(teacherJson.getInteger("depId"))
-                                    .departmentName(teacherJson.getString("departmentName"))
-                                    .contact(teacherJson.getString("contact"))
-                                    .build();
+                            TeacherMemberVO teacherVO =
+                                    TeacherMemberVO.builder()
+                                            .id(teacherJson.getInteger("id"))
+                                            .code(teacherJson.getString("code"))
+                                            .name(teacherJson.getString("name"))
+                                            .depId(teacherJson.getInteger("depId"))
+                                            .departmentName(teacherJson.getString("departmentName"))
+                                            .contact(teacherJson.getString("contact"))
+                                            .build();
                             teachers.add(teacherVO);
                         }
                         signUpInfoVO.setTeacherMember(teachers);
@@ -529,20 +539,22 @@ public class UserServiceImpl implements UserService {
             IPage<Competition> competitionPage = competitionMapper.selectPage(page, queryWrapper);
 
             // 将Competition列表转换为CompetitionBriefVO列表
-            List<CompetitionBriefVO> briefVOList = competitionPage.getRecords().stream()
-                    .map(competition -> {
-                        Integer status = calculateCompetitionStatus(competition);
-                        return CompetitionBriefVO.builder()
-                                .id(competition.getId().longValue())
-                                .name(competition.getName())
-                                .cover(competition.getCover())
-                                .status(status)
-                                .regBeginTime(competition.getRegBeginTime())
-                                .regEndTime(competition.getRegEndTime())
-                                .isSigned(false) // 默认未报名，前端可根据用户实际报名情况覆盖
-                                .build();
-                    })
-                    .collect(Collectors.toList());
+            List<CompetitionBriefVO> briefVOList =
+                    competitionPage.getRecords().stream()
+                            .map(
+                                    competition -> {
+                                        Integer status = calculateCompetitionStatus(competition);
+                                        return CompetitionBriefVO.builder()
+                                                .id(competition.getId().longValue())
+                                                .name(competition.getName())
+                                                .cover(competition.getCover())
+                                                .status(status)
+                                                .regBeginTime(competition.getRegBeginTime())
+                                                .regEndTime(competition.getRegEndTime())
+                                                .isSigned(false) // 默认未报名，前端可根据用户实际报名情况覆盖
+                                                .build();
+                                    })
+                            .collect(Collectors.toList());
 
             // 构建返回结果
             SearchCompetitionResultVO resultVO = new SearchCompetitionResultVO();
@@ -586,21 +598,23 @@ public class UserServiceImpl implements UserService {
             }
 
             // 查询用户在该比赛中的团队信息
-            Team team = teamMapper.selectOne(
-                    new QueryWrapper<Team>()
-                            .eq("com_id", comId)
-                            .eq("captain", user.getCode()));
+            Team team =
+                    teamMapper.selectOne(
+                            new QueryWrapper<Team>()
+                                    .eq("com_id", comId)
+                                    .eq("captain", user.getCode()));
             if (team == null) {
                 throw new BaseException(ErrorEnum.HAVE_NOT_SIGNED_COM);
             }
 
             // 构建TeamInfoVO对象
-            TeamInfoVO teamInfoVO = TeamInfoVO.builder()
-                    .success(true)
-                    .teamId(team.getId().intValue())
-                    .teamName(team.getName())
-                    .captain(team.getCaptain())
-                    .build();
+            TeamInfoVO teamInfoVO =
+                    TeamInfoVO.builder()
+                            .success(true)
+                            .teamId(team.getId().intValue())
+                            .teamName(team.getName())
+                            .captain(team.getCaptain())
+                            .build();
 
             // 处理成员信息
             List<TeamMemberVO> teamMembers = new ArrayList<>();
@@ -609,15 +623,16 @@ public class UserServiceImpl implements UserService {
                     JSONArray teamMemberJson = JSONArray.parseArray(team.getMember());
                     for (Object obj : teamMemberJson) {
                         JSONObject memberJson = (JSONObject) obj;
-                        TeamMemberVO memberVO = TeamMemberVO.builder()
-                                .id(memberJson.getInteger("id"))
-                                .code(memberJson.getString("code"))
-                                .name(memberJson.getString("name"))
-                                .depId(memberJson.getInteger("depId"))
-                                .departmentName(memberJson.getString("departmentName"))
-                                .major(memberJson.getString("major"))
-                                .contact(memberJson.getString("contact"))
-                                .build();
+                        TeamMemberVO memberVO =
+                                TeamMemberVO.builder()
+                                        .id(memberJson.getInteger("id"))
+                                        .code(memberJson.getString("code"))
+                                        .name(memberJson.getString("name"))
+                                        .depId(memberJson.getInteger("depId"))
+                                        .departmentName(memberJson.getString("departmentName"))
+                                        .major(memberJson.getString("major"))
+                                        .contact(memberJson.getString("contact"))
+                                        .build();
                         teamMembers.add(memberVO);
                     }
                 } catch (JSONException e) {
