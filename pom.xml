@@ -39,6 +39,7 @@
         <mockito.version>5.17.0</mockito.version>
         <bucket4j.version>8.10.1</bucket4j.version>
         <aspectj.version>1.9.24</aspectj.version>
+        <qcloud.version>5.6.227</qcloud.version>
 
     </properties>
 
@@ -175,6 +176,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-aop</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api</artifactId>
+                <version>${qcloud.version}</version>
             </dependency>
 
         </dependencies>

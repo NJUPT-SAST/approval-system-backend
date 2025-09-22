@@ -72,7 +72,7 @@ SELECT UUID()                                           AS id,
        1
 FROM `judge` j
 WHERE j.user_id = (SELECT id FROM `user` WHERE `code` = 'judge')
-    LIMIT 1;
+LIMIT 1;
 
 -- 插入评分数据 (关联比赛、评委和用户)
 INSERT IGNORE INTO `score` (`id`, `com_id`, `judge_id`, `option`, `score`, `user_id`, `create_time`, `update_time`,
@@ -89,7 +89,7 @@ SELECT UUID()                           AS id,
        1
 FROM `judge` j
 WHERE j.user_id = (SELECT id FROM `user` WHERE `code` = 'judge')
-    LIMIT 1;
+LIMIT 1;
 
 -- 插入队伍数据 (关联比赛和队长)
 INSERT IGNORE INTO `team` (`com_id`, `name`, `captain`, `member`, `teacher`, `create_time`, `update_time`,

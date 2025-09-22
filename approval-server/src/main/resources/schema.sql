@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS `user`
     `contact`     varchar(50)  NOT NULL COMMENT '手机号',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_code` (`code`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='用户表';
 
 -- create file table
 CREATE TABLE IF NOT EXISTS `file`
@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `file`
     `create_user` BIGINT   DEFAULT NULL COMMENT '创建用户',
     `update_user` BIGINT   DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`) USING BTREE
-    ) ENGINE = InnoDB
-    CHARACTER SET = utf8mb4 COMMENT ='文件表';
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4 COMMENT ='文件表';
 
 -- create notice table
 CREATE TABLE IF NOT EXISTS `notice`
@@ -48,9 +48,10 @@ CREATE TABLE IF NOT EXISTS `notice`
     `update_time` datetime     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `create_user` bigint(20)   DEFAULT NULL COMMENT '创建用户',
     `update_user` bigint(20)   DEFAULT NULL COMMENT '更新用户',
+    `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0-未删 1-已删）',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='公告表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='公告表';
 
 -- create department table
 CREATE TABLE IF NOT EXISTS `department`
@@ -62,8 +63,8 @@ CREATE TABLE IF NOT EXISTS `department`
     `create_user` bigint(20) DEFAULT NULL COMMENT '创建用户',
     `update_user` bigint(20) DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='学院表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='学院表';
 
 CREATE TABLE IF NOT EXISTS `judge`
 (
@@ -75,8 +76,8 @@ CREATE TABLE IF NOT EXISTS `judge`
     `create_user` BIGINT   DEFAULT NULL COMMENT '创建用户',
     `update_user` BIGINT   DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='评委表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='评委表';
 
 CREATE TABLE IF NOT EXISTS `review`
 (
@@ -92,8 +93,8 @@ CREATE TABLE IF NOT EXISTS `review`
     `create_user` BIGINT                DEFAULT NULL COMMENT '创建用户',
     `update_user` BIGINT                DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='评审表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='评审表';
 
 CREATE TABLE IF NOT EXISTS `score`
 (
@@ -108,8 +109,8 @@ CREATE TABLE IF NOT EXISTS `score`
     `create_user` BIGINT   DEFAULT NULL COMMENT '创建用户',
     `update_user` BIGINT   DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='评分表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='评分表';
 
 CREATE TABLE IF NOT EXISTS `team`
 (
@@ -124,8 +125,8 @@ CREATE TABLE IF NOT EXISTS `team`
     `create_user` BIGINT       DEFAULT NULL COMMENT '创建用户',
     `update_user` BIGINT       DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='队伍表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='队伍表';
 
 CREATE TABLE IF NOT EXISTS `work`
 (
@@ -139,8 +140,8 @@ CREATE TABLE IF NOT EXISTS `work`
     `create_user`    BIGINT   DEFAULT NULL COMMENT '创建用户',
     `update_user`    BIGINT   DEFAULT NULL COMMENT '更新用户',
     PRIMARY KEY (`id`)
-    ) ENGINE = InnoDB
-    DEFAULT CHARSET = utf8mb4 COMMENT ='作品表';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='作品表';
 
 -- 插入学院数据
 INSERT IGNORE INTO `department` (`name`, `create_time`, `update_time`, `create_user`, `update_user`)
