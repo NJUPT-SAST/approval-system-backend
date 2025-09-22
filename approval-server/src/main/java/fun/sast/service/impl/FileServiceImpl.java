@@ -174,9 +174,11 @@ public class FileServiceImpl implements FileService {
             dataRow.add(String.valueOf(team.getTeacher())); // 指导老师
 
             String captainCode = team.getCaptain(); // 队长学号
-            dataRow.add(captainCode);
-            String captainName = userMapper.selectById(captainCode).getName();
-            dataRow.add(captainName);
+            User captain = null;
+            if (StringUtils.hasText(captainCode)) {
+                captain = userMapper.selectOne(new QueryWrapper<User>().eq("code", captainCode));
+            }
+            dataRow.add(captain != null ? captain.getCode() : "无");
 
             Work work = workMapper.selectOne(new QueryWrapper<Work>().eq("team_id", team.getId()));
             dataRow.add(work != null ? String.valueOf(work.getId()) : "无");
@@ -211,7 +213,7 @@ public class FileServiceImpl implements FileService {
 
     private List<Map<String, String>> parseMembers(String memberJson) {
         List<Map<String, String>> members = new ArrayList<>();
-        if (memberJson != null && !memberJson.isEmpty()) {
+        if (memberJson == null || memberJson.isEmpty()) {
             return null;
         }
         try {
@@ -239,8 +241,7 @@ public class FileServiceImpl implements FileService {
             JSONArray jsonArray = JSONArray.parseArray(teacherJson);
             for (Object obj : jsonArray) {
                 JSONObject json = (JSONObject) obj;
-                Map<String, String> teacherInfo =
-                        Map.of(json.getString("name"), json.getString("dep_id"));
+                Map<String, String> teacherInfo = Map.of("name", json.getString("name"));
                 teachers.add(teacherInfo);
             }
         } catch (Exception e) {
