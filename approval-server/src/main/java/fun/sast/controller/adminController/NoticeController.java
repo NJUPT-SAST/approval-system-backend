@@ -45,7 +45,7 @@ public class NoticeController {
      * @param vo
      * @return
      */
-    @PutMapping("/update")
+    @PostMapping("/edit")
     @ResponseResult
     public void updateNotice(@RequestBody NoticeOperateVO vo) {
         User currentUser = UserInterceptor.userHolder.get();
@@ -55,6 +55,7 @@ public class NoticeController {
         try {
             noticeService.updateNotice(vo, currentUser);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(ErrorEnum.NOTICE_ERROR);
         }
     }
@@ -65,7 +66,7 @@ public class NoticeController {
      * @param id 公告id
      * @return
      */
-    @DeleteMapping("/del")
+    @PostMapping("/del")
     @ResponseResult
     public void deleteNotice(@RequestParam Integer id) {
         User currentUser = UserInterceptor.userHolder.get();

@@ -1,9 +1,7 @@
 package fun.sast.controller.adminController;
 
 import com.alibaba.fastjson2.JSONObject;
-import fun.sast.annotation.CheckRole;
 import fun.sast.annotation.ResponseResult;
-import fun.sast.enums.UserRoleEnum;
 import fun.sast.service.CompetitionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

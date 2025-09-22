@@ -13,7 +13,6 @@ import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
 import fun.sast.vo.NoticeOperateVO;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -68,22 +67,23 @@ public class NoticeServiceImpl implements NoticeService {
         return results;
     }
 
-    private static final DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     @Override
     public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
+        System.out.println("传递的com_id值：" + operateVO.getComId());
+        System.out.println(
+                "传递的 com_id 类型："
+                        + (operateVO.getComId() == null
+                                ? "null"
+                                : operateVO.getComId().getClass()));
+
         Competition competition = competitionMapper.selectById(operateVO.getComId());
         if (competition == null) {
             throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
         }
         LocalDateTime noticeTime = operateVO.getTime();
-        String noticeTimeStr;
         // 前端未传值，设置为当前时间
         if (noticeTime == null) {
-            noticeTimeStr = LocalDateTime.now().format(formatter);
-        } else {
-            noticeTimeStr = noticeTime.toString();
+            noticeTime = LocalDateTime.now();
         }
 
         // 转换为Notice实体，并填充其他字段信息
@@ -100,10 +100,7 @@ public class NoticeServiceImpl implements NoticeService {
                         .updateUser(null)
                         .build();
 
-        int result = noticeMapper.insert(notice);
-        if (result <= 0) {
-            throw new BaseException(ErrorEnum.NOTICE_ERROR);
-        }
+        noticeMapper.insert(notice);
     }
 
     @Override
@@ -114,12 +111,9 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
         LocalDateTime noticeTime = operateVO.getTime();
-        String noticeTimeStr;
         // 前端未传值，设置为当前时间
         if (noticeTime == null) {
-            noticeTimeStr = LocalDateTime.now().format(formatter);
-        } else {
-            noticeTimeStr = noticeTime.toString();
+            noticeTime = LocalDateTime.now();
         }
 
         Notice updatedNotice =
@@ -129,17 +123,14 @@ public class NoticeServiceImpl implements NoticeService {
                         .content(operateVO.getContent())
                         .role(operateVO.getRole())
                         .title(operateVO.getTitle())
-                        .time(LocalDateTime.parse(noticeTimeStr, formatter))
+                        .time(noticeTime)
                         .createTime(existingNotice.getCreateTime())
-                        .updateTime(LocalDateTime.parse(LocalDateTime.now().format(formatter)))
+                        .updateTime(LocalDateTime.now())
                         .createUser(existingNotice.getCreateUser())
-                        .updateUser(currentUser.getCreateUser())
+                        .updateUser(currentUser.getId().longValue())
                         .build();
 
-        int result = noticeMapper.updateById(updatedNotice);
-        if (result <= 0) {
-            throw new BaseException(ErrorEnum.NOTICE_ERROR);
-        }
+        noticeMapper.updateById(updatedNotice);
     }
 
     @Override
@@ -149,9 +140,6 @@ public class NoticeServiceImpl implements NoticeService {
             throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
         }
 
-        int result = noticeMapper.deleteById(noticeId);
-        if(result <= 0) {
-            throw new BaseException(ErrorEnum.NOTICE_ERROR);
-        }
+        noticeMapper.deleteById(noticeId);
     }
 }

@@ -27,7 +27,7 @@ public class CompetitionServiceImpl implements CompetitionService {
         }
 
         JSONObject resultData = new JSONObject();
-        resultData.put("table", competition.getTable().toString());
+        resultData.put("table", competition.getTableSchema().toString());
 
         return resultData;
     }
