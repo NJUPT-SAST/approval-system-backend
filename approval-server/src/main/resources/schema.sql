@@ -142,16 +142,29 @@ CREATE TABLE IF NOT EXISTS `work`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='作品表';
 
--- 插入学院数据
-INSERT IGNORE INTO `department` (`name`, `create_time`, `update_time`, `create_user`, `update_user`)
-VALUES
-    ('计算机科学与技术学院', NOW(), NOW(), 1, 1),
-    ('电子信息工程学院', NOW(), NOW(), 1, 1),
-    ('机械工程与自动化学院', NOW(), NOW(), 1, 1),
-    ('经济管理学院', NOW(), NOW(), 1, 1),
-    ('外国语学院', NOW(), NOW(), 1, 1),
-    ('法学院', NOW(), NOW(), 1, 1),
-    ('艺术学院', NOW(), NOW(), 1, 1),
-    ('医学院', NOW(), NOW(), 1, 1),
-    ('理学院', NOW(), NOW(), 1, 1),
-    ('土木工程学院', NOW(), NOW(), 1, 1);
+CREATE TABLE IF NOT EXISTS `competition`
+(
+    `id`                 INT          NOT NULL AUTO_INCREMENT COMMENT '活动ID编号',
+    `name`               VARCHAR(255) NOT NULL COMMENT '比赛名称',
+    `cover`              VARCHAR(500) DEFAULT NULL COMMENT '封面url',
+    `introduce`          TEXT COMMENT '比赛介绍',
+    `is_review`          INT          DEFAULT 0 COMMENT '是否已经审批',
+    `max_team_members`   INT COMMENT '团队人数限制',
+    `min_team_members`   INT COMMENT '团队人数限制',
+    `reg_begin_time`     VARCHAR(50) COMMENT '报名开始时间',
+    `reg_end_time`       VARCHAR(50) COMMENT '报名结束时间',
+    `review_begin_time`  VARCHAR(50) COMMENT '评审开始时间',
+    `review_end_time`    VARCHAR(50) COMMENT '评审结束时间',
+    `review_settings`    JSON COMMENT '评审设置',
+    `submit_begin_time`  VARCHAR(50) COMMENT '活动提交开始时间',
+    `submit_end_time`    VARCHAR(50) COMMENT '活动提交结束时间',
+    `table`              JSON COMMENT '表单schema',
+    `type`               INT          DEFAULT 0 COMMENT '0 团队，1 个人',
+    `user_code`          INT COMMENT '活动负责人学号',
+    `create_time`        DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time`        DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `create_user`        BIGINT       DEFAULT NULL COMMENT '创建用户',
+    `update_user`        BIGINT       DEFAULT NULL COMMENT '更新用户',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='比赛表';

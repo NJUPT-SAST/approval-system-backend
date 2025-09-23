@@ -51,7 +51,8 @@ public class ReviewController {
      */
     @ResponseResult
     @GetMapping("/competition-list")
-    public CompetitionListVO getCompetitionList(@RequestParam int page) {
+    public CompetitionListVO getCompetitionList(
+            @RequestParam(required = false, defaultValue = "1") int page) {
         return reviewService.getCompetitionList(page);
     }
 
