@@ -24,7 +24,7 @@ public class ScoreController {
      */
     @ResponseResult
     @GetMapping("/competition-list")
-    public CompetitionListVO getCompetitionList(@RequestParam int page) {
+    public CompetitionListVO getCompetitionList(@RequestParam(defaultValue = "1") int page) {
         return scoreService.getCompetitionList(page);
     }
 
