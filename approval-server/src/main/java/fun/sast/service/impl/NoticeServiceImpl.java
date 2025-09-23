@@ -1,12 +1,17 @@
 package fun.sast.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import fun.sast.Exception.BaseException;
+import fun.sast.entity.Competition;
 import fun.sast.entity.Notice;
 import fun.sast.entity.User;
+import fun.sast.enums.ErrorEnum;
 import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
+import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.NoticeMapper;
 import fun.sast.service.NoticeService;
+import fun.sast.vo.NoticeOperateVO;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NoticeServiceImpl implements NoticeService {
     private final NoticeMapper noticeMapper;
+    private final CompetitionMapper competitionMapper;
 
     // 已经登陆显示相应角色的公告
     // 未登录获取普通角色的公告
@@ -59,5 +65,75 @@ public class NoticeServiceImpl implements NoticeService {
             }
         }
         return results;
+    }
+
+    @Override
+    public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
+
+        Competition competition = competitionMapper.selectById(operateVO.getComId());
+        if (competition == null) {
+            throw new BaseException(ErrorEnum.UNKNOWN_COMPETITION_ID);
+        }
+        LocalDateTime noticeTime = operateVO.getTime();
+        // 前端未传值，设置为当前时间
+        if (noticeTime == null) {
+            noticeTime = LocalDateTime.now();
+        }
+
+        // 转换为Notice实体，并填充其他字段信息
+        Notice notice =
+                Notice.builder()
+                        .comId(operateVO.getComId())
+                        .content(operateVO.getContent())
+                        .role(operateVO.getRole())
+                        .title(operateVO.getTitle())
+                        .time(noticeTime)
+                        .createTime(LocalDateTime.now())
+                        .updateTime(null)
+                        .createUser(currentUser.getCreateUser())
+                        .updateUser(null)
+                        .build();
+
+        noticeMapper.insert(notice);
+    }
+
+    @Override
+    public void updateNotice(NoticeOperateVO operateVO, User currentUser) {
+        Notice existingNotice = noticeMapper.selectById(operateVO.getId());
+        if (existingNotice == null) {
+            throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
+        }
+
+        LocalDateTime noticeTime = operateVO.getTime();
+        // 前端未传值，设置为当前时间
+        if (noticeTime == null) {
+            noticeTime = LocalDateTime.now();
+        }
+
+        Notice updatedNotice =
+                Notice.builder()
+                        .id(operateVO.getId())
+                        .comId(operateVO.getComId())
+                        .content(operateVO.getContent())
+                        .role(operateVO.getRole())
+                        .title(operateVO.getTitle())
+                        .time(noticeTime)
+                        .createTime(existingNotice.getCreateTime())
+                        .updateTime(LocalDateTime.now())
+                        .createUser(existingNotice.getCreateUser())
+                        .updateUser(currentUser.getId().longValue())
+                        .build();
+
+        noticeMapper.updateById(updatedNotice);
+    }
+
+    @Override
+    public void deleteNotice(Integer noticeId, User currentUser) {
+        Notice existingNotice = noticeMapper.selectById(noticeId);
+        if (existingNotice == null) {
+            throw new BaseException(ErrorEnum.NOTICE_NOT_EXIST);
+        }
+
+        noticeMapper.deleteById(noticeId);
     }
 }

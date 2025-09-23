@@ -104,6 +104,13 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.alibaba/easyexcel -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <version>4.0.3</version>
+        </dependency>
+
     </dependencies>
 
     <build>

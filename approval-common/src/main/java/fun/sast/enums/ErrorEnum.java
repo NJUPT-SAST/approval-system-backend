@@ -26,6 +26,7 @@ public enum ErrorEnum {
     OSS_FILE_NOT_EXIST(3006, "文件不存在"),
     INVALID_URL_ERROR(3007, "URL格式不合法"),
     TOO_MANY_REQUESTS(3008, "请求过于频繁"),
+    FILE_DOWNLOAD_ERROR(3009, "文件下载失败"),
     SCORE_NOT_EXIST(4001, "评审结果不存在"),
     NO_RESULT(5002, "没有结果"),
     CONTEST_NOT_EXIST(6001, "比赛不存在"),
@@ -41,12 +42,15 @@ public enum ErrorEnum {
     USER_EXIST(7002, "用户已存在"),
     FILE_NOT_EXIST(8001, "文件不存在"),
     FILE_EXPIRED_ERROR(8002, "文件已过期，请重新提交"),
-    NOTICE_ERROR(9001, "公告发布失败"),
+    NOTICE_ERROR(9001, "公告操作失败"),
     NOTICE_NOT_EXIST(9002, "公告不存在"),
     IMPORT_ERROR(10000, "导入失败"),
+    EXPORT_COMINFO_ERROR(10001, "导出参赛信息失败"),
     INVALID_CAPTCHA(11001, "验证码过期"),
     INCORRECT_CAPTCHA(11002, "验证码错误"),
-    CAPTCHA_NOT_EXIST(11003, "请输入验证码");
+    CAPTCHA_NOT_EXIST(11003, "请输入验证码"),
+    WHITELIST_FAILED(11004, "操作白名单失败"),
+    EXCEL_FAILED(11005, "Excel解析失败");
 
     private final Integer errCode;
     private final String errMsg;
