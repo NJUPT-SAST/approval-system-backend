@@ -48,7 +48,9 @@ public enum ErrorEnum {
     EXPORT_COMINFO_ERROR(10001, "导出参赛信息失败"),
     INVALID_CAPTCHA(11001, "验证码过期"),
     INCORRECT_CAPTCHA(11002, "验证码错误"),
-    CAPTCHA_NOT_EXIST(11003, "请输入验证码");
+    CAPTCHA_NOT_EXIST(11003, "请输入验证码"),
+    WHITELIST_FAILED(11004, "操作白名单失败"),
+    EXCEL_FAILED(11005, "Excel解析失败");
 
     private final Integer errCode;
     private final String errMsg;

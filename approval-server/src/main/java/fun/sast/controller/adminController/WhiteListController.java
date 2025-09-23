@@ -23,12 +23,12 @@ public class WhiteListController {
     @PostMapping("/whitelist")
     public void setWhiteList(
             @RequestParam Long comId,
-            @RequestParam Boolean isEnable,
-            @RequestParam(required = false) MultipartFile excelFile) {
+            @RequestParam Boolean isWhiteList,
+            @RequestParam(required = false) MultipartFile file) {
         User currentUser = UserInterceptor.userHolder.get();
         if (currentUser.getRole() != 3) {
             throw new BaseException(ErrorEnum.NO_ROLE);
         }
-        whiteListService.operateWhiteList(comId, isEnable, excelFile);
+        whiteListService.operateWhiteList(comId, isWhiteList, file);
     }
 }
