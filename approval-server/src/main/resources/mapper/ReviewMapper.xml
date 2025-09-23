@@ -46,7 +46,49 @@
           AND review_settings LIKE '%' #{code} '%'
         ORDER BY review_begin_time DESC
     </select>
-    <select id="getComCount" resultType="java.lang.Integer"></select>
-    <select id="getReviewCount" resultType="java.lang.Integer"></select>
+    <select id="getComCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM review
+        WHERE accept IS NOT NULL
+    </select>
+
+    <select id="getReviewCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM review
+    </select>
+
+    <select id="getJMember" resultType="java.lang.String">
+        SELECT member
+        FROM team
+        WHERE com_id = #{comId}
+          AND captain = #{captainId}
+    </select>
+
+    <select id="getContents" resultType="java.lang.String">
+        SELECT schema_content
+        FROM work
+        WHERE com_id = #{comId}
+          AND user_code = #{userCode}
+    </select>
+
+    <select id="getAccessories" resultType="string">
+        SELECT url
+        FROM file
+        WHERE com_id = #{comId}
+          AND user_code = #{userCode}
+    </select>
+
+    <select id="getTeamName" resultType="java.lang.String">
+        SELECT name
+        FROM team
+        WHERE com_id = #{comId}
+          AND captain = #{captainId}
+    </select>
+
+    <select id="getCaptainName" resultType="java.lang.String">
+        SELECT name
+        FROM user
+        WHERE code = #{code}
+    </select>
 
 </mapper>

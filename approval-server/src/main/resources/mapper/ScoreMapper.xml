@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="fun.sast.mapper.ScoreMapper">
+
+    <select id="getJCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM judge
+        WHERE user_code = (SELECT user_code FROM work WHERE id = #{id})
+          AND judge_code = #{code}
+    </select>
+
+    <select id="getComIdByProId" resultType="java.lang.Integer">
+        SELECT com_id
+        FROM work
+        WHERE id = #{proId}
+    </select>
+
+    <select id="getUserCode" resultType="java.lang.String" parameterType="int">
+        SELECT user_code
+        FROM work
+        WHERE id = #{proId}
+    </select>
+
+    <select id="getScoreInfo" resultType="java.lang.Integer">
+        SELECT score
+        FROM score
+        WHERE com_id = #{comId}
+          AND user_code = #{user}
+          AND judge_code = #{judge}
+    </select>
+
+    <select id="getOpinionInfo" resultType="java.lang.String">
+        SELECT opinion
+        FROM score
+        WHERE com_id = #{comId}
+          AND user_code = #{user}
+          AND judge_code = #{judge}
+    </select>
+
+
+</mapper>
