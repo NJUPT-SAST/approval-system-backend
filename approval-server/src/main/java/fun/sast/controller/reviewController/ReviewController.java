@@ -4,6 +4,7 @@ import fun.sast.annotation.ResponseResult;
 import fun.sast.service.ReviewService;
 import fun.sast.vo.AccountImportVO;
 import fun.sast.vo.CompetitionListVO;
+import fun.sast.vo.WorkReviewListVO;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -61,11 +62,11 @@ public class ReviewController {
      *
      * @param comId 比赛 Id
      * @param page 页码
-     * @return CompetitionListVO 作品列表
+     * @return WorkReviewListVO 作品列表
      */
     @ResponseResult
-    @GetMapping("/pragram-list")
-    public CompetitionListVO getPragramList(
+    @GetMapping("/program-list")
+    public WorkReviewListVO getPragramList(
             @RequestParam String comId, @RequestParam(required = false) Integer page) {
         return reviewService.getPragramList(comId, page);
     }

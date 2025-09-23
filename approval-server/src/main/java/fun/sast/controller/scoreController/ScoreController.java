@@ -3,6 +3,7 @@ package fun.sast.controller.scoreController;
 import fun.sast.annotation.ResponseResult;
 import fun.sast.service.ScoreService;
 import fun.sast.vo.CompetitionListVO;
+import fun.sast.vo.WorkScoreListVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,11 +34,11 @@ public class ScoreController {
      *
      * @param comId 比赛 Id
      * @param page 页码
-     * @return CompetitionListVO 作品列表
+     * @return WorkScoreListVO 作品列表
      */
     @ResponseResult
     @GetMapping("/program-list")
-    public CompetitionListVO getProgramList(
+    public WorkScoreListVO getProgramList(
             @RequestParam(required = false) String comId,
             @RequestParam(required = false) Integer page) {
         return scoreService.getProgramList(comId, page);

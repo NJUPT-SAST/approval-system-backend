@@ -2,6 +2,7 @@ package fun.sast.service;
 
 import fun.sast.vo.AccountImportVO;
 import fun.sast.vo.CompetitionListVO;
+import fun.sast.vo.WorkReviewListVO;
 import java.util.List;
 
 public interface ReviewService {
@@ -11,5 +12,5 @@ public interface ReviewService {
 
     CompetitionListVO getCompetitionList(int page);
 
-    CompetitionListVO getPragramList(String comId, Integer page);
+    WorkReviewListVO getPragramList(String comId, Integer page);
 }
