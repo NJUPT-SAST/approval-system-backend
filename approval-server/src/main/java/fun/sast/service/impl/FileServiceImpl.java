@@ -10,7 +10,7 @@ import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.FileMapper;
 import fun.sast.service.FileService;
-import fun.sast.utils.OSSUtil;
+import fun.sast.utils.COSUtil;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FileServiceImpl implements FileService {
     private final FileMapper fileMapper;
-    private final OSSUtil ossUtil;
+    private final COSUtil cosUtil;
 
     @Value("${file.OSS.bucket-url-prefix:}")
     String prefix;
@@ -32,6 +32,7 @@ public class FileServiceImpl implements FileService {
      */
     @Override
     public String getDownloadCertificate(String url) {
+
         // 获取user身份信息
         User user = UserInterceptor.userHolder.get();
 
@@ -43,16 +44,20 @@ public class FileServiceImpl implements FileService {
         url = URLDecoder.decode(url, StandardCharsets.UTF_8);
 
         // 判断url是否合法
-        if (!ossUtil.isOSSBucketURL(url)) {
+        if (!cosUtil.isLegalCOSUrl(url)) {
             throw new BaseException(ErrorEnum.INVALID_URL_ERROR);
         }
-
-        // 提取 objectKey
-        String objectKey = url.startsWith(prefix) ? url.substring(prefix.length()) : url;
+        String cosCert = cosUtil.getDownloadCertificate(url);
+        // 提取 objectKey 对比数据库看有没有文件
+        String objectKey = cosUtil.extractObjectKey(cosCert);
+        if (objectKey == null) {
+            throw new BaseException(ErrorEnum.INVALID_URL_ERROR);
+        }
 
         QueryWrapper<File> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("url", objectKey);
         File file = fileMapper.selectOne(queryWrapper);
+
         if (file == null) {
             throw new BaseException(ErrorEnum.FILE_NOT_EXIST);
         }
@@ -67,6 +72,6 @@ public class FileServiceImpl implements FileService {
             throw new BaseException(ErrorEnum.FILE_NOT_EXIST);
         }
 
-        return ossUtil.getDownloadCertificate(url);
+        return cosUtil.getDownloadCertificate(url);
     }
 }

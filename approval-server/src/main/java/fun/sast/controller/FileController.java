@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/com/file")
+@RestController
+@RequestMapping("/com/file")
 @Slf4j
 @RequiredArgsConstructor
 public class FileController {
@@ -19,11 +20,12 @@ public class FileController {
     /**
      * 获取下载凭证
      *
-     * @param url 文件地址例如https://mock-bucket.oss-cn-hangzhou.aliyuncs.com/list/list2/text2.txt
+     * @param url 文件地址例如https://mock-bucket.cos.ap-nanjing.myqcloud.com/list/list2/text2.txt
      */
     @ResponseResult
     @GetMapping("/downloadCertificate")
     public String downloadCertificate(@RequestParam String url) {
+
         return fileService.getDownloadCertificate(url);
     }
 
