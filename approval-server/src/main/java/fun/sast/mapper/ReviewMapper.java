@@ -28,4 +28,8 @@ public interface ReviewMapper extends BaseMapper<Review> {
     String getTeamName(@Param("comId") Integer comId, @Param("captainId") String captainId);
 
     String getCaptainName(@Param("code") String captainId);
+
+    String getCaptainIdByProId(Integer proId);
+
+    Integer getComIdByProId(Integer proId);
 }

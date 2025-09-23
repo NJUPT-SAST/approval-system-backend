@@ -11,8 +11,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProgramInfoForReview {
-    private Integer memberNum;
+    private String teamName;
     private UserInfo captain;
+    private Integer memberNum;
     private JSONArray memberList;
     private List<Accessory> accessories;
     private List<Text> texts;

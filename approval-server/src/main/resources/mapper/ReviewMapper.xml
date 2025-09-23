@@ -91,4 +91,16 @@
         WHERE code = #{code}
     </select>
 
+    <select id="getCaptainIdByProId" resultType="java.lang.String" parameterType="int">
+        SELECT user_code
+        FROM work
+        WHERE id = #{proId}
+    </select>
+
+    <select id="getComIdByProId" resultType="java.lang.Integer" parameterType="int">
+        SELECT com_id
+        FROM work
+        WHERE id = #{ProId}
+    </select>
+
 </mapper>
