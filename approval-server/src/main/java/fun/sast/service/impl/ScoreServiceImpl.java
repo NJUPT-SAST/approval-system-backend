@@ -16,12 +16,11 @@ import fun.sast.vo.CompetitionList;
 import fun.sast.vo.CompetitionListVO;
 import fun.sast.vo.WorkScoreListVO;
 import fun.sast.vo.WorkScoreVO;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +37,7 @@ public class ScoreServiceImpl implements ScoreService {
     public CompetitionListVO getCompetitionList(int page) {
         Page<Competition> pageObj = new Page<>(page, PAGE_SIZE);
         LambdaQueryWrapper<Competition> queryWrapper =
-                new LambdaQueryWrapper<Competition>()
-                        .orderByDesc(Competition::getCreateTime);
+                new LambdaQueryWrapper<Competition>().orderByDesc(Competition::getCreateTime);
 
         IPage<Competition> competitionPage = competitionMapper.selectPage(pageObj, queryWrapper);
 
@@ -97,9 +95,12 @@ public class ScoreServiceImpl implements ScoreService {
                         .map(
                                 work -> {
                                     // 查询该作品的评分信息
-                                    Score score = scoreMapper.selectOne(
-                                            new LambdaQueryWrapper<Score>()
-                                                    .eq(Score::getId, work.getId().toString()));
+                                    Score score =
+                                            scoreMapper.selectOne(
+                                                    new LambdaQueryWrapper<Score>()
+                                                            .eq(
+                                                                    Score::getId,
+                                                                    work.getId().toString()));
 
                                     return new WorkScoreVO()
                                             .setId(work.getId().intValue())
