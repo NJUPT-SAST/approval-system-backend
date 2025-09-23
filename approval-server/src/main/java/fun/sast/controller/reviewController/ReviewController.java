@@ -5,7 +5,9 @@ import fun.sast.service.ReviewService;
 import fun.sast.vo.AccountImportVO;
 import fun.sast.vo.CompetitionListVO;
 import fun.sast.vo.WorkReviewListVO;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,11 +39,12 @@ public class ReviewController {
      */
     @ResponseResult
     @PostMapping("/upload")
-    public void uploadReview(
+    public Map<String, Object> uploadReview(
             @RequestParam String id,
             @RequestParam boolean accept,
             @RequestParam(required = false) String opinion) {
         reviewService.uploadReview(id, accept, opinion);
+        return new HashMap<>();
     }
 
     /**

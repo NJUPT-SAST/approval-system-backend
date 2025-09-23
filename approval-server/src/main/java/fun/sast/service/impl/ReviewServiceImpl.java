@@ -14,6 +14,7 @@ import fun.sast.enums.UserRoleEnum;
 import fun.sast.interceptor.UserInterceptor;
 import fun.sast.mapper.CompetitionMapper;
 import fun.sast.mapper.ReviewMapper;
+import fun.sast.mapper.UserMapper;
 import fun.sast.mapper.WorkMapper;
 import fun.sast.service.CompetitionService;
 import fun.sast.service.ReviewService;
@@ -23,6 +24,7 @@ import fun.sast.vo.CompetitionList;
 import fun.sast.vo.CompetitionListVO;
 import fun.sast.vo.WorkReviewListVO;
 import fun.sast.vo.WorkReviewVO;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final CompetitionMapper competitionMapper;
     private final WorkMapper workMapper;
     private final ReviewMapper reviewMapper;
+    private final UserMapper userMapper;
     private final WorkService workService;
     private final CompetitionService competitionService;
     private static final int PAGE_SIZE = 10;
@@ -47,7 +50,44 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void uploadReview(String id, boolean accept, String opinion) {
-        return;
+        User user = UserInterceptor.userHolder.get();
+        if (user == null
+                || !(UserRoleEnum.JUDGE.getRole().equals(user.getRole())
+                        || UserRoleEnum.ADMIN.getRole().equals(user.getRole()))) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
+        }
+
+        Work work = workMapper.selectById(id);
+        if (work == null) {
+            throw new BaseException(ErrorEnum.WORK_NOT_EXIST);
+        }
+
+        LambdaQueryWrapper<Review> queryWrapper =
+                new LambdaQueryWrapper<Review>().eq(Review::getId, id);
+        Review existingReview = reviewMapper.selectOne(queryWrapper);
+
+        if (existingReview != null) {
+            existingReview.setAccept(accept);
+            existingReview.setOpinion(opinion);
+            existingReview.setJudgeId(user.getId());
+            existingReview.setUpdateTime(LocalDateTime.now());
+            existingReview.setUpdateUser(user.getId().longValue());
+            reviewMapper.updateById(existingReview);
+        } else {
+            Review review = new Review();
+            review.setId(id);
+            review.setAccept(accept);
+            review.setOpinion(opinion);
+            review.setJudgeId(user.getId());
+            review.setComId(work.getComId().intValue());
+            review.setCode(work.getUserCode());
+            review.setUserId(getUserIdByUserCode(work.getUserCode()));
+            review.setCreateTime(LocalDateTime.now());
+            review.setUpdateTime(LocalDateTime.now());
+            review.setCreateUser(user.getId().longValue());
+            review.setUpdateUser(user.getId().longValue());
+            reviewMapper.insert(review);
+        }
     }
 
     @Override
@@ -127,9 +167,12 @@ public class ReviewServiceImpl implements ReviewService {
                 workPage.getRecords().stream()
                         .map(
                                 work -> {
-                                    Review review = reviewMapper.selectOne(
-                                            new LambdaQueryWrapper<Review>()
-                                                    .eq(Review::getId, work.getId().toString()));
+                                    Review review =
+                                            reviewMapper.selectOne(
+                                                    new LambdaQueryWrapper<Review>()
+                                                            .eq(
+                                                                    Review::getId,
+                                                                    work.getId().toString()));
 
                                     return new WorkReviewVO()
                                             .setId(work.getId().intValue())
@@ -151,5 +194,12 @@ public class ReviewServiceImpl implements ReviewService {
                 pages,
                 isFirst,
                 isLast);
+    }
+
+    private Integer getUserIdByUserCode(String userCode) {
+        LambdaQueryWrapper<User> queryWrapper =
+                new LambdaQueryWrapper<User>().eq(User::getCode, userCode);
+        User user = userMapper.selectOne(queryWrapper);
+        return user != null ? user.getId() : null;
     }
 }
