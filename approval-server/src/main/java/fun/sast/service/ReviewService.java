@@ -4,9 +4,10 @@ import fun.sast.vo.AccountImportVO;
 import fun.sast.vo.CompetitionListVO;
 import fun.sast.vo.WorkReviewListVO;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ReviewService {
-    List<AccountImportVO> importAccount(String comId);
+    List<AccountImportVO> importAccount(String depId, MultipartFile file);
 
     void uploadReview(String id, boolean accept, String opinion);
 

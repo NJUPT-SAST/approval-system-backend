@@ -1,5 +1,7 @@
 package fun.sast.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -15,6 +17,7 @@ public class User implements Serializable {
     private Integer depId;
 
     /** 用户id编号 */
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     /** 用户姓名 */

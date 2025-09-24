@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,13 +22,16 @@ public class ReviewController {
     /**
      * 导入学生账号并导出账号 excel
      *
-     * @param depId 学院 ID
+     * @param depId 学院 ID (可选)
+     * @param file Excel 文件 (可选)
      * @return List<Account> 账号列表
      */
     @ResponseResult
     @PostMapping("/import")
-    public List<AccountImportVO> importAccount(@RequestParam String depId) {
-        return reviewService.importAccount(depId);
+    public List<AccountImportVO> importAccount(
+            @RequestParam(required = false) String depId,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        return reviewService.importAccount(depId, file);
     }
 
     /**

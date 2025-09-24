@@ -24,12 +24,19 @@ import fun.sast.vo.CompetitionList;
 import fun.sast.vo.CompetitionListVO;
 import fun.sast.vo.WorkReviewListVO;
 import fun.sast.vo.WorkReviewVO;
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.DigestUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +51,152 @@ public class ReviewServiceImpl implements ReviewService {
     private static final int PAGE_SIZE = 10;
 
     @Override
-    public List<AccountImportVO> importAccount(String comId) {
-        return null;
+    public List<AccountImportVO> importAccount(String depId, MultipartFile file) {
+        List<AccountImportVO> accounts = new ArrayList<>();
+
+        if (file != null && !file.isEmpty()) {
+            try {
+                List<StudentInfo> students = parseExcelFile(file);
+                accounts = createUsersAndGenerateAccounts(students, depId);
+            } catch (IOException e) {
+                throw new BaseException(ErrorEnum.IMPORT_ERROR);
+            }
+        }
+
+        return accounts;
+    }
+
+    private static class StudentInfo {
+        String code;
+        String name;
+
+        StudentInfo(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+    }
+
+    private List<StudentInfo> parseExcelFile(MultipartFile file) throws IOException {
+        List<StudentInfo> students = new ArrayList<>();
+
+        Workbook workbook = null;
+        try {
+            String fileName = file.getOriginalFilename();
+            if (fileName != null && fileName.endsWith(".xlsx")) {
+                workbook = new XSSFWorkbook(file.getInputStream());
+            } else if (fileName != null && fileName.endsWith(".xls")) {
+                workbook = new HSSFWorkbook(file.getInputStream());
+            } else {
+                throw new BaseException(ErrorEnum.INVALID_FILE_TYPE_ERROR);
+            }
+
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+                Row row = sheet.getRow(i);
+                if (row != null) {
+                    Cell codeCell = row.getCell(0);
+                    Cell nameCell = row.getCell(1);
+
+                    if (codeCell != null && nameCell != null) {
+                        String studentCode = getCellValueAsString(codeCell);
+                        String studentName = getCellValueAsString(nameCell);
+
+                        if (studentCode != null && !studentCode.trim().isEmpty() &&
+                            studentName != null && !studentName.trim().isEmpty()) {
+                            students.add(new StudentInfo(studentCode.trim(), studentName.trim()));
+                        }
+                    }
+                }
+            }
+        } finally {
+            if (workbook != null) {
+                workbook.close();
+            }
+        }
+
+        return students;
+    }
+
+    private String getCellValueAsString(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString();
+                } else {
+                    return String.valueOf((long) cell.getNumericCellValue());
+                }
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return null;
+        }
+    }
+
+    private List<AccountImportVO> createUsersAndGenerateAccounts(List<StudentInfo> students, String depId) {
+        List<AccountImportVO> accounts = new ArrayList<>();
+        User currentUser = UserInterceptor.userHolder.get();
+        Long operatorId = currentUser != null ? currentUser.getId().longValue() : 0L;
+        Integer departmentId = depId != null ? Integer.parseInt(depId) : null;
+
+        for (StudentInfo student : students) {
+            String randomSuffix = generateRandomPassword();
+            String password = student.code + randomSuffix;
+            String salt = generateSalt();
+            String encryptedPassword = encryptPassword(password, salt);
+
+            User user = new User();
+            user.setDepId(departmentId);
+            user.setName(student.name);
+            user.setCode(student.code);
+            user.setPassword(encryptedPassword);
+            user.setSalt(salt);
+            user.setRole(UserRoleEnum.STUDENT.getRole());
+            user.setMajor("");
+            user.setContact("");
+            user.setCreateTime(LocalDateTime.now());
+            user.setUpdateTime(LocalDateTime.now());
+            user.setCreateUser(operatorId);
+            user.setUpdateUser(operatorId);
+
+            userMapper.insert(user);
+            accounts.add(new AccountImportVO(password, student.code));
+        }
+
+        return accounts;
+    }
+
+    private String generateSalt() {
+        return generateRandomString(16);
+    }
+
+    private String encryptPassword(String password, String salt) {
+        return DigestUtils.md5DigestAsHex((password + salt).getBytes());
+    }
+
+
+    private String generateRandomPassword() {
+        return generateRandomString(6);
+    }
+
+    private String generateRandomString(int length) {
+        String chars = "abcdefghijklmnopqrstuvwxyz";
+        SecureRandom random = new SecureRandom();
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            result.append(chars.charAt(random.nextInt(chars.length())));
+        }
+
+        return result.toString();
     }
 
     @Override

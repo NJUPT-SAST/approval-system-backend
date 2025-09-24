@@ -40,6 +40,7 @@
         <bucket4j.version>8.10.1</bucket4j.version>
         <aspectj.version>1.9.24</aspectj.version>
         <qcloud.version>5.6.227</qcloud.version>
+        <poi.version>5.2.5</poi.version>
 
     </properties>
 
@@ -182,6 +183,18 @@
                 <groupId>com.qcloud</groupId>
                 <artifactId>cos_api</artifactId>
                 <version>${qcloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi.version}</version>
             </dependency>
 
         </dependencies>
