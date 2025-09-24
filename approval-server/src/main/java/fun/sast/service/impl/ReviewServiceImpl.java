@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -102,8 +102,10 @@ public class ReviewServiceImpl implements ReviewService {
                         String studentCode = getCellValueAsString(codeCell);
                         String studentName = getCellValueAsString(nameCell);
 
-                        if (studentCode != null && !studentCode.trim().isEmpty() &&
-                            studentName != null && !studentName.trim().isEmpty()) {
+                        if (studentCode != null
+                                && !studentCode.trim().isEmpty()
+                                && studentName != null
+                                && !studentName.trim().isEmpty()) {
                             students.add(new StudentInfo(studentCode.trim(), studentName.trim()));
                         }
                     }
@@ -141,7 +143,8 @@ public class ReviewServiceImpl implements ReviewService {
         }
     }
 
-    private List<AccountImportVO> createUsersAndGenerateAccounts(List<StudentInfo> students, String depId) {
+    private List<AccountImportVO> createUsersAndGenerateAccounts(
+            List<StudentInfo> students, String depId) {
         List<AccountImportVO> accounts = new ArrayList<>();
         User currentUser = UserInterceptor.userHolder.get();
         Long operatorId = currentUser != null ? currentUser.getId().longValue() : 0L;
@@ -181,7 +184,6 @@ public class ReviewServiceImpl implements ReviewService {
     private String encryptPassword(String password, String salt) {
         return DigestUtils.md5DigestAsHex((password + salt).getBytes());
     }
-
 
     private String generateRandomPassword() {
         return generateRandomString(6);
