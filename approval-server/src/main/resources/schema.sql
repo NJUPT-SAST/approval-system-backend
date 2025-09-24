@@ -156,3 +156,15 @@ VALUES
     ('医学院', NOW(), NOW(), 1, 1),
     ('理学院', NOW(), NOW(), 1, 1),
     ('土木工程学院', NOW(), NOW(), 1, 1);
+
+-- 创建白名单表
+CREATE TABLE `white_list` (
+                              `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                              `com_id` BIGINT NOT NULL COMMENT '比赛ID',
+                              `user_codes` JSON NOT NULL COMMENT '白名单用户列表（JSON数组格式，如["admin","student"]）',
+                              `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `uk_com_id` (`com_id`) COMMENT '一个比赛只能有一条白名单记录'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='白名单表';
+

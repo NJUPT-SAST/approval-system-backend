@@ -115,6 +115,7 @@ public class ScoreServiceImpl implements ScoreService {
         if (allScores.isEmpty()) {
             throw new BaseException(ErrorEnum.SCORE_NOT_EXIST);
         }
+        log.debug("比赛ID {} 共有 {} 条评分记录", comId, allScores.size());
 
         // 按队长Id分组：key: userId, value: 该队长的所有评审记录List<Score>
         Map<String, List<Score>> scoreGroupByUserId =
@@ -150,6 +151,8 @@ public class ScoreServiceImpl implements ScoreService {
                 throw new BaseException(ErrorEnum.WORK_NOT_EXIST);
             }
 
+            log.debug("队长ID {} 作品ID {} 共有 {} 条评分记录", userId, work.getId(), workScores.size());
+
             workQueryWrapper.clear();
             rowData.add(work.getId());
 
@@ -160,6 +163,8 @@ public class ScoreServiceImpl implements ScoreService {
                 log.error("未找到队长ID {} 的用户信息", userId);
                 throw new BaseException(ErrorEnum.USER_NOT_EXIST);
             }
+
+            log.debug("队长ID {} 姓名 {} 部门ID {}", userId, leader.getName(), leader.getDepId());
 
             userQueryWrapper.clear();
 
@@ -174,6 +179,8 @@ public class ScoreServiceImpl implements ScoreService {
                 departmentQueryWrapper.clear();
             }
 
+            log.debug("队长ID {} 姓名 {} 部门名称 {}", userId, leaderName, departmentName);
+
             rowData.add(userId);
             rowData.add(leaderName);
             rowData.add(departmentName);
@@ -184,6 +191,8 @@ public class ScoreServiceImpl implements ScoreService {
                 workType = getWorkType(work);
             }
             rowData.add(workType);
+
+            log.debug("队长ID {} 作品ID {} 组别 {}", userId, work.getId(), workType);
 
             // 动态列：评委信息
             for (Score score : workScores) {
@@ -200,6 +209,15 @@ public class ScoreServiceImpl implements ScoreService {
                 rowData.add(judgeCode);
                 rowData.add(score.getScore() != null ? score.getScore() : null);
                 rowData.add(score.getOption() != null ? score.getOption() : null);
+
+                log.debug(
+                        "队长ID {} 作品ID {} 评委ID {} 工号 {} 评分 {} 意见 {}",
+                        userId,
+                        work.getId(),
+                        score.getJudgeId(),
+                        judgeCode,
+                        score.getScore(),
+                        score.getOption());
             }
 
             // 补齐空缺的评委列
@@ -222,13 +240,18 @@ public class ScoreServiceImpl implements ScoreService {
     private String getWorkType(Work work) {
         try {
             JsonNode node = objectMapper.readTree(work.getSchemaContent());
+            log.debug("作品ID {} schemaContent 解析成功", work.getId());
+
             for (JsonNode item : node) {
                 if ("项目组别".equals(item.get("input").asText())) {
+                    log.debug("作品ID {} 找到项目组别字段", work.getId());
+
                     return item.get("content").asText() != null
                             ? item.get("content").asText()
                             : null;
                 }
             }
+
         } catch (IOException e) {
             log.error("作品ID {} 组别解析失败: {}", work.getId(), e.getMessage());
             return null;

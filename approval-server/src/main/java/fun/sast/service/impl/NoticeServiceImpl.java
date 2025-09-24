@@ -69,12 +69,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void releaseNotice(NoticeOperateVO operateVO, User currentUser) {
-        System.out.println("传递的com_id值：" + operateVO.getComId());
-        System.out.println(
-                "传递的 com_id 类型："
-                        + (operateVO.getComId() == null
-                                ? "null"
-                                : operateVO.getComId().getClass()));
 
         Competition competition = competitionMapper.selectById(operateVO.getComId());
         if (competition == null) {
