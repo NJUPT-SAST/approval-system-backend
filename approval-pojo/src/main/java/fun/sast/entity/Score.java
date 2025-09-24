@@ -1,5 +1,6 @@
 package fun.sast.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class Score implements Serializable {
     private Integer judgeId;
 
     /** 评审意见 */
+    @TableField("`option`")
     private String option;
 
     /** 打分 */

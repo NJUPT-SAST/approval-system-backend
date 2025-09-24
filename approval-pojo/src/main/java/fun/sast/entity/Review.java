@@ -16,6 +16,9 @@ public class Review implements Serializable {
     /** 活动id */
     private Integer comId;
 
+    /** 队长学号 */
+    private String code;
+
     private String id;
 
     /** 审批人id */
