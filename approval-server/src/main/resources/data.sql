@@ -27,7 +27,22 @@ VALUES
 
 -- 裁判
 ('0', 'judge', MD5(CONCAT('judge', @judge_salt)), 'judge', 2, @judge_salt, NOW(), NOW(), 1, 1, 'txgc', '1112232');
-
+-- 插team
+-- 插入队伍数据，使用 ON DUPLICATE KEY UPDATE 确保可重复执行
+INSERT INTO `team` (`id`, `com_id`, `name`, `captain`, `member`, `teacher`, `create_user`, `update_user`)
+VALUES
+(1, 1, '创新之星队', '2021001', '["2021002", "2021003"]', '["张教授", "李教授"]', 1, 1),
+(2, 1, '科技先锋队', '2021004', '["2021005", "2021006"]', '["王教授"]', 1, 1),
+(3, 2, NULL, '2021007', NULL, '["刘教授"]', 1, 1),
+(4, 2, NULL, '2021008', NULL, '["陈教授"]', 1, 1)
+ON DUPLICATE KEY UPDATE
+  `com_id` = VALUES(`com_id`),
+  `name` = VALUES(`name`),
+  `captain` = VALUES(`captain`),
+  `member` = VALUES(`member`),
+  `teacher` = VALUES(`teacher`),
+  `update_time` = CURRENT_TIMESTAMP,
+  `update_user` = VALUES(`update_user`);
 
 -- insert initial notices into the database
 INSERT IGNORE INTO `notice` (`id`, `com_id`, `content`, `role`, `time`, `title`, `create_time`, `update_time`,

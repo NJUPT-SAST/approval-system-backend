@@ -47,6 +47,17 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>fun.sast</groupId>
+                <artifactId>approval-pojo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fun.sast</groupId>
+                <artifactId>approval-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.jetbrains</groupId>
                 <artifactId>annotations</artifactId>
                 <version>${annotations.version}</version>
@@ -182,6 +193,12 @@
                 <groupId>com.qcloud</groupId>
                 <artifactId>cos_api</artifactId>
                 <version>${qcloud.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-annotations.version}</version>
             </dependency>
 
         </dependencies>
