@@ -73,6 +73,10 @@ public class UserServiceImpl implements UserService {
         vo.setRole(user.getRole());
         vo.setDepId(user.getDepId());
 
+        // 放Redis60分钟过期
+        String redisKey = "user:" + user.getCode();
+        redisUtil.set(redisKey, user, 60 * 60);
+
         return vo;
     }
 }
