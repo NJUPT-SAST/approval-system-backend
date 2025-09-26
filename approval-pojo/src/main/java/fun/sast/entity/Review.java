@@ -1,5 +1,6 @@
 package fun.sast.entity;
 
+import com.alibaba.excel.annotation.format.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -18,17 +19,21 @@ public class Review implements Serializable {
 
     private String id;
 
+    private Integer score;
+
     /** 审批人id */
     private Integer judgeId;
 
     /** 审批意见 */
-    private String opinion;
+    private String option;
 
     /** 队长id */
     private Integer userId;
 
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
+    @DateTimeFormat("yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
     private Long createUser;

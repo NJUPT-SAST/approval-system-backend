@@ -1,25 +1,31 @@
 package fun.sast.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Notice implements Serializable {
+    /** 公告id编号 */
+    @TableId(type = IdType.AUTO)
+    private Integer id;
+
     /** 活动id编号 */
     private Integer comId;
 
     /** 公告内容 */
     private String content;
 
-    /** 公告id编号 */
-    private Integer id;
-
-    /** */
+    /** 接收公告的角色 */
     private Integer role;
 
     /** 发出公告的时间 */
@@ -35,4 +41,7 @@ public class Notice implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    @TableLogic // 逻辑删除
+    private boolean isDeleted = false;
 }

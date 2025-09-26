@@ -1,19 +1,18 @@
 jwt:
-  secret: jwt  # JWT密钥
+  secret: LRXHV49MAFSAXB79WJV3IIQR  # JWT密钥
   expiration: 864000000             # JWT过期时间（毫秒）
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/review
+    url: jdbc:mysql://localhost:3306/approval-test
     username: root
-    password: 111111
+    password: 1111111
 
   data:
     redis:
       host: localhost
       port: 6379
-
 
 
 file:
@@ -28,6 +27,13 @@ file:
     downloadExpiredTime: 1
     bucket-url-prefix: https://mock-bucket.cos.ap-nanjing.myqcloud.com/
 
-
 server:
   port: 9090
+
+  mybatis-plus:
+    global-config:
+      db-config:
+        logic-delete-value: 1 #数据库中逻辑删除存储值
+        logic-not-delete-value: 0
+
+

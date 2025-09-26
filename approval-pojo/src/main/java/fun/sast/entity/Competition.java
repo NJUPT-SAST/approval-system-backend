@@ -59,8 +59,8 @@ public class Competition implements Serializable {
     private String submitEndTime;
 
     /** 表单 schema */
-    @TableField(typeHandler = Fastjson2TypeHandler.class)
-    private JSONObject table;
+    @TableField(value = "table_schema", typeHandler = Fastjson2TypeHandler.class)
+    private JSONObject tableSchema;
 
     /** 0 团队，1 个人 */
     private Integer type;
@@ -75,4 +75,7 @@ public class Competition implements Serializable {
     private Long createUser;
 
     private Long updateUser;
+
+    /** 是否设置白名单 */
+    private Boolean isWhiteList;
 }

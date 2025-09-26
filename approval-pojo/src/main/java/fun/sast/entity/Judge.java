@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Judge implements Serializable {
     /** 活动id */
-    private long comId;
+    private Integer comId;
 
     /** 评委id */
     private Integer id;

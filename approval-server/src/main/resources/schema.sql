@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `notice`
     `update_time` datetime     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `create_user` bigint(20)   DEFAULT NULL COMMENT '创建用户',
     `update_user` bigint(20)   DEFAULT NULL COMMENT '更新用户',
+    `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '逻辑删除（0-未删 1-已删）',
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='公告表';
@@ -155,3 +156,15 @@ VALUES
     ('医学院', NOW(), NOW(), 1, 1),
     ('理学院', NOW(), NOW(), 1, 1),
     ('土木工程学院', NOW(), NOW(), 1, 1);
+
+-- 创建白名单表
+CREATE TABLE `white_list` (
+                              `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                              `com_id` BIGINT NOT NULL COMMENT '比赛ID',
+                              `user_codes` JSON NOT NULL COMMENT '白名单用户列表（JSON数组格式，如["admin","student"]）',
+                              `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              `update_time` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              PRIMARY KEY (`id`),
+                              UNIQUE KEY `uk_com_id` (`com_id`) COMMENT '一个比赛只能有一条白名单记录'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='白名单表';
+
