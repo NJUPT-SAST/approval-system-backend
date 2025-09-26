@@ -16,7 +16,7 @@ public class Team implements Serializable {
 
     /** 比赛ID */
     @TableField("com_id")
-    private Long comId;
+    private Integer comId;
 
     /** 队伍名称（仅团队赛） */
     private String name;

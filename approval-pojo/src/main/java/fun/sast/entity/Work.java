@@ -13,7 +13,7 @@ public class Work implements Serializable {
     private Long id;
 
     /** 比赛ID */
-    private Long comId;
+    private Integer comId;
 
     /** 队长学号 */
     private String userCode;

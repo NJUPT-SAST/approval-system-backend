@@ -17,7 +17,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     private final CompetitionMapper competitionMapper;
 
     @Override
-    public JSONObject getSchema(Long comId) {
+    public JSONObject getSchema(Integer comId) {
         if (comId == null) {
             throw new BaseException(ErrorEnum.CONTEST_NOT_EXIST);
         }

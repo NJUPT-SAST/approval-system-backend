@@ -19,7 +19,7 @@ public class WhiteList {
     private Long id;
 
     /** 比赛ID 关联competition表的id字段 */
-    private Long comId;
+    private Integer comId;
 
     @TableField(typeHandler = JacksonTypeHandler.class)
     private List<String> userCodes;

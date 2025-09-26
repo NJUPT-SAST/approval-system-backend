@@ -74,7 +74,7 @@ public class FileUtil {
      * @return 上传文件的凭证
      */
     public Map<String, String> getUploadCertificate(
-            String filename, Long comId, Long id, String input) {
+            String filename, Integer comId, Long id, String input) {
         String typeName = CommonUtil.getTypeByFilename(filename);
         if (!CommonUtil.isAllowUploadType(typeName)) {
             throw new BaseException(ErrorEnum.INVALID_FILE_TYPE_ERROR);
@@ -122,14 +122,14 @@ public class FileUtil {
 
             try (ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream())) {
                 for (Map<String, String> fileInfo : fileIntoList) {
-                    String ossUrl = fileInfo.get("ossUrl");
+                    String cosUrl = fileInfo.get("cosUrl");
                     String fileName = fileInfo.get("fileName");
-                    if (!StringUtils.hasText(ossUrl) || !StringUtils.hasText(fileName)) {
+                    if (!StringUtils.hasText(cosUrl) || !StringUtils.hasText(fileName)) {
                         log.warn("文件信息不完整，跳过该文件");
                         continue;
                     }
-                    // 生成OSS临时授权链接
-                    String authorizedUrl = cosUtil.getDownloadCertificate(ossUrl);
+                    // 生成COS临时授权链接
+                    String authorizedUrl = cosUtil.getDownloadCertificate(cosUrl);
                     // 从授权链接下载文件流
                     try (InputStream fileIn = getInputStreamFromUrl(authorizedUrl)) {
                         if (fileIn == null) {

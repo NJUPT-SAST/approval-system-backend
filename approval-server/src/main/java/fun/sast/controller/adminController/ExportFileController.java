@@ -2,6 +2,7 @@ package fun.sast.controller.adminController;
 
 import fun.sast.Exception.BaseException;
 import fun.sast.annotation.ResponseResult;
+import fun.sast.dto.FileResponseDTO;
 import fun.sast.entity.User;
 import fun.sast.enums.ErrorEnum;
 import fun.sast.interceptor.UserInterceptor;
@@ -17,32 +18,35 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/data")
 @RequiredArgsConstructor
 public class ExportFileController {
-        private final FileService fileService;
+    private final FileService fileService;
 
-        @GetMapping("/exportComInfo")
-        @ResponseResult
-        public void exportComInfo(HttpServletResponse response, @RequestParam Long comId) {
-            User currentUser = UserInterceptor.userHolder.get();
+    @GetMapping("/exportComInfo")
+    @ResponseResult
+    public FileResponseDTO exportComInfo(
+            HttpServletResponse response, @RequestParam Integer comId) {
+        User currentUser = UserInterceptor.userHolder.get();
 
-            if (currentUser.getRole() != 3) {
-                throw new BaseException(ErrorEnum.NO_ROLE);
-            }
-            try {
-                fileService.exportComInfo(response,comId);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new BaseException(ErrorEnum.EXPORT_COMINFO_ERROR);
-            }
+        if (currentUser.getRole() != 3) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
         }
+        try {
+            return fileService.exportComInfo(comId);
+        } catch (Exception e) {
 
-        @ResponseResult
-        @GetMapping("/exportWork")
-        public void exportWork(HttpServletResponse response,@RequestParam Long comId, @RequestParam String
-     userCode) {
-            User currentUser = UserInterceptor.userHolder.get();
-            if (currentUser.getRole() != 3) {
-                throw new BaseException(ErrorEnum.NO_ROLE);
-            }
-            fileService.exportWork(response,comId, userCode);
+            throw new BaseException(ErrorEnum.EXPORT_COMINFO_ERROR);
         }
+    }
+
+    @ResponseResult
+    @GetMapping("/exportWork")
+    public void exportWork(
+            HttpServletResponse response,
+            @RequestParam Integer comId,
+            @RequestParam String userCode) {
+        User currentUser = UserInterceptor.userHolder.get();
+        if (currentUser.getRole() != 3) {
+            throw new BaseException(ErrorEnum.NO_ROLE);
+        }
+        fileService.exportWork(response, comId, userCode);
+    }
 }

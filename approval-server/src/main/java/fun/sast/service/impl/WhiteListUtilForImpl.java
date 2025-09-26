@@ -27,7 +27,7 @@ public class WhiteListUtilForImpl extends AnalysisEventListener<Map<Integer, Str
     // 存储合法学号
     private List<String> validUserCodes = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
 
-    private Long comId;
+    private Integer comId;
     private Boolean isWhiteList; // 是否启用白名单
 
     private WhiteListMapper whiteListMapper;
@@ -43,7 +43,7 @@ public class WhiteListUtilForImpl extends AnalysisEventListener<Map<Integer, Str
                 userMapper != null ? "注入成功" : "注入失败（null）");
     }
 
-    public void setParams(Long comId, Boolean isWhiteList) {
+    public void setParams(Integer comId, Boolean isWhiteList) {
         this.comId = comId;
         this.isWhiteList = isWhiteList;
         log.info("工具类参数设置：comId={}, isWhiteList={}", comId, isWhiteList);

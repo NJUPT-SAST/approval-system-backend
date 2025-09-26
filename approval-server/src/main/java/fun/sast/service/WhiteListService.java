@@ -8,5 +8,5 @@ public interface WhiteListService {
      * @param isWhiteList 是否启用白名单
      * @param file 白名单Excel文件
      */
-    void operateWhiteList(Long comId, Boolean isWhiteList, MultipartFile file);
+    void operateWhiteList(Integer comId, Boolean isWhiteList, MultipartFile file);
 }

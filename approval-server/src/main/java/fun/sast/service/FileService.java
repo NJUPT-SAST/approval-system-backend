@@ -1,13 +1,12 @@
 package fun.sast.service;
 
-import fun.sast.entity.File;
+import fun.sast.dto.FileResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface FileService {
     String getDownloadCertificate(String url);
 
-    File exportComInfo(HttpServletResponse response,Long comId);
+    FileResponseDTO exportComInfo(Integer comId);
 
-    File exportWork(HttpServletResponse response,Long comId,String userCode);
-
+    void exportWork(HttpServletResponse response, Integer comId, String userCode);
 }

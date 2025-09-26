@@ -94,7 +94,7 @@ public class COSUtil {
      */
     public String getDownloadCertificate(String url) {
         if (!StringUtils.hasText(url) || !StringUtils.hasText(bucketUrlPrefix)) {
-            throw new BaseException(ErrorEnum.OSS_BUCKET_NOT_EXIST);
+            throw new BaseException(ErrorEnum.COS_BUCKET_NOT_EXIST);
         }
 
         String key = extractObjectKey(url);

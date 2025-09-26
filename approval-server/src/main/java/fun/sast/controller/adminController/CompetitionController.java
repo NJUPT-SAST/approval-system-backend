@@ -17,7 +17,7 @@ public class CompetitionController {
 
     @ResponseResult
     @GetMapping("/admin/com/schema")
-    public JSONObject getSchema(@RequestParam Long comId) {
+    public JSONObject getSchema(@RequestParam Integer comId) {
         return competitionService.getSchema(comId);
     }
 }

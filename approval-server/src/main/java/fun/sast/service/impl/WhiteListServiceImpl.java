@@ -25,7 +25,7 @@ public class WhiteListServiceImpl implements WhiteListService {
     @Autowired private WhiteListUtilForImpl excelUtil;
 
     @Override
-    public void operateWhiteList(Long comId, Boolean isWhiteList, MultipartFile file) {
+    public void operateWhiteList(Integer comId, Boolean isWhiteList, MultipartFile file) {
         log.info("=== 开始处理白名单操作 ===");
         log.info("入参详情：comId={}, isWhiteList={}", comId, isWhiteList);
         if (file != null) {
@@ -91,11 +91,11 @@ public class WhiteListServiceImpl implements WhiteListService {
             competitionMapper.updateById(competition);
             log.info("已启用比赛{}的白名单", comId);
         } catch (IOException e) {
-            e.printStackTrace();
+
             log.error("解析Excel文件失败", e);
             throw new BaseException(ErrorEnum.EXCEL_FAILED);
         } catch (Exception e) {
-            e.printStackTrace();
+
             log.error("处理白名单失败", e);
             throw new BaseException(ErrorEnum.WHITELIST_FAILED);
         }

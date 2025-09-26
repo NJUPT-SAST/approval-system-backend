@@ -55,7 +55,7 @@ public class NoticeController {
         try {
             noticeService.updateNotice(vo, currentUser);
         } catch (Exception e) {
-            e.printStackTrace();
+
             throw new BaseException(ErrorEnum.NOTICE_ERROR);
         }
     }

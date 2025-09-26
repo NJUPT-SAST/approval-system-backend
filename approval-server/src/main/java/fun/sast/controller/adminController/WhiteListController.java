@@ -22,7 +22,7 @@ public class WhiteListController {
     @ResponseResult
     @PostMapping("/whitelist")
     public void setWhiteList(
-            @RequestParam Long comId,
+            @RequestParam Integer comId,
             @RequestParam Boolean isWhiteList,
             @RequestParam(required = false) MultipartFile file) {
         User currentUser = UserInterceptor.userHolder.get();
